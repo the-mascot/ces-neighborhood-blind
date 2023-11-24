@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.common;
+package ces.neighborhood.blind.common.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;

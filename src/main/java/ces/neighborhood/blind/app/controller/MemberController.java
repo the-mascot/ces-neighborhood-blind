@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.service.MemberService;
+import ces.neighborhood.blind.common.entity.ApiResponse;
 
 @RestController
 public class MemberController {
@@ -20,17 +21,15 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+//    @GetMapping(path = "/member/info")
+//    public ResponseEntity getMbrInfo(@RequestParam String mbrId) {
+//        return new ResponseEntity<MbrInfo>(memberService.getMbrInfo(mbrId),
+//                HttpStatus.OK);
+//    }
+
     @GetMapping(path = "/member/info")
     public ResponseEntity getMbrInfo(@RequestParam String mbrId) {
-        Logger logger = LoggerFactory.getLogger(MemberController.class);
-
-        logger.trace("Trace!");
-        logger.debug("Drace!!");
-        logger.info("Info!!!");
-        logger.warn("Warning!!!!");
-        logger.error("error!!!!!");
-        return new ResponseEntity<MbrInfo>(memberService.getMbrInfo(mbrId),
-                HttpStatus.OK);
+        return ApiResponse.success(memberService.getMbrInfo(mbrId));
     }
 
 }
