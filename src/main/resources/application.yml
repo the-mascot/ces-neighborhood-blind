@@ -1,0 +1,49 @@
+spring:
+  profiles:
+    group:
+      "local": "local, common"
+    default: local
+---
+# common
+
+spring:
+  config:
+    activate:
+      on-profile: "common"
+
+server:
+  shutdown: graceful
+  port: 8010
+
+---
+# local
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+  datasource:
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://localhost:5432/neighborhooddb
+      username: master
+      password: 1234
+      minimum-idle: 10
+      maximum-pool-size: 50
+
+  jpa:
+    database: postgresql
+    properties:
+      hibernate:
+        format_sql: true  # 쿼리 출력시 포맷 정렬
+        use_sql_comments: true  # 주석 출력
+        show_sql: true  # JPA 출력시 쿼리 출력
+
+jwt:
+  header: Authorization
+  secret: YmVzdC1ldW5zb28tc2V1bmdob29uLW5laWdoYm9yaG9vZA==
+  access-token-expire-time: 1800000
+  refresh-token-expire-time: 604800000
+
+logging:
+  config: classpath:log4j2.xml
