@@ -11,6 +11,14 @@ spring:
     activate:
       on-profile: "common"
 
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false  #기본 true, 개발시에는 false로 캐싱 없에야 편함
+  mvc:
+    static-path-pattern: /static/** # static 파일 경로 설정
+
+
 server:
   shutdown: graceful
   port: 8010
