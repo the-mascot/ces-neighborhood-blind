@@ -2,6 +2,7 @@ package ces.neighborhood.blind.common.entity;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import ces.neighborhood.blind.common.exception.ErrorCode;
@@ -20,9 +21,9 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    public HttpHeaders getHeaders() {
+    private static HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
+        headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }
 

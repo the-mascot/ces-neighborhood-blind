@@ -21,12 +21,6 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-//    @GetMapping(path = "/member/info")
-//    public ResponseEntity getMbrInfo(@RequestParam String mbrId) {
-//        return new ResponseEntity<MbrInfo>(memberService.getMbrInfo(mbrId),
-//                HttpStatus.OK);
-//    }
-
     @GetMapping(path = "/member/info")
     public ResponseEntity getMbrInfo(@RequestParam String mbrId) {
         return ApiResponse.success(memberService.getMbrInfo(mbrId));

@@ -1,5 +1,10 @@
 package ces.neighborhood.blind.common.exception;
 
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@ToString
 public class BizException extends RuntimeException {
 
     private ErrorCode errorCode;
