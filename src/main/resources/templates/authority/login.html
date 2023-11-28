@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <script>
+        const goHome = () => {
+            window.location.href = '/';
+        }
+    </script>
+</head>
+<div layout:fragment="content">
+    로그인
+    <form method="post" th:action="@{/auth/login}">
+        <input type="email" name="username">아이디
+        <input type="password" name="password">비밀번호
+        <button type="submit">로그인</button>
+    </form>
+    <button onclick="goHome()">Home</button>
+</div>
+</html>

@@ -1,0 +1,50 @@
+package ces.neighborhood.blind.common.provider;
+
+import ces.neighborhood.blind.app.service.UserDetailServiceImpl;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class AuthenticationProviderImpl implements AuthenticationProvider {
+
+    private final UserDetailServiceImpl userDetailService;
+
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        UserDetails userDetails = userDetailService.loadUserByUsername(authentication.getName());
+        this.credentialChecks(authentication, userDetails);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                userDetails.getUsername(),
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+        );
+        usernamePasswordAuthenticationToken.setDetails(authentication.getDetails());
+        return usernamePasswordAuthenticationToken;
+    }
+
+    protected void credentialChecks(Authentication authentication, UserDetails userDetails) {
+        if (authentication.getCredentials() == null) {
+            throw new BizException(ErrorCode.CODE_1003);
+        }
+        if (!this.passwordEncoder.matches(String.valueOf(authentication.getCredentials()), userDetails.getPassword())) {
+            throw new BizException(ErrorCode.CODE_1002);
+        }
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return false;
+    }
+}

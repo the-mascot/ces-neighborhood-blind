@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +24,17 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String mbrId) throws BizException {
         return memberRepository.findById(mbrId)
-                .map(this::)
+                .map(this::createUserDetails)
+                .orElseThrow(() -> new BizException(ErrorCode.CODE_1001));
     }
 
     private UserDetails createUserDetails(MbrInfo mbrInfo) {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(member.getMbrRole());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(mbrInfo.getRole());
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(simpleGrantedAuthority);
         return new User(
-                member.getMbrId(),
-                member.getMbrPw(),
+                mbrInfo.getMbrId(),
+                mbrInfo.getMbrPw(),
                 authorities
         );
     }

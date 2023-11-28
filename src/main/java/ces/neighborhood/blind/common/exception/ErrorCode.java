@@ -12,9 +12,10 @@ public enum ErrorCode {
     CODE_0000("0000", "Successful Response", HttpStatus.OK),
 
     /*CODE 1000 ~ 1999 : 회원관련*/
-    NO_AUTHORITY("1000", "No Authority"),
-    NOT_FOUND_PASSWORD("1001", "Not Found Password"),
-    WRONG_PASSWORD("1002", "Wrong Password"),
+    CODE_1000("1000", "No Authority"),
+    CODE_1001("1001", "Not Found Member"),
+    CODE_1002("1002", "Wrong Password"),
+    CODE_1003("1003", "Please enter a Password"),
     CODE_9999("9999", "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
     private String code;

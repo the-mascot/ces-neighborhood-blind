@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.common.entity;
+package ces.neighborhood.blind.app.dto;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

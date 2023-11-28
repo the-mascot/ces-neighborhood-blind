@@ -25,4 +25,5 @@ public class MbrInfo {
     private String mbrStd;
     private Timestamp lastLoginDate;
     private Timestamp withdrawDate;
+    private String role;
 }

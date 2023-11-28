@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.common.entity;
+package ces.neighborhood.blind.app.dto;
 
 import lombok.Getter;
 import lombok.ToString;
