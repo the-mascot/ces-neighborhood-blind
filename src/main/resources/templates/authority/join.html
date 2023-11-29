@@ -6,9 +6,9 @@
 </head>
 <div layout:fragment="content">
     회원가입
-    <form method="post" th:action="@{/auth/join}" th:object="${loginReqDto}">
-        <input type="email" th:field="*{userId}">아이디
-        <input type="password" th:field="*{password}">비밀번호
+        <form method="post" th:action="@{/auth/join}" th:object="${loginReqDto}">
+            <input type="email" th:field="*{userId}">아이디
+            <input type="password" th:field="*{password}">비밀번호
         <button type="submit">회원가입</button>
     </form>
     <a href="/static">Home</a>

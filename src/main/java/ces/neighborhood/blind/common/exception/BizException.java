@@ -20,7 +20,7 @@ public class BizException extends RuntimeException {
     }
 
     public BizException(ErrorCode errorCode) {
-        super(errorCode.getCode());
+        super(errorCode.toString());
         this.errorCode = errorCode;
     }
 

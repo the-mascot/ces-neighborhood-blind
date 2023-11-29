@@ -11,9 +11,9 @@ public enum Role {
     ROLE_GUEST("ROLE_GUEST")
     ;
 
-    String description;
+    String roleName;
 
-    Role(String description) {
-        this.description = description;
+    Role(String roleName) {
+        this.roleName = roleName;
     }
 }

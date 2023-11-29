@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@ToString
 public enum ErrorCode {
 
     CODE_0000("0000", "Successful Response", HttpStatus.OK),
@@ -36,6 +35,15 @@ public enum ErrorCode {
     public String getCode() { return code; }
 
     public String getMessage() { return message; }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("[BizError] CODE: ");
+        stringBuilder.append(code);
+        stringBuilder.append(", message: ");
+        stringBuilder.append(message);
+        return stringBuilder.toString();
+    }
 
     public HttpStatus getHttpStatus() {
         return httpStatus == null ? HttpStatus.INTERNAL_SERVER_ERROR : httpStatus;

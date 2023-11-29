@@ -25,6 +25,8 @@ public class AuthorityController {
 
     @RequestMapping("/join")
     public String join(Model model) {
+        // th:object 사용을 위해 view controller에 model 객체를 같이 보내줘야한다.
+        model.addAttribute("loginReqDto", new LoginReqDto());
         return "/authority/join";
     }
 

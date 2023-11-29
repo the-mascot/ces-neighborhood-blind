@@ -1,13 +1,11 @@
 package ces.neighborhood.blind.app.dto;
 
-import jakarta.validation.constraints.Email;
-import lombok.Getter;
-import lombok.ToString;
-
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
-@Getter
-@ToString
+import jakarta.validation.constraints.Email;
+import lombok.Data;
+
+@Data
 public class LoginReqDto {
 
     @NotBlank
