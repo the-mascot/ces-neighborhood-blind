@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
 
 import ces.neighborhood.blind.common.provider.AuthenticationProviderImpl;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +41,9 @@ public class SpringSecurityConfig {
                 )
                 // custom authenticationProvider bean 등록
                 .authenticationProvider(authenticationProvider)
-                // CSRF 설정 (쿠키에 CSRF Token을 저장하는 방식),
-                // withHttpOnlyFalse: 스크립트에서 접근 허용. REST API Header token을 보내야해서 접근 가능하게 설정.
-                .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf((csrf) -> csrf
+                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+                )
                 .build();
     }
 }

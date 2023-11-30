@@ -3,15 +3,36 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <script type="text/javascript">
-        const goWrite = () => {
-            window.location.href = '/board/write';
+    <script>
+        function post() {
+            let form = document.getElementById('boardForm');
+            let formData = new FormData(form);
+
+            let jsonFormData = {};
+            formData.forEach((value, key) => {
+                jsonFormData[key] = value;
+            });
+
+            axios.post('/baord/post', jsonFormData)
+                .then(response => {
+                    console.log(response.data);
+                    document.getElementById('result').append(response.data())
+                })
+                .catch(error => {
+                    console.log(error);
+                    document.getElementById('result').append(error.message);
+                });
         }
     </script>
 </head>
 <div layout:fragment="content">
-    <form method="post" action="@{/board/post}" th:object="">
-
+    <form id="boardForm">
+        <input type="text" name="title">타이틀
+        <input type="text" name="content">컨텐츠
     </form>
+    <button onclick="post()">등록</button>
+    <div id="result">
+
+    </div>
 </div>
 </html>

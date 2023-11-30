@@ -2,12 +2,16 @@ package ces.neighborhood.blind.app.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.service.MemberService;
 import ces.neighborhood.blind.app.dto.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 public class MemberController {
 
@@ -19,6 +23,12 @@ public class MemberController {
 
     @GetMapping(path = "/member/info")
     public ResponseEntity getMbrInfo(@RequestParam String mbrId) {
+        return ApiResponse.success(memberService.getMbrInfo(mbrId));
+    }
+
+    @PostMapping(path = "/member/info2")
+    public ResponseEntity getMbrInfo2(@RequestBody String mbrId) {
+        log.error("hellod");
         return ApiResponse.success(memberService.getMbrInfo(mbrId));
     }
 
