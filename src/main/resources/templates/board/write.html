@@ -13,10 +13,11 @@
                 jsonFormData[key] = value;
             });
 
-            axios.post('/baord/post', jsonFormData)
+            axios.post('/board/post', jsonFormData)
                 .then(response => {
+                    console.log(response);
                     console.log(response.data);
-                    document.getElementById('result').append(response.data())
+                    document.getElementById('result').append(response.data.data)
                 })
                 .catch(error => {
                     console.log(error);

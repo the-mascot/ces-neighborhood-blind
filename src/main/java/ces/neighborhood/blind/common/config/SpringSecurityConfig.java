@@ -5,11 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.web.cors.CorsConfiguration;
 
-import ces.neighborhood.blind.common.provider.AuthenticationProviderImpl;
+import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
 import lombok.RequiredArgsConstructor;
 
 /**

@@ -1,10 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="header">
-    <div>
-        <a href="/login">로그인</a>
-        <a href="/join">회원가입</a>
-        <a href="/board">게시판</a>
+<div class="header" th:fragment="header">
+    <div class="header box">
+    </div>
+    <div class="gnb">
+        <div class="wrap">
+            <div class="gnb-link">
+                <ul>
+                    <li>
+                        <a href="/login" class="active">홈</a>
+                    </li>
+                    <li>
+                        <a href="/join">APT 이야기</a>
+                    </li>
+                    <li>
+                        <a href="/board">게시판</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="login-wrap">
+                <button class="login-btn"><a href="/login" class="login-link">로그인</a></button>
+                <button class="join-btn"><a href="/join" class="join-link">회원가입</a></button>
+            </div>
+        </div>
     </div>
 </div>
 </html>

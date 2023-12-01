@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.common.provider;
+package ces.neighborhood.blind.app.provider;
 
 import ces.neighborhood.blind.app.service.UserDetailServiceImpl;
 import ces.neighborhood.blind.common.exception.BizException;
