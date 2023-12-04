@@ -2,11 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div class="header" th:fragment="header">
     <div class="header box">
+        <img th:src="@{../static/assets/img/Neighborhood-logo-white.png}" height="40" width="100">
     </div>
     <div class="gnb">
-        <div class="wrap">
+        <div class="wrap content-between">
             <div class="gnb-link">
                 <ul>
+                    <li>
+                        <img th:src="@{../static/assets/img/Neighborhood-logo.png}" height="70" width="150">
+                    </li>
                     <li>
                         <a href="/login" class="active">홈</a>
                     </li>
@@ -18,9 +22,9 @@
                     </li>
                 </ul>
             </div>
-            <div class="login-wrap">
-                <button class="login-btn"><a href="/login" class="login-link">로그인</a></button>
-                <button class="join-btn"><a href="/join" class="join-link">회원가입</a></button>
+            <div class="gnb-login-wrap">
+                <button class="gnb-login-btn"><a href="/login" class="login-link">로그인</a></button>
+                <button class="gnb-join-btn"><a href="/join" class="join-link">회원가입</a></button>
             </div>
         </div>
     </div>
