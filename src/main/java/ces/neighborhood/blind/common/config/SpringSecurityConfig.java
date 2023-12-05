@@ -42,15 +42,19 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((auth) -> auth
-                    .requestMatchers("/", "/login","/auth/login", "/join", "/auth/join", "/static/**").permitAll()
+                    .requestMatchers("/", "/login","/auth/login", "/logout", "/join", "/auth/join", "/static/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .formLogin((login) -> login
                         .loginPage("/login")    // 로그인 페이지
                         .loginProcessingUrl("/auth/login")
-                        .usernameParameter("userId")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
+                )
+                .logout((logout) -> logout
+                        .permitAll()
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
                 )
                 // custom authenticationProvider bean 등록
                 .csrf((csrf) -> csrf

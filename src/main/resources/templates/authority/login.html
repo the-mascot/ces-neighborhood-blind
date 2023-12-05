@@ -14,12 +14,12 @@
             <div class="login-wrap content-center">
                 <div class="login-inner-wrap">
                     <div class="content-center">
-                        <form method="post" th:action="@{/auth/login}" th:object="${loginReqDto}" id="loginForm" class="login-form mt-30">
+                        <form method="post" th:action="@{/auth/login}" id="loginForm" class="login-form mt-30">
                             <div class="input-group mb-30">
                                 <span class="input-group-text">
                                     <img th:src="@{../static/assets/img/id.svg}">
                                 </span>
-                                <input type="text" id="username" th:field="*{userId}" placeholder="아이디 ex) xxx@neighborhood.com" class="form-control" maxlength="30" autocomplete="off">
+                                <input type="text" id="username" name="username" placeholder="아이디 ex) xxx@neighborhood.com" class="form-control" maxlength="30" autocomplete="off">
                                 <span id="resetId" class="input-group-text">
                                     <img th:src="@{../static/assets/img/x-circle.svg}">
                                 </span>
@@ -28,7 +28,7 @@
                                 <span class="input-group-text">
                                     <img th:src="@{../static/assets/img/password.svg}">
                                 </span>
-                                <input type="password" id="password" th:field="*{password}" placeholder="비밀번호" autocomplete="off" class="form-control" maxlength="16">
+                                <input type="password" id="password" name="password" placeholder="비밀번호" autocomplete="off" class="form-control" maxlength="16">
                                 <span id="resetPassword" class="input-group-text">
                                     <img th:src="@{../static/assets/img/x-circle.svg}">
                                 </span>
@@ -68,6 +68,9 @@
             document.getElementById('password').value = '';
         });
 
+        document.getElementById('username').addEventListener('keypress', handleKeyPress);
+        document.getElementById('password').addEventListener('keypress', handleKeyPress);
+
         const login = () => {
             let data = document.getElementById('loginForm');
             if (validateLogin() === true) {
@@ -91,6 +94,12 @@
                 return false;
             }
             return true;
+        }
+
+        function handleKeyPress (event) {
+            if (event.key === 'Enter') {
+                login();
+            }
         }
 
         function nullCheck (value) {

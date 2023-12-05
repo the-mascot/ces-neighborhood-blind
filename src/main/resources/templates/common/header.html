@@ -28,7 +28,9 @@
             <span sec:authentication="name"></span>
             <div th:if="${#authorization.expression('isAuthenticated()')}" class="gnb-login-wrap">
                 <button class="gnb-login-btn"><a href="/mypage" class="login-link">내 정보</a></button>
-                <button class="gnb-join-btn"><a href="/logout" class="join-link">로그아웃</a></button>
+                <form th:method="post" th:action="@{/logout}" class="join-link">
+                    <button class="gnb-join-btn">로그아웃</button>
+                </form>
             </div>
             <div th:unless="${#authorization.expression('isAuthenticated()')}" class="gnb-login-wrap">
                 <button class="gnb-login-btn"><a href="/login" class="login-link">로그인</a></button>
