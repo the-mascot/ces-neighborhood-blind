@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <div class="header" th:fragment="header">
     <div class="header box">
         <img th:src="@{../static/assets/img/Neighborhood-logo-white.png}" height="40" width="100">
@@ -22,7 +25,12 @@
                     </li>
                 </ul>
             </div>
-            <div class="gnb-login-wrap">
+            <span sec:authentication="name"></span>
+            <div th:if="${#authorization.expression('isAuthenticated()')}" class="gnb-login-wrap">
+                <button class="gnb-login-btn"><a href="/mypage" class="login-link">내 정보</a></button>
+                <button class="gnb-join-btn"><a href="/logout" class="join-link">로그아웃</a></button>
+            </div>
+            <div th:unless="${#authorization.expression('isAuthenticated()')}" class="gnb-login-wrap">
                 <button class="gnb-login-btn"><a href="/login" class="login-link">로그인</a></button>
                 <button class="gnb-join-btn"><a href="/join" class="join-link">회원가입</a></button>
             </div>

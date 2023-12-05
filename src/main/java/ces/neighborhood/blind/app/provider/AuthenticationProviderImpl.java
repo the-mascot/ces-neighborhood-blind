@@ -6,6 +6,7 @@ import ces.neighborhood.blind.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -35,11 +36,8 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     }
 
     protected void credentialChecks(Authentication authentication, UserDetails userDetails) {
-        if (authentication.getCredentials() == null) {
-            throw new BizException(ErrorCode.CODE_1003);
-        }
         if (!this.passwordEncoder.matches(String.valueOf(authentication.getCredentials()), userDetails.getPassword())) {
-            throw new BizException(ErrorCode.CODE_1002);
+            throw new BadCredentialsException(ErrorCode.CODE_1002.getMessage());
         }
     }
 

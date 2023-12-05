@@ -8,8 +8,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.thymeleaf.dialect.IDialect;
+import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
+import ces.neighborhood.blind.common.filter.LoginFailureHandler;
+import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -27,18 +34,24 @@ public class SpringSecurityConfig {
 
     private final AuthenticationProviderImpl authenticationProvider;
 
+    private final LoginSuccessHandler loginSuccessHandler;
+
+    private final LoginFailureHandler loginFailureHandler;
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((auth) -> auth
                     .requestMatchers("/", "/login","/auth/login", "/join", "/auth/join", "/static/**").permitAll()
                     .anyRequest().authenticated()
                 )
-//                .formLogin((login) -> login
-//                        .loginPage("/login")    // 로그인 페이지
-//                        .loginProcessingUrl("/auth/login")  // 로그인 처리 url
-//                        .defaultSuccessUrl("/") // 로그인 성공 후 처리 url
-//                        .failureForwardUrl("/") // 로그인 실패 후 처리 url
-//                )
+                .formLogin((login) -> login
+                        .loginPage("/login")    // 로그인 페이지
+                        .loginProcessingUrl("/auth/login")
+                        .usernameParameter("userId")
+                        .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailureHandler)
+                )
                 // custom authenticationProvider bean 등록
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())

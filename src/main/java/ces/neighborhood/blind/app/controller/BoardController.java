@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.entity.MbrBoard;
 import ces.neighborhood.blind.app.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -22,7 +24,7 @@ public class BoardController {
 
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @RequestMapping("/board")
-    public String board(Model model) {
+    public String board(Model model, HttpServletRequest request, HttpServletResponse response) {
         return "/board/board";
     }
 
