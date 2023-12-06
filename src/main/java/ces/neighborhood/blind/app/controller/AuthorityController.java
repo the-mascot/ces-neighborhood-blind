@@ -28,10 +28,9 @@ public class AuthorityController {
     private final AuthorityService authorityService;
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String error = (String) request.getAttribute("error");
-        if (!StringUtils.isEmpty(error)) {
-            model.addAttribute("loginStatus", error);
+    public String login(@RequestParam(required = false) boolean error , Model model) {
+        if (error) {
+            model.addAttribute("loginStatus", ErrorCode.CODE_1005.getMessage());
         }
         model.addAttribute("loginReqDto", new LoginReqDto());
         return "/authority/login";

@@ -8,15 +8,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
 import ces.neighborhood.blind.common.filter.LoginFailureHandler;
 import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -42,21 +37,19 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((auth) -> auth
-                    .requestMatchers("/", "/login","/auth/login", "/logout", "/join", "/auth/join", "/static/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/", "/login", "/auth/login", "/logout", "/join", "/auth/join", "/static/**").permitAll()
+                    .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
                 .formLogin((login) -> login
-                        .loginPage("/login")    // 로그인 페이지
-                        .loginProcessingUrl("/auth/login")
-                        .successHandler(loginSuccessHandler)
-                        .failureHandler(loginFailureHandler)
+                        .loginPage("/login")    // 로그인 페이지 url
+                        .loginProcessingUrl("/auth/login")  // 로그인 처리 url
+                        .successHandler(loginSuccessHandler)    // 인증성공 처리 handler
+                        .failureHandler(loginFailureHandler)    // 인증실패 처리 handler
                 )
                 .logout((logout) -> logout
-                        .permitAll()
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutUrl("/logout")   // 로그아웃 url
+                        .logoutSuccessUrl("/")  // 로그아웃 성공시 redirect url
                 )
-                // custom authenticationProvider bean 등록
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                 )
@@ -64,6 +57,7 @@ public class SpringSecurityConfig {
     }
 
     @Bean
+    // custom authenticationProvider bean 등록
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);

@@ -20,8 +20,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
                                         HttpServletResponse response,
                                         AuthenticationException exception)
             throws IOException, ServletException {
-        log.error(exception.toString());
-        request.setAttribute("error", ErrorCode.CODE_1005.getMessage());
-        response.sendRedirect("/login");
+        response.sendRedirect("/login?error=" + true);
     }
 }

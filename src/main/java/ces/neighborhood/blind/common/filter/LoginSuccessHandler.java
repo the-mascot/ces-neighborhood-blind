@@ -24,8 +24,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         FilterChain chain,
                                         Authentication authentication)
             throws IOException, ServletException {
-        //SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.debug("[LoginSuccessHandler] {} 님 login" + authentication.getName());
+        log.info("[LoginSuccessHandler] {} 님 login", authentication.getName());
         response.sendRedirect("/");
     }
 
@@ -34,7 +33,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         HttpServletResponse response,
                                         Authentication authentication)
             throws IOException, ServletException {
-        log.debug("[LoginSuccessHandler] {} 님 login" + authentication.getName());
+        log.info("[LoginSuccessHandler] {} 님 login", authentication.getName());
         response.sendRedirect("/");
     }
 }
