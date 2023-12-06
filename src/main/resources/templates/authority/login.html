@@ -43,10 +43,10 @@
                             <button onclick="login()" class="login-btn mb-10">로 그 인</button>
                         </div>
                         <div>
-                            <button class="join-btn mb-10">회원가입</button>
+                            <button id="joinBtn" class="join-btn mb-10">회원가입</button>
                         </div>
                         <div>
-                            <button class="login-btn mb-10">네이버로 시작하기</button>
+                            <button class="social-login-btn mb-10"><img th:src="@{../static/assets/img/naver_login_btn.png}"></button>
                         </div>
                         <div>
                             <button class="login-btn mb-30">구글로 시작하기</button>
@@ -66,6 +66,10 @@
 
         document.getElementById('resetPassword').addEventListener('click', function () {
             document.getElementById('password').value = '';
+        });
+
+        document.getElementById('joinBtn').addEventListener('click', function () {
+            window.location.href = '/join';
         });
 
         document.getElementById('username').addEventListener('keypress', handleKeyPress);
