@@ -46,10 +46,16 @@
                             <button id="joinBtn" class="join-btn mb-10">회원가입</button>
                         </div>
                         <div>
-                            <button class="social-login-btn mb-10"><img th:src="@{../static/assets/img/naver_login_btn.png}"></button>
+                            <button class="naver-login-btn mb-10" onclick="loginWithNaver()">
+                                <img class="naver-logo" th:src="@{../static/assets/img/naver_logo.png}">
+                                <span class="naver-login-text">네이버 로그인</span>
+                            </button>
                         </div>
                         <div>
-                            <button class="login-btn mb-30">구글로 시작하기</button>
+                            <button class="google-login-btn mb-30" onclick="loginWithGoogle()">
+                                <img class="naver-logo" th:src="@{../static/assets/img/google_logo.png}">
+                                <span class="google-login-text">구글로 로그인</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -81,6 +87,9 @@
                 data.submit();
             }
         }
+
+        const loginWithNaver = () => window.location.href = '/oauth2/authorization/naver';
+        const loginWithGoogle = () => window.location.href = '/oauth2/authorization/google';
 
         const validateLogin = () => {
             if (nullCheck(document.getElementById('username').value)) {

@@ -167,13 +167,13 @@ body {
     border-radius: 10px;
     font-family: "Noto Sans KR ExtraBold";
     font-size: 20px;
-    color: white;
+    color: #FFFFFF;
 }
 
 .join-btn {
     width: 100%;
     height: 40px;
-    background-color: #fff;
+    background-color: #ffffff;
     border: solid 1px #d4d4d4;
     color: #222;
     font-family: "Noto Sans KR ExtraBold";
@@ -186,11 +186,42 @@ body {
     color: red;
 }
 
-.social-login-btn {
+.naver-login-btn {
     width: 100%;
     height: 40px;
     border: none;
-    padding: 0;
+    background-color: #03c75a;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.naver-logo {
+    margin-left: 20%;
+}
+
+.naver-login-text {
+    margin-left: 30px;
+    font-family: "Noto Sans KR ExtraBold";
+    font-size: 20px;
+    color: white;
+}
+
+.google-login-btn {
+    width: 100%;
+    height: 40px;
+    border: none;
+    background-color: #4285F4;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.google-login-text {
+    margin-left: 30px;
+    font-family: "Noto Sans KR ExtraBold";
+    font-size: 20px;
+    color: white;
 }
 
 /* ---/login--- */

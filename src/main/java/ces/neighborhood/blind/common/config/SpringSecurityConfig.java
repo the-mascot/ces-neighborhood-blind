@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
+import ces.neighborhood.blind.app.service.Oauth2UserServiceImpl;
 import ces.neighborhood.blind.common.filter.LoginFailureHandler;
 import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class SpringSecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
 
+    private final Oauth2UserServiceImpl oauth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,6 +47,10 @@ public class SpringSecurityConfig {
                         .loginProcessingUrl("/auth/login")  // 로그인 처리 url
                         .successHandler(loginSuccessHandler)    // 인증성공 처리 handler
                         .failureHandler(loginFailureHandler)    // 인증실패 처리 handler
+                )
+                .oauth2Login(login -> login
+                        .loginPage("/login")
+                        .userInfoEndpoint(point -> point.userService(oauth2UserService))
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")   // 로그아웃 url
