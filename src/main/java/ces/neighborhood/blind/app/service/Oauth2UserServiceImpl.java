@@ -1,18 +1,6 @@
 package ces.neighborhood.blind.app.service;
 
 
-import ces.neighborhood.blind.app.dto.Role;
-import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.common.exception.BizException;
-import ces.neighborhood.blind.common.exception.ErrorCode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +11,17 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
