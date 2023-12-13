@@ -1,5 +1,6 @@
 package ces.neighborhood.blind.app.provider;
 
+import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.service.UserDetailServiceImpl;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
