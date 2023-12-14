@@ -20,6 +20,9 @@ public class AuthorityController {
 
     private final AuthorityService authorityService;
 
+    /**
+     * 로그인 페이지
+     */
     @RequestMapping("/login")
     public String login(@RequestParam(required = false) boolean error , Model model) {
         if (error) {
@@ -29,6 +32,9 @@ public class AuthorityController {
         return "/authority/login";
     }
 
+    /**
+     * 회원가입 페이지
+     */
     @RequestMapping("/join")
     public String join(Model model) {
         // th:object 사용을 위해 view controller에 model 객체를 같이 보내줘야한다.
@@ -36,6 +42,9 @@ public class AuthorityController {
         return "/authority/join";
     }
 
+    /**
+     * 회원가입
+     */
     @PostMapping("/auth/join")
     public String joinMember(@ModelAttribute LoginReqDto loginReqDto) {
         authorityService.joinMember(loginReqDto);

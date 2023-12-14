@@ -62,10 +62,16 @@ public class AuthorityService {
         this.rememberMeServices.loginSuccess(request, response, authentication);
     }
 
+    /**
+     * 회원가입 Service
+     */
     public void joinMember(LoginReqDto loginReqDto) {
         memberRepository.save(convertToMbrInfo(loginReqDto));
     }
 
+    /**
+     * LoginReqDto -> MbrInfo convert
+     */
     private MbrInfo convertToMbrInfo(LoginReqDto loginReqDto) {
         return MbrInfo.builder()
                 .mbrId(loginReqDto.getUserId())

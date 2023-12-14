@@ -2,7 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<head>
+
+<div layout:fragment="content">
+    <form id="boardForm">
+        <input type="text" name="title">타이틀
+        <input type="text" name="content">컨텐츠
+    </form>
+    <button onclick="post()">등록</button>
+    <div id="result">
+
+    </div>
+</div>
+
+<th:block layout:fragment="script">
     <script>
         function post() {
             let form = document.getElementById('boardForm');
@@ -25,15 +37,5 @@
                 });
         }
     </script>
-</head>
-<div layout:fragment="content">
-    <form id="boardForm">
-        <input type="text" name="title">타이틀
-        <input type="text" name="content">컨텐츠
-    </form>
-    <button onclick="post()">등록</button>
-    <div id="result">
-
-    </div>
-</div>
+</th:block>
 </html>
