@@ -9,14 +9,5 @@ spring:
       username: ENC(e/KE2yOzAi1r7yEuNCspnA==)
       password: ENC(Agl4h4nz+O2d8bNbqRkziruQChA6yulF)
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 1001350064885-a7tp24je0net5ktb46tlgeji2t8jhtdc.apps.googleusercontent.com
-            client-secret: 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
-            scope: profile, email
-
 server:
   shutdown: graceful
