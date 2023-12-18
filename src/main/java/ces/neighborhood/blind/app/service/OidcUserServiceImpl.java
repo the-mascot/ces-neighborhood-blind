@@ -7,6 +7,7 @@ import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.core.converter.ClaimTypeConverter;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ import org.springframework.util.Assert;
 @Service
 @RequiredArgsConstructor
 public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, OidcUser> {
+
+    private static final String INVALID_USER_INFO_RESPONSE_ERROR_CODE = "invalid_user_info_response";
 
     private static final Converter<Map<String, Object>, Map<String, Object>> DEFAULT_CLAIM_TYPE_CONVERTER = new ClaimTypeConverter(
             createDefaultClaimTypeConverters());
@@ -59,7 +63,12 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
         userInfo = new OidcUserInfo(claims);
 
         if (userInfo.getSubject() == null) {
-            throw new OAuth2AuthenticationException("invalid_user_info_response");
+            throw new OAuth2AuthenticationException(INVALID_USER_INFO_RESPONSE_ERROR_CODE);
+        }
+
+        if (!userInfo.getSubject().equals(userRequest.getIdToken().getSubject())) {
+            OAuth2Error oauth2Error = new OAuth2Error(INVALID_USER_INFO_RESPONSE_ERROR_CODE);
+            throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
         }
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
@@ -70,19 +79,15 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
                 .getUserNameAttributeName();
         Map<String, Object> attributes = StringUtils.equals(registrationId, "naver") ? oauth2User.getAttribute(attributeName) : oauth2User.getAttributes();
 
-
-
-
         if (attributes == null || attributes.get("email") == null) {
             throw new BizException(ErrorCode.CODE_1005);
         }
 
         memberRepository.save(convertToMbrInfo(attributes));
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName()));
-
-        return getUser(userRequest, oauth2User, authorities);
+        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
+        authorities.add(new OidcUserAuthority(userRequest.getIdToken(), userInfo));
+        return getUser(userRequest, userInfo, authorities);
     }
 
     private MbrInfo convertToMbrInfo(Map<String, Object> attributes) {

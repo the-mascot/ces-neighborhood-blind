@@ -4,24 +4,26 @@ package ces.neighborhood.blind.app.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import ces.neighborhood.blind.app.dto.ComCode;
 import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.SnsMbrInfo;
+import ces.neighborhood.blind.app.entity.SnsMbrInfoKey;
 import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.app.repository.Oauth2UserRepository;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
+    private static final String NAVER = "naver";
+
     private final MemberRepository memberRepository;
+
+    private final Oauth2UserRepository oauth2UserRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
@@ -44,17 +50,16 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-        Map<String, Object> attributes = StringUtils.equals(registrationId, "naver") ? oauth2User.getAttribute(attributeName) : oauth2User.getAttributes();
+        Map<String, Object> attributes = StringUtils.equals(registrationId, NAVER) ? oauth2User.getAttribute(attributeName) : oauth2User.getAttributes();
 
         if (attributes == null || attributes.get("email") == null) {
             throw new BizException(ErrorCode.CODE_1005);
         }
 
         memberRepository.save(convertToMbrInfo(attributes));
-
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName());
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
+        oauth2UserRepository.save(convertToSnsMbrInfo(attributes, registrationId));
+        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
+        authorities.add(new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName()));
 
         return new DefaultOAuth2User(authorities, attributes, "email");
     }
@@ -63,6 +68,19 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         return MbrInfo.builder()
                 .mbrId(String.valueOf(attributes.get("email")))
                 .role(Role.ROLE_MEMBER.getRoleName())
+                .mbrNm(String.valueOf(attributes.get("name")))
+                .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
+                .build();
+    }
+
+    private SnsMbrInfo convertToSnsMbrInfo(Map<String, Object> attributes, String registrationId) {
+        return SnsMbrInfo.builder()
+                .snsMbrInfoKey(SnsMbrInfoKey.builder()
+                        .snsId(String.valueOf(attributes.get(StringUtils.equals(NAVER, registrationId) ? "id" : "sub")))
+                        .snsType(registrationId)
+                        .build())
+                .snsName(String.valueOf(attributes.get("name")))
+                .mbrId(String.valueOf(attributes.get("email")))
                 .build();
     }
 }

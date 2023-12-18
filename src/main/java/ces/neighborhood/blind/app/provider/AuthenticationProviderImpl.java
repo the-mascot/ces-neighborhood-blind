@@ -47,6 +47,6 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     // Spring Security에게 UsernamePassword 방식을 지원한다는 것을 알려주는 역할
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.equals(authentication);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

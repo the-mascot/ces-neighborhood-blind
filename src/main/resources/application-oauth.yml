@@ -9,7 +9,6 @@ spring:
             scope:
               - email
               - profile
-              - openid
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
           naver:
             client-id: UpEJjnGzwwLj_hk4mbB6

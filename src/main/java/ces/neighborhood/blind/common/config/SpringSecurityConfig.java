@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
+import ces.neighborhood.blind.app.provider.CustomOauth2AuthorizationRequestResolver;
 import ces.neighborhood.blind.common.filter.LoginFailureHandler;
 import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class SpringSecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
 
+    private final CustomOauth2AuthorizationRequestResolver authorizationRequestResolver;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,7 +50,9 @@ public class SpringSecurityConfig {
                 )
                 .oauth2Login(login -> login
                         .loginPage("/login")
-                        //.userInfoEndpoint(point -> point.userService(oauth2UserService))
+                        .authorizationEndpoint(endpoint -> endpoint
+                                .authorizationRequestResolver(authorizationRequestResolver)
+                        )
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")   // 로그아웃 url
@@ -69,4 +73,5 @@ public class SpringSecurityConfig {
         authenticationManagerBuilder.authenticationProvider(authenticationProvider);
         return authenticationManagerBuilder.build();
     }
+
 }

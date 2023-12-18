@@ -29,23 +29,4 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return memberRepository.findById(mbrId)
                 .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.CODE_1001.getMessage()));
     }
-
-    // UserDetails 사용 버전
-//    @Override
-//    public UserDetails loadUserByUsername(String mbrId) throws BizException {
-//        return memberRepository.findById(mbrId)
-//                .map(this::createUserDetails)
-//                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.CODE_1001.getMessage()));
-//    }
-
-    private UserDetails createUserDetails(MbrInfo mbrInfo) {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(mbrInfo.getRole());
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
-        return new User(
-                mbrInfo.getMbrId(),
-                mbrInfo.getMbrPw(),
-                authorities
-        );
-    }
 }
