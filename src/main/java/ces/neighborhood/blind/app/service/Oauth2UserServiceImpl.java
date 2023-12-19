@@ -41,22 +41,33 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException {
+        // delegate로 DefaultOAuth2UserService의 loadUser를 호출해 Oauth2User를 받아온다.
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
+        // 공급자 ID ex) google, naver. SNS_TYPE으로 사용
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        String attributeName = userRequest
+
+        // 사용자 식별 이름 google : sub, naver : response
+        String userNameAttributeName = userRequest
                 .getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-        Map<String, Object> attributes = StringUtils.equals(registrationId, NAVER) ? oauth2User.getAttribute(attributeName) : oauth2User.getAttributes();
 
-        if (attributes == null || attributes.get("email") == null) {
-            throw new BizException(ErrorCode.CODE_1005);
+        if (StringUtils.isEmpty(userNameAttributeName)) {
+            throw new BizException(ErrorCode.CODE_1100);
         }
 
+        Map<String, Object> attributes = StringUtils.equals(registrationId, NAVER) ? oauth2User.getAttribute(userNameAttributeName) : oauth2User.getAttributes();
+
+        if (attributes == null || attributes.get("email") == null) {
+            throw new BizException(ErrorCode.CODE_1101);
+        }
+
+        // mbrInfo 저장
         memberRepository.save(convertToMbrInfo(attributes));
+        // snsMbrInfo 저장
         oauth2UserRepository.save(convertToSnsMbrInfo(attributes, registrationId));
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         authorities.add(new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName()));
@@ -69,6 +80,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .mbrId(String.valueOf(attributes.get("email")))
                 .role(Role.ROLE_MEMBER.getRoleName())
                 .mbrNm(String.valueOf(attributes.get("name")))
+                .mbrEmail(String.valueOf(attributes.get("email")))
                 .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
                 .build();
     }

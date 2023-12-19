@@ -49,11 +49,5 @@ spring:
         jdbc:
           time_zone: UTC
 
-jwt:
-  header: Authorization
-  secret: YmVzdC1ldW5zb28tc2V1bmdob29uLW5laWdoYm9yaG9vZA==
-  access-token-expire-time: 1800000
-  refresh-token-expire-time: 604800000
-
 logging:
   config: classpath:log4j2.xml

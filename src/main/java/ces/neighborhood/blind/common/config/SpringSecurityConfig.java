@@ -38,11 +38,11 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests((auth) -> auth
+        return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/auth/login", "/logout", "/join", "/auth/join", "/static/**").permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
-                .formLogin((login) -> login
+                .formLogin(login -> login
                         .loginPage("/login")    // 로그인 페이지 url
                         .loginProcessingUrl("/auth/login")  // 로그인 처리 url
                         .successHandler(loginSuccessHandler)    // 인증성공 처리 handler
@@ -54,11 +54,11 @@ public class SpringSecurityConfig {
                                 .authorizationRequestResolver(authorizationRequestResolver)
                         )
                 )
-                .logout((logout) -> logout
+                .logout(logout -> logout
                         .logoutUrl("/logout")   // 로그아웃 url
                         .logoutSuccessUrl("/")  // 로그아웃 성공시 redirect url
                 )
-                .csrf((csrf) -> csrf
+                .csrf(csrf -> csrf
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())  // Session 방식
                         /*.csrfTokenRepository(new CookieCsrfTokenRepository())   // Cookie 방식*/
                 )
