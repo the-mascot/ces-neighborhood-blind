@@ -7,7 +7,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
 public class XSSFilter implements Filter {
 
     @Override
@@ -19,7 +24,8 @@ public class XSSFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain)
             throws IOException, ServletException {
-
+        log.error("do filter");
+        chain.doFilter(request, response);
     }
 
     @Override

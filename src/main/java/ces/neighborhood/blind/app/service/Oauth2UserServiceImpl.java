@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import ces.neighborhood.blind.app.dto.ComCode;
+import ces.neighborhood.blind.common.code.ComCode;
 import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.SnsMbrInfo;

@@ -13,6 +13,7 @@ public class BasicTest {
 
     @Test
     public void toStringTest() {
+
         System.out.println(ErrorCode.CODE_1001.toString());
     }
 

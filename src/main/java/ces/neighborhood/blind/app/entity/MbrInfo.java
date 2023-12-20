@@ -1,14 +1,9 @@
 package ces.neighborhood.blind.app.entity;
 
-import ces.neighborhood.blind.app.dto.ComCode;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
+import ces.neighborhood.blind.common.code.ComCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,11 +12,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
@@ -79,12 +74,12 @@ public class MbrInfo implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return !StringUtils.equals(mbrStd, ComCode.MBR_STD_EXPIRED.getCode());
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return !StringUtils.equals(mbrStd, ComCode.MBR_STD_EXPIRED.getCode());
     }
 
     @Override
@@ -94,6 +89,6 @@ public class MbrInfo implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
