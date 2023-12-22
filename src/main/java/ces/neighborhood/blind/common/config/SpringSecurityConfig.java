@@ -43,7 +43,8 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/auth/login", "/logout", "/join", "/auth/join", "/static/**").permitAll()
+                        .requestMatchers("/", "/login", "/auth/login", "/logout", "/join", "/auth/join",
+                                "/static/**", "/member/info", "/oauth/redirect", "/oauth/login").permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
                 .formLogin(login -> login
@@ -55,8 +56,7 @@ public class SpringSecurityConfig {
                 .oauth2Login(login -> login
                         .loginPage("/login")
                         .authorizationEndpoint(endpoint -> endpoint
-                                .authorizationRequestResolver(authorizationRequestResolver)
-                        )
+                                .authorizationRequestResolver(authorizationRequestResolver))
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")   // 로그아웃 url
@@ -76,7 +76,6 @@ public class SpringSecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.eraseCredentials(false);
         return authenticationManagerBuilder.build();
     }
 }

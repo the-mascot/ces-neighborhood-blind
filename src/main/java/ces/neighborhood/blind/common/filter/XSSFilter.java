@@ -24,7 +24,7 @@ public class XSSFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain)
             throws IOException, ServletException {
-        log.error("do filter");
+        //log.error("do filter");
         chain.doFilter(request, response);
     }
 

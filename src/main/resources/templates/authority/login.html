@@ -57,6 +57,12 @@
                                 <span class="google-login-text">구글로 로그인</span>
                             </button>
                         </div>
+                        <div>
+                            <button class="google-login-btn mb-30" onclick="customLoginWithGoogle()">
+                                <img class="naver-logo" th:src="@{../static/assets/img/google_logo.png}">
+                                <span class="google-login-text">커스텀 로그인</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,6 +96,7 @@
 
         const loginWithNaver = () => window.location.href = '/oauth2/authorization/naver';
         const loginWithGoogle = () => window.location.href = '/oauth2/authorization/google';
+        const customLoginWithGoogle = () => window.location.href = '/oauth/login';
 
         const validateLogin = () => {
             if (nullCheck(document.getElementById('username').value)) {

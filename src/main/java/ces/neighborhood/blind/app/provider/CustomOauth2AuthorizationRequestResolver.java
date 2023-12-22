@@ -18,10 +18,12 @@ public class CustomOauth2AuthorizationRequestResolver implements
 
     private final OAuth2AuthorizationRequestResolver defaultResolver;
 
+    public static final String CUSTOM_AUTHORIZATION_REQUEST_BASE_URI = "/oauth2/authorization";
+
     public CustomOauth2AuthorizationRequestResolver(
             ClientRegistrationRepository clientRegistrationRepository) {
         this.defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository,
-                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI);
+                CUSTOM_AUTHORIZATION_REQUEST_BASE_URI);
     }
 
     @Override

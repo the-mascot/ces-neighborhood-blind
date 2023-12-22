@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.service.MemberService;
 import ces.neighborhood.blind.app.dto.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,7 +27,8 @@ public class MemberController {
     }
 
     @GetMapping(path = "/member/info")
-    public ResponseEntity getMbrInfo(@RequestParam String mbrId) {
+    public ResponseEntity getMbrInfo(@RequestParam String mbrId, HttpServletRequest request, HttpServletResponse response) {
+        log.error("here");
         return ApiResponse.success(memberService.getMbrInfo(mbrId));
     }
 
