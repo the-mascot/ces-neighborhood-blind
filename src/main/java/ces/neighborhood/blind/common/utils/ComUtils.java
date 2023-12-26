@@ -2,8 +2,23 @@ package ces.neighborhood.blind.common.utils;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
-public class CommonUtils {
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Slf4j
+public class ComUtils {
+
+    public static String objectToJson(Object o) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = "";
+        try {
+             json = objectMapper.writeValueAsString(o);
+        } catch (Exception e) {
+            log.error("[objectToJson] Json String 변환 실패, error: {}", e.getMessage());
+        }
+        return json;
+    }
 
     public static <T> T convertMapToObject(Map<String, Object> map, Class<T> clazz) throws IllegalAccessException, InstantiationException {
         T instance = clazz.newInstance();
@@ -29,5 +44,5 @@ public class CommonUtils {
             return null;
         }
     }
-
+    
 }

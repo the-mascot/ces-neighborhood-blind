@@ -26,6 +26,7 @@ public class ApiExceptionAdvice {
     public ResponseEntity<ApiExceptionResponse> exceptionHandler(HttpServletRequest request, final Exception e) {
         log.error("[ExceptionHandler] errMsg: {}", e.getMessage());
         log.error("[ExceptionHandler] err 호출지점: {}", e.getStackTrace()[0]);
+        e.printStackTrace();
         return ResponseEntity
                 .status(ErrorCode.CODE_9999.getHttpStatus())
                 .body(ApiExceptionResponse.builder()
