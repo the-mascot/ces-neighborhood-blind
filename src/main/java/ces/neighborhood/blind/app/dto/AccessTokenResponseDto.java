@@ -4,18 +4,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
-@ToString
-@AllArgsConstructor
 @Builder
-public class AccessTokenResponseDto {
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccessTokenResponseDto implements Serializable {
 
     @JsonProperty("access_token")
     private String accessToken;

@@ -1,12 +1,10 @@
 package ces.neighborhood.blind.common.config;
 
-import org.eclipse.jetty.client.dynamic.HttpClientTransportDynamic;
 import org.eclipse.jetty.io.ClientConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.JettyClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,8 +24,8 @@ public class WebClientConfig {
         SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
         ClientConnector clientConnector = new ClientConnector();
         clientConnector.setSslContextFactory(sslContextFactory);
-//        HttpClient httpClient = new CustomHttpClient(new HttpClientTransportDynamic(clientConnector));
-        reactor.netty.http.client.HttpClient httpClient = HttpClient
+        //CustomHttpClient httpClient = new CustomHttpClient(new HttpClientTransportDynamic(clientConnector));
+        HttpClient httpClient = HttpClient
                 .create()
                 .wiretap("reactor.netty.http.client.HttpClient",
                         LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL);

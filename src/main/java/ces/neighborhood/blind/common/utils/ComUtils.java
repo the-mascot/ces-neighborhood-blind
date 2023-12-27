@@ -1,6 +1,9 @@
 package ces.neighborhood.blind.common.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,7 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Slf4j
 public class ComUtils {
 
-    public static String objectToJson(Object o) {
+    /**
+     * Object to Json String Converter
+     * @param map, clazz
+     * @return Object
+     */
+    public static String convertObjectToJson(Object o) {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = "";
         try {
@@ -20,6 +28,11 @@ public class ComUtils {
         return json;
     }
 
+    /**
+     * Map to Object converter
+     * @param map, clazz
+     * @return Object
+     */
     public static <T> T convertMapToObject(Map<String, Object> map, Class<T> clazz) throws IllegalAccessException, InstantiationException {
         T instance = clazz.newInstance();
 
@@ -44,5 +57,4 @@ public class ComUtils {
             return null;
         }
     }
-    
 }

@@ -1,21 +1,22 @@
 package ces.neighborhood.blind.app;
 
-import ces.neighborhood.blind.common.exception.ErrorCode;
+import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.reactive.function.client.WebClient;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BasicTest {
 
-    public BasicTest() {
+    public BasicTest() throws Exception {
         this.toStringTest();
     }
 
     @Test
-    public void toStringTest() {
-
-
+    public void toStringTest() throws Exception {
+        String response = "{\"access_token\":\"1234\"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        AccessTokenResponseDto accessTokenResponseDto = objectMapper.readValue(response, AccessTokenResponseDto.class);
     }
 
 }
