@@ -9,19 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthorizationCodeAuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,15 +31,19 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
+import ces.neighborhood.blind.app.service.Oauth2UserServiceImpl;
 import ces.neighborhood.blind.common.config.WebClientConfig;
-import java.awt.PageAttributes;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +57,7 @@ public class OAuth2AuthenticationProviderImpl implements
 
     private GrantedAuthoritiesMapper authoritiesMapper = ((authorities) -> authorities);
 
-    private final WebClientConfig webClientConfig;
+    private final Oauth2UserServiceImpl userService;
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -78,21 +84,32 @@ public class OAuth2AuthenticationProviderImpl implements
         }
 
         ClientRegistration clientRegistration = authorizationCodeAuthentication.getClientRegistration();
+        // Access Token 요청
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(clientRegistration, authorizationResponse);
-        ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
-//        ResponseEntity<AccessTokenResponseDto> response = restTemplate.exchange(requestEntity, AccessTokenResponseDto.class);
-//        AccessTokenResponseDto accessTokenResponseDto = response.getBody();
-//        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenResponseDto.getAccessToken(), null, null);
-//        OAuth2RefreshToken oAuth2RefreshToken = new OAuth2RefreshToken(accessTokenResponseDto.getRefreshToken(), null, null);
-//
-//        OAuth2AuthorizationCodeAuthenticationToken authenticationResult = new OAuth2AuthorizationCodeAuthenticationToken(
-//                authorizationCodeAuthentication.getClientRegistration(),
-//                authorizationCodeAuthentication.getAuthorizationExchange(), oAuth2AccessToken,
-//                oAuth2RefreshToken, accessTokenResponse.getAdditionalParameters());
-//        authenticationResult.setDetails(authorizationCodeAuthentication.getDetails());
+        ResponseEntity<AccessTokenResponseDto> response = restTemplate.exchange(requestEntity, AccessTokenResponseDto.class);
+        AccessTokenResponseDto accessTokenResponseDto = response.getBody();
+        // Access Token
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenResponseDto.getAccessToken(), Instant.now(), Instant.now().plusSeconds(30));
+        // Refresh Token
+        OAuth2RefreshToken refreshToken = new OAuth2RefreshToken(accessTokenResponseDto.getRefreshToken(), Instant.now(), null);
+        Map<String, Object> additionalParameters = new HashMap<>();
+        OAuth2User oauth2User = this.userService.loadUser(new OAuth2UserRequest(
+                clientRegistration, accessToken, additionalParameters
+        ));
 
-        return null;
+        Collection<? extends GrantedAuthority> mappedAuthorities = this.authoritiesMapper.mapAuthorities(oauth2User.getAuthorities());
+
+        OAuth2LoginAuthenticationToken authenticationResult = new OAuth2LoginAuthenticationToken(
+                authorizationCodeAuthentication.getClientRegistration(),
+                authorizationCodeAuthentication.getAuthorizationExchange(),
+                oauth2User,
+                mappedAuthorities,
+                accessToken,
+                refreshToken);
+        authenticationResult.setDetails(authorizationCodeAuthentication.getDetails());
+
+        return authenticationResult;
     }
 
     @Override

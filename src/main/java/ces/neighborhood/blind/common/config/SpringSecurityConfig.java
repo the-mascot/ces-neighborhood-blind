@@ -62,10 +62,10 @@ public class SpringSecurityConfig {
                         .logoutUrl("/logout")   // 로그아웃 url
                         .logoutSuccessUrl("/")  // 로그아웃 성공시 redirect url
                 )
-//                .csrf(csrf -> csrf
-//                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())  // Session 방식
-//                        /*.csrfTokenRepository(new CookieCsrfTokenRepository())   // Cookie 방식*/
-//                )
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())  // Session 방식
+                        /*.csrfTokenRepository(new CookieCsrfTokenRepository())   // Cookie 방식*/
+                )
                 .authenticationProvider(oAuth2AuthenticationProvider)
                 .authenticationProvider(authenticationProvider)
                 .build();

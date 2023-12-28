@@ -9,6 +9,11 @@ import jakarta.servlet.ServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Component;
 
 @Slf4j
