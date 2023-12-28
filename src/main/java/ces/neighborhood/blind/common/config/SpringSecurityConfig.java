@@ -3,8 +3,8 @@ package ces.neighborhood.blind.common.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,6 +15,7 @@ import ces.neighborhood.blind.app.provider.CustomOauth2AuthorizationRequestResol
 import ces.neighborhood.blind.app.provider.OAuth2AuthenticationProviderImpl;
 import ces.neighborhood.blind.common.filter.LoginFailureHandler;
 import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(securedEnabled = true)
 public class SpringSecurityConfig {
 
     private final AuthenticationProviderImpl authenticationProvider;
@@ -40,11 +42,15 @@ public class SpringSecurityConfig {
 
     private final CustomOauth2AuthorizationRequestResolver authorizationRequestResolver;
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/auth/login", "/logout", "/join", "/auth/join",
-                                "/static/**", "/member/info", "/oauth/redirect", "/oauth/login").permitAll()
+        return http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/", "/login", "/auth/login", "/logout",
+                                "/join", "/auth/join", "/static/**", "/board/**"
+                        ).permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
                 .formLogin(login -> login

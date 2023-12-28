@@ -1,7 +1,9 @@
 package ces.neighborhood.blind.app.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.entity.MbrBoard;
 import ces.neighborhood.blind.app.service.BoardService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +25,6 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
     @RequestMapping("/board")
     public String board(Model model, HttpServletRequest request, HttpServletResponse response) {
         return "/board/board";

@@ -29,8 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthorityService {
 
-    private final AuthenticationManager authenticationManager;
-
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
@@ -43,20 +41,6 @@ public class AuthorityService {
 
     private SecurityContextRepository
             securityContextRepository = new RequestAttributeSecurityContextRepository();
-
-    public void login(LoginReqDto loginReqDto, HttpServletRequest request, HttpServletResponse response) {
-        UsernamePasswordAuthenticationToken unauthenticatedToken = new UsernamePasswordAuthenticationToken(
-                loginReqDto.getUserId(),
-                loginReqDto.getPassword()
-        );
-        Authentication authentication = authenticationManager.authenticate(unauthenticatedToken);
-
-        SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-        context.setAuthentication(authentication);
-        this.securityContextHolderStrategy.setContext(context);
-        this.securityContextRepository.saveContext(context, request, response);
-        this.rememberMeServices.loginSuccess(request, response, authentication);
-    }
 
     /**
      * 회원가입 Service
@@ -76,7 +60,7 @@ public class AuthorityService {
                 .build();
     }
 
-    public String authenticate(Map<String, Object> param) throws Exception {
+    public String authenticate(Map<String, Object> param) {
         WebClient webClient = WebClient.builder().baseUrl("https://nid.naver.com/oauth2.0/authorize").build();
         String response = webClient.get()
                 .uri(uriBuilder -> uriBuilder

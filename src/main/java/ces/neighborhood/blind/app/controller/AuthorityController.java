@@ -87,13 +87,4 @@ public class AuthorityController {
         return "redirect:" + uriBuilder.toUriString();
     }
 
-    /**
-     * OAuth2 커스텀 redirect uri
-     */
-    @GetMapping("/oauth/redirect")
-    public String oAuth2Redirect(@RequestParam Map<String, Object> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        authorityService.authenticate(param);
-        return null;
-    }
-
 }

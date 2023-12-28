@@ -9,7 +9,6 @@ axios.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-
 /*ID 유효성 검사*/
 function validateId(id) {
     // 이메일 형식 확인
@@ -26,4 +25,14 @@ function validatePassword (password) {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,16}$/;
     return passwordRegex.test(password);
 }
+
+const ComUtils = {
+    nullCheck: function(value) {
+        if (value === null || value === '') {
+            return true;
+        }
+        return false;
+    }
+}
+
 
