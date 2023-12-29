@@ -1,9 +1,7 @@
 package ces.neighborhood.blind.app.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
-import ces.neighborhood.blind.app.entity.MbrBoard;
+import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.service.BoardService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +24,20 @@ public class BoardController {
 
     @RequestMapping("/board")
     public String board(Model model, HttpServletRequest request, HttpServletResponse response) {
+        boardService.getBoardList(model);
         return "/board/board";
     }
 
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @RequestMapping("/write")
     public String write(Model model) {
-        model.addAttribute("mbrBoard", new MbrBoard());
+        model.addAttribute("mbrBoard");
         return "/board/write";
     }
 
     @ResponseBody
     @PostMapping("/board/post")
-    public ResponseEntity post(@RequestBody MbrBoard mbrBoard) {
-        return ApiResponse.success(boardService.saveMbrBoard(mbrBoard));
+    public ResponseEntity post(@RequestBody Board board) {
+        return ApiResponse.success(boardService.saveMbrBoard(board));
     }
 }

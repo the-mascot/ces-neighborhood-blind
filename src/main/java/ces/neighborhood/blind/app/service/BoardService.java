@@ -1,11 +1,10 @@
 package ces.neighborhood.blind.app.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
-import ces.neighborhood.blind.app.entity.MbrBoard;
-import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.repository.BoardRepository;
-import ces.neighborhood.blind.app.repository.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -15,11 +14,12 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public List<MbrBoard> getBoardList(String boardType) {
-        return boardRepository.findByBoardType(boardType);
+    public List<Board> getBoardList(Model model) {
+        String boardType = String.valueOf(model.getAttribute("boardType"));
+        return boardRepository.findByBoardType();
     }
 
-    public long saveMbrBoard(MbrBoard mbrBoard) {
-        return boardRepository.save(mbrBoard).getBoardNo();
+    public long saveMbrBoard(Board board) {
+        return boardRepository.save(board).getBoardNo();
     }
 }

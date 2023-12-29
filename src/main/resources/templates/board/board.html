@@ -3,9 +3,21 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <div layout:fragment="content">
-    <div class="wrap">
-        <div class="content-center mt-30 mb-30">
-            <button onclick="goWrite()">글쓰기</button>
+    <div class="wrap content-center">
+        <div class="content-column">
+            <div class="post-lnb-wrap">
+                <p>title</p>
+            </div>
+            <div class="content-left mt-30 mb-30">
+                <div class="post-layout">
+                    <h5>제목</h5>
+                    <p>안녕하세요</p>
+                </div>
+                <div class="post-layout">
+                    <h5>제목2</h5>
+                    <p>안녕</p>
+                </div>
+            </div>
         </div>
     </div>
 

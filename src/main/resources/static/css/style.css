@@ -28,6 +28,10 @@ body {
     box-sizing: border-box;
 }
 
+.content-left {
+    display: flex;
+}
+
 .content-between {
     display: flex;
     justify-content: space-between;
@@ -41,6 +45,11 @@ body {
 .content-right {
     display: flex;
     justify-content: right;
+}
+
+.content-column {
+    display: flex;
+    flex-direction: column;
 }
 
 .mt-10 {
@@ -225,3 +234,16 @@ body {
 }
 
 /* ---/login--- */
+
+/*board-list*/
+
+.post-layout {
+    width: 550px;
+    height: 220px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.post-lnb-wrap {
+    justify-content: initial;
+}

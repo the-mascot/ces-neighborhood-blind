@@ -1,14 +1,12 @@
 package ces.neighborhood.blind.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import ces.neighborhood.blind.app.entity.MbrBoard;
-import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.Board;
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<MbrBoard, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    List<MbrBoard> findByBoardType(String boardType);
+    List<Board> findByBoardType(String boardType);
 
 }
