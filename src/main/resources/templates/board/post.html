@@ -4,15 +4,9 @@
       layout:decorate="~{layout}">
 
 <div layout:fragment="content">
-    <div class="wrap">
-        <form id="boardForm">
-            <input type="text" name="title">타이틀
-            <input type="text" name="content">컨텐츠
-        </form>
-        <button onclick="post()">등록</button>
-        <div id="result">
-
-        </div>
+    <h2 th:text="${board.title}"></h2>
+    <p th:text="${board.content}"></p>
+    <div id="result">
     </div>
 </div>
 

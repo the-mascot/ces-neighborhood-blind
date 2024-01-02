@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,8 +28,6 @@ public class Board extends BaseEntity {
 
     private String boardType;
 
-    private String mbrId;
-
     private String title;
 
     private String content;
@@ -36,5 +36,8 @@ public class Board extends BaseEntity {
 
     private Integer likeCnt;
 
+    @ManyToOne
+    @JoinColumn(name = "mbr_Id")
+    private MbrInfo mbrInfo;
 
 }

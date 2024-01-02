@@ -5,12 +5,16 @@ import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @MappedSuperclass
 @Getter
+@Setter
+@ToString
 public abstract class BaseEntity {
 
     // 마지막수정자
@@ -21,12 +25,12 @@ public abstract class BaseEntity {
 
     // 마지막수정일자
     @UpdateTimestamp
-    @Column(updatable = false)
+    @Column(insertable = false)
     private Timestamp modifyDate;
 
     // 최초생성일자
     @CreationTimestamp
-    @Column(insertable = false)
+    @Column(updatable = false)
     private Timestamp createDate;
 
 }

@@ -9,7 +9,7 @@
 
     <Loggers>
         <!-- Root log level 설정. application.yml에서 logging.root를 설정하면 여기보다 우선 순위로 적용된다.-->
-        <Root level="INFO">
+        <Root level="TRACE">
             <AppenderRef ref="CONSOLE"/>
         </Root>
     </Loggers>

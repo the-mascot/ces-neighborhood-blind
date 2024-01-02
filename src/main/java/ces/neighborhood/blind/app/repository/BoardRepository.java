@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    List<Board> findByBoardType(String boardType);
+    List<Board> findAllByBoardTypeOrderByCreateDate(String boardType);
 
 }

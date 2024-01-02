@@ -48,6 +48,12 @@ spring:
         show_sql: true  # JPA 출력시 쿼리 출력
         jdbc:
           time_zone: UTC
+    show-sql: true
 
 logging:
   config: classpath:log4j2.xml
+  level:
+    org:
+      hibernate:
+        jdbc:
+          bind: trace

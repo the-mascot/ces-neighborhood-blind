@@ -8,19 +8,15 @@
             <div class="post-lnb-wrap">
                 <p>title</p>
             </div>
-            <div class="content-left mt-30 mb-30">
+            <button onclick="goWrite()">글쓰기</button>
+            <div id="wrap" th:each="board, index : ${boardList}" class="content-left">
                 <div class="post-layout">
-                    <h5>제목</h5>
-                    <p>안녕하세요</p>
-                </div>
-                <div class="post-layout">
-                    <h5>제목2</h5>
-                    <p>안녕</p>
+                    <h5 th:text="${board.title}"></h5>
+                    <p th:text="${board.content}"></p>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <th:block layout:fragment="script">

@@ -28,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class MbrInfo implements UserDetails {
 
     @Id
+    @Column(name = "mbr_id")
     // 회원 ID (이메일 형식)
     private String mbrId;
 

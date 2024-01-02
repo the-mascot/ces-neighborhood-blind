@@ -14,6 +14,7 @@ import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -24,7 +25,7 @@ public class BoardController {
 
     @RequestMapping("/board")
     public String board(Model model, HttpServletRequest request, HttpServletResponse response) {
-        boardService.getBoardList(model);
+        model.addAttribute("boardList", boardService.getBoardList(model));
         return "/board/board";
     }
 
@@ -35,9 +36,11 @@ public class BoardController {
         return "/board/write";
     }
 
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
     @ResponseBody
     @PostMapping("/board/post")
-    public ResponseEntity post(@RequestBody Board board) {
-        return ApiResponse.success(boardService.saveMbrBoard(board));
+    public ResponseEntity post(@RequestBody Board board, Principal principal) {
+        board.setCreateUser(principal.getName());
+        return ApiResponse.success(boardService.saveMbrBoard(board, principal));
     }
 }
