@@ -55,6 +55,8 @@ public class MbrInfo implements UserDetails {
 
     private Timestamp withdrawDate;
 
+    private Integer loginFailCnt;
+
     @UpdateTimestamp
     @Column(insertable = false)
     private Timestamp modifyDate;

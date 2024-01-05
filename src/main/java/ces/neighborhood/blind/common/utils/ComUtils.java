@@ -1,10 +1,18 @@
 package ces.neighborhood.blind.common.utils;
 
+import ces.neighborhood.blind.app.entity.Board;
+import ces.neighborhood.blind.common.code.Constant;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +22,8 @@ public class ComUtils {
 
     /**
      * Object to Json String Converter
-     * @param map, clazz
-     * @return Object
+     * @param o
+     * @return JSON String
      */
     public static String convertObjectToJson(Object o) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -55,6 +63,30 @@ public class ComUtils {
             return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             return null;
+        }
+    }
+
+    /**
+     * 현재시간과 timestamp의 시간 차이 계산
+     * @param timestamp
+     * @return 시간차이 ex) 1분, 1시간, 1일
+     */
+    public static String calculateTimeDifference(Timestamp timestamp) {
+        if (timestamp == null) return null;
+        Instant instant = timestamp.toInstant();
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of(TimeZone.getDefault().getID()));
+
+        LocalDateTime now = LocalDateTime.now();
+        long minutes = ChronoUnit.MINUTES.between(dateTime, now);
+        long hours = ChronoUnit.HOURS.between(dateTime, now);
+        long days = ChronoUnit.DAYS.between(dateTime, now);
+
+        if (minutes < 60) {
+            return minutes + Constant.MINUTES_KO;
+        } else if (hours < 24) {
+            return hours + Constant.HOURS_KO;
+        } else {
+            return days + Constant.DAYS_KO;
         }
     }
 }

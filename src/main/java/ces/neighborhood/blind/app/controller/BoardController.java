@@ -4,16 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.service.BoardService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 
@@ -23,24 +22,41 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @RequestMapping("/board")
-    public String board(Model model, HttpServletRequest request, HttpServletResponse response) {
+    /**
+     * 게시판 목록 페이지
+     */
+    @GetMapping("/board")
+    public String board(Model model) {
         model.addAttribute("boardList", boardService.getBoardList(model));
         return "/board/board";
     }
 
+    /**
+     * 게시글 작성 페이지
+     */
     @PreAuthorize("hasRole('ROLE_MEMBER')")
-    @RequestMapping("/write")
+    @GetMapping("/board/write")
     public String write(Model model) {
         model.addAttribute("mbrBoard");
         return "/board/write";
     }
 
+    /**
+     * 게시글 상세 페이지
+     */
+    @GetMapping("/board/posts/{postNo}")
+    public String posts(Model model, @PathVariable Long postNo) {
+        model.addAttribute("board", boardService.getPost(postNo));
+        return "/board/posts";
+    }
+
+    /**
+     * 게시글 등록
+     */
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @ResponseBody
-    @PostMapping("/board/post")
+    @PostMapping("/board/write/post")
     public ResponseEntity post(@RequestBody Board board, Principal principal) {
-        board.setCreateUser(principal.getName());
         return ApiResponse.success(boardService.saveMbrBoard(board, principal));
     }
 }

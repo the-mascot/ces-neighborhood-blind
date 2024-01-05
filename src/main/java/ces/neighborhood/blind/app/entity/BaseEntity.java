@@ -20,17 +20,17 @@ public abstract class BaseEntity {
     // 마지막수정자
     private String modifyUser;
 
-    // 최초생성자
-    private String createUser;
-
     // 마지막수정일자
     @UpdateTimestamp
     @Column(insertable = false)
-    private Timestamp modifyDate;
+    protected Timestamp modifyDate;
+
+    // 최초생성자
+    private String createUser;
 
     // 최초생성일자
     @CreationTimestamp
     @Column(updatable = false)
-    private Timestamp createDate;
+    protected Timestamp createDate;
 
 }

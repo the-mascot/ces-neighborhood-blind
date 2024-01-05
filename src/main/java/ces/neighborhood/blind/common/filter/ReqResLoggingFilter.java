@@ -46,6 +46,7 @@ public class ReqResLoggingFilter implements Filter {
             if (!StringUtils.equals(requestToCache.getMethod(), HttpMethod.GET.toString())) {
                 log.info("[ReqResLoggingFilter] body: {}", this.getBody((ContentCachingRequestWrapper) requestToCache));
             }
+            chain.doFilter(request, response);
         } else {
             chain.doFilter(request, response);
         }

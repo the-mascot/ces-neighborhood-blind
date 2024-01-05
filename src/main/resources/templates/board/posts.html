@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-
 <div layout:fragment="content">
-    <h2 th:text="${board.title}"></h2>
-    <p th:text="${board.content}"></p>
-    <div id="result">
+    <div class="wrap">
+        <h2 th:text="${board.title}"></h2>
+        <p th:text="${board.content}"></p>
+        <p th:text="${board.postNo}"></p>
+        <div id="result">
+        </div>
     </div>
 </div>
 

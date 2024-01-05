@@ -8,10 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BasicTest {
 
-    public BasicTest() throws Exception {
-        this.toStringTest();
-    }
-
     @Test
     public void toStringTest() throws Exception {
         String response = "{\"access_token\":\"1234\"}";

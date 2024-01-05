@@ -75,7 +75,6 @@ body {
 .mb-30 {
     margin-bottom: 30px;
 }
-
 /*---common---*/
 
 /*gnb*/
@@ -235,15 +234,76 @@ body {
 
 /* ---/login--- */
 
-/*board-list*/
+/* /board */
+.board-layout-wrap {
+    max-width: 1100px;
+}
 
-.post-layout {
+.board-layout {
     width: 550px;
     height: 220px;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
+    padding: 10px;
 }
 
-.post-lnb-wrap {
+.right-border {
+    border-right: 1px solid #eee;
+}
+
+.board-lnb-wrap {
     justify-content: initial;
 }
+
+.board-category {
+    font-family: "Noto Sans KR Medium";
+    font-size: 13px;
+}
+
+.board-content-wrap {
+}
+
+.board-title {
+    height: 52px;
+}
+
+.board-title a {
+    font-family: "Noto Sans KR SemiBold";
+    text-decoration: none;
+    color: black;
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 18px;
+}
+
+.board-content {
+    height: 43px;
+    max-height: 43px;
+}
+
+.board-content a {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 43px;
+    font-family: "Noto Sans KR";
+    font-size: 14px;
+    text-decoration: none;
+    color: black;
+}
+
+.board-icon-wrap {
+    font-family: "Noto Sans KR Light";
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    margin-right: 14px;
+}
+
+
+/* ---/board--- */

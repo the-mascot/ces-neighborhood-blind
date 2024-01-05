@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ApiResponse<T> {
 
     private final String code;
