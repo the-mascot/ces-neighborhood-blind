@@ -14,22 +14,37 @@
                     <span class="board-category">썸 연애</span>
                     <div class="board-content-wrap">
                         <h3 class="board-title">
-                            <a th:href="${boardList[stat.index].url}" th:text="${boardList[stat.index].title}"></a>
+                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" th:text="${boardList[stat.index].title}" ></a>
                         </h3>
                         <p class="board-content">
-                            <a th:href="@{/}" th:text="${boardList[stat.index].content}"></a>
+                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" th:text="${boardList[stat.index].content}"></a>
                         </p>
                     </div>
-                    <div class="content-left">
-                        <a th:href="@{/}" class="content-center board-icon-wrap">
-                            <img th:src="@{../static/assets/icon/eye.svg}" th:text="${boardList[stat.index].viewCnt} " class="pe-1 board-icon">
+                    <div>
+                        <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="board-sub-wrap">
+                            <p th:text="${boardList[stat.index].nickName}" class="mb-1"></p>
                         </a>
-                        <a th:href="@{/}" class="content-center board-icon-wrap">
-                            <img th:src="@{../../static/assets/icon/recommend.svg}" th:text="${boardList[stat.index].likeCnt == 0 ? '좋아요' : boardList[stat.index].likeCnt}" class="pe-1 board-icon">
-                        </a>
-                        <a th:href="@{/}" class="content-center board-icon-wrap">
-                            <img th:src="@{../../static/assets/icon/chat.svg}" th:text="${boardList[stat.index].commCnt}" class="pe-1 board-icon">
-                        </a>
+                    </div>
+                    <div class="content-between">
+                        <div class="content-left">
+                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
+                                <img th:src="@{/static/assets/icon/eye.svg}" th:text="${boardList[stat.index].viewCnt} " class="pe-1">
+                            </a>
+                            <a th:href="@{/}" class="content-center board-icon-wrap">
+                                <img th:src="@{/static/assets/icon/recommend.svg}" th:text="${boardList[stat.index].likeCnt == 0 ? '좋아요' : boardList[stat.index].likeCnt}" class="pe-1 board-icon">
+                            </a>
+                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
+                                <img th:src="@{/static/assets/icon/chat.svg}" th:text="${boardList[stat.index].commCnt}" class="pe-1">
+                            </a>
+                        </div>
+                        <div class="content-center">
+                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
+                                <p th:text="${boardList[stat.index].createDateStr}"></p>
+                            </a>
+                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
+                                <img th:src="@{/static/assets/icon/chat.svg}" th:text="${boardList[stat.index].commCnt}" class="pe-1">
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="board-layout" th:if="${!stat.last}">
@@ -46,6 +61,10 @@
     <script type="text/javascript">
         function goWrite() {
             window.location.href = '/board/write';
+        }
+
+        function goPosts(postNo) {
+            window.location.href = '/board/posts/' + postNo;
         }
     </script>
 </th:block>

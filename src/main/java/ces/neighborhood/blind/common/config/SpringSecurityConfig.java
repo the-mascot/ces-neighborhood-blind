@@ -49,7 +49,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/login", "/auth/login", "/logout",
-                                "/join", "/auth/join", "/static/**", "/board/**"
+                                "/join", "/auth/join", "/static/**", "/board/**", "/board/posts/**"
                         ).permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )

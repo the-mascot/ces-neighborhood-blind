@@ -17,20 +17,20 @@
                         <form method="post" th:action="@{/auth/login}" id="loginForm" class="login-form mt-30">
                             <div class="input-group mb-30">
                                 <span class="input-group-text">
-                                    <img th:src="@{../static/assets/img/id.svg}">
+                                    <img th:src="@{/static/assets/img/id.svg}">
                                 </span>
                                 <input type="text" id="username" name="username" placeholder="아이디 ex) xxx@neighborhood.com" class="form-control" maxlength="30" autocomplete="off">
                                 <span id="resetId" class="input-group-text">
-                                    <img th:src="@{../../static/assets/icon/x-circle.svg}">
+                                    <img th:src="@{/static/assets/icon/x-circle.svg}">
                                 </span>
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <img th:src="@{../../static/assets/icon/password.svg}">
+                                    <img th:src="@{/static/assets/icon/password.svg}">
                                 </span>
                                 <input type="password" id="password" name="password" placeholder="비밀번호" autocomplete="off" class="form-control" maxlength="16">
                                 <span id="resetPassword" class="input-group-text">
-                                    <img th:src="@{../../static/assets/icon/x-circle.svg}">
+                                    <img th:src="@{/static/assets/icon/x-circle.svg}">
                                 </span>
                             </div>
                         </form>
@@ -47,13 +47,13 @@
                         </div>
                         <div>
                             <button class="naver-login-btn mb-10" onclick="loginWithNaver()">
-                                <img class="naver-logo" th:src="@{../static/assets/img/naver_logo.png}">
+                                <img class="naver-logo" th:src="@{/static/assets/img/naver_logo.png}">
                                 <span class="naver-login-text">네이버 로그인</span>
                             </button>
                         </div>
                         <div>
                             <button class="google-login-btn mb-30" onclick="loginWithGoogle()">
-                                <img class="naver-logo" th:src="@{../static/assets/img/google_logo.png}">
+                                <img class="naver-logo" th:src="@{/static/assets/img/google_logo.png}">
                                 <span class="google-login-text">구글로 로그인</span>
                             </button>
                         </div>

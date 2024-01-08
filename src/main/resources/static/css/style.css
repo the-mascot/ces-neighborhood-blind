@@ -301,9 +301,16 @@ body {
     font-family: "Noto Sans KR Light";
     text-decoration: none;
     color: black;
-    font-size: 14px;
+    font-size: 13px;
     margin-right: 14px;
+    align-items: center;
 }
 
+.board-sub-wrap {
+    font-family: "Noto Sans KR Light";
+    text-decoration: none;
+    color: black;
+    font-size: 13px;
+}
 
 /* ---/board--- */
