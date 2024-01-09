@@ -1,5 +1,5 @@
 axios.interceptors.request.use(function (config) {
-    if (['posts.html', 'put', 'patch', 'delete'].includes(config.method.toLocaleLowerCase())) {
+    if (['post', 'put', 'patch', 'delete'].includes(config.method.toLocaleLowerCase())) {
         const csrfToken = document.head.querySelector('meta[name="_csrf"]').content;
         const csrfHeader = document.head.querySelector('meta[name="_csrf_header"]').content;
         config.headers[csrfHeader] = csrfToken;

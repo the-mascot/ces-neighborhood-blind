@@ -26,6 +26,7 @@ body {
     height: 100%;
     margin: 0 auto;
     box-sizing: border-box;
+    padding: 20px 20px 0;
 }
 
 .content-left {
@@ -56,6 +57,10 @@ body {
     margin-top: 10px;
 }
 
+.mt-14 {
+    margin-top: 14px;
+}
+
 .mt-20 {
     margin-top: 20px;
 }
@@ -68,6 +73,10 @@ body {
     margin-bottom: 10px;
 }
 
+.mb-14 {
+    margin-bottom: 14px;
+}
+
 .mb-20 {
     margin-bottom: 20px;
 }
@@ -75,6 +84,27 @@ body {
 .mb-30 {
     margin-bottom: 30px;
 }
+
+.mr-14 {
+    margin-right: 14px;
+}
+
+.ml-14 {
+    margin-left: 14px;
+}
+
+.f-m {
+    font-family: "Noto Sans KR Medium";
+}
+
+.f-l {
+    font-family: "Noto Sans KR Light";
+}
+
+.f-14 {
+    font-size: 14px;
+}
+
 /*---common---*/
 
 /*gnb*/
@@ -207,7 +237,7 @@ body {
 .naver-logo {
     margin-left: 20%;
 }
-/*추가부분*/
+
 .naver-login-text {
     margin-left: 30px;
     font-family: "Noto Sans KR ExtraBold";
@@ -231,7 +261,6 @@ body {
     font-size: 20px;
     color: white;
 }
-
 /* ---/login--- */
 
 /* /board */
@@ -313,4 +342,86 @@ body {
     font-size: 13px;
 }
 
+.view-cnt-span::before {
+    content: url("/static/assets/icon/eye.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 10px 1px 0;
+    vertical-align: middle;
+}
+
+.like-cnt-span::before {
+    content: url("/static/assets/icon/like.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 10px 1px 0;
+    vertical-align: middle;
+}
+
+.comm-cnt-span::before {
+    content: url("/static/assets/icon/chat.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 10px 1px 0;
+    vertical-align: middle;
+}
+
+.book-mark-span {
+    content: url("/static/assets/icon/bookmark.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 10px 1px 0;
+    vertical-align: middle;
+}
+
 /* ---/board--- */
+
+/* /posts */
+.breadcrumb {
+    font-family: "Noto Sans KR Medium";
+    font-size: 14px;
+    text-decoration: none;
+    color: black;
+}
+
+.post-title {
+    font-family: "Noto Sans KR SemiBold";
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.post-main {
+    width: 736px;
+    min-height: 800px;
+}
+
+.post-aside {
+    width: 300px;
+    margin-left: 64px;
+    font-family: "Noto Sans KR Medium";
+}
+
+.post-aside h1 {
+    font-size: 16px;
+    font-family: "Noto Sans KR SemiBold";
+}
+
+.recommend-list {
+    padding: 22px 23px;
+    border: 1px solid #eee;
+}
+
+.clock-span::before {
+    content: url("/static/assets/icon/clock.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 10px 1px 0;
+    vertical-align: middle;
+}
+
+.

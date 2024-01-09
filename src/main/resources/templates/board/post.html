@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<div layout:fragment="content">
+    <div class="wrap content-left">
+        <div class="post-main">
+            <a th:href="@{/board}" class="breadcrumb">게시판</a>
+            <h2 class="post-title" th:text="${board.title}"></h2>
+            <div class="post-name">
+                <p th:text="${board.mbrInfo.mbrNm}" class="f-l f-14"></p>
+            </div>
+            <div class="f-l f-14">
+                <span class="clock-span mr-14" th:text="${board.createDateStr}"></span>
+                <span class="view-cnt-span" th:text="${board.viewCnt}"></span>
+            </div>
+            <p th:text="${board.content}"></p>
+            <p th:text="${board.postNo}"></p>
+        </div>
+        <aside class="post-aside">
+            <div class="recommend-list">
+                <h1>추천 글</h1>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script>
+    </script>
+</th:block>
+</html>

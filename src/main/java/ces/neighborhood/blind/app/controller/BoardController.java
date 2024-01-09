@@ -44,10 +44,10 @@ public class BoardController {
     /**
      * 게시글 상세 페이지
      */
-    @GetMapping("/board/posts/{postNo}")
+    @GetMapping("/board/post/{postNo}")
     public String posts(Model model, @PathVariable Long postNo) {
         model.addAttribute("board", boardService.getPost(postNo));
-        return "/board/posts";
+        return "/board/post";
     }
 
     /**

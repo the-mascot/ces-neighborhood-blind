@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import ces.neighborhood.blind.app.dto.BoardListDto;
+import ces.neighborhood.blind.app.dto.BoardDto;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import java.util.List;
 
@@ -26,11 +26,10 @@ public class JpaTest {
 
     @Test
     public void convertDate() {
-        List<BoardListDto> boardListDto = boardRepository.getBoardList();
-        boardListDto.forEach(s -> {
+        List<BoardDto> boardDto = boardRepository.getBoardList();
+        boardDto.forEach(s -> {
             System.out.println("title : " + s.getTitle());
             System.out.println("content : " + s.getContent());
-            System.out.println("nickname : " + s.getMbrNm());
         });
     }
 

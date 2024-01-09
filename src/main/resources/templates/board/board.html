@@ -14,35 +14,35 @@
                     <span class="board-category">썸 연애</span>
                     <div class="board-content-wrap">
                         <h3 class="board-title">
-                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" th:text="${boardList[stat.index].title}" ></a>
+                            <a th:href="${boardList[stat.index].postUrl}" th:text="${boardList[stat.index].title}" ></a>
                         </h3>
                         <p class="board-content">
-                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" th:text="${boardList[stat.index].content}"></a>
+                            <a th:href="${boardList[stat.index].postUrl}" th:text="${boardList[stat.index].content}"></a>
                         </p>
                     </div>
                     <div>
-                        <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="board-sub-wrap">
+                        <a th:href="${boardList[stat.index].postUrl}" class="board-sub-wrap">
                             <p th:text="${boardList[stat.index].nickName}" class="mb-1"></p>
                         </a>
                     </div>
                     <div class="content-between">
                         <div class="content-left">
-                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
-                                <img th:src="@{/static/assets/icon/eye.svg}" th:text="${boardList[stat.index].viewCnt} " class="pe-1">
+                            <a th:href="${boardList[stat.index].postUrl}" class="content-center board-icon-wrap">
+                                <span th:text="${boardList[stat.index].viewCnt} " class="view-cnt-span"></span>
                             </a>
                             <a th:href="@{/}" class="content-center board-icon-wrap">
-                                <img th:src="@{/static/assets/icon/recommend.svg}" th:text="${boardList[stat.index].likeCnt == 0 ? '좋아요' : boardList[stat.index].likeCnt}" class="pe-1 board-icon">
+                                <span th:text="${boardList[stat.index].likeCnt == 0 ? '좋아요' : boardList[stat.index].likeCnt}" class="like-cnt-span"></span>
                             </a>
-                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
-                                <img th:src="@{/static/assets/icon/chat.svg}" th:text="${boardList[stat.index].commCnt}" class="pe-1">
+                            <a th:href="${boardList[stat.index].postUrl}" class="content-center board-icon-wrap">
+                                <span th:text="${boardList[stat.index].commCnt}" class="comm-cnt-span"></span>
                             </a>
                         </div>
                         <div class="content-center">
-                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
-                                <p th:text="${boardList[stat.index].createDateStr}"></p>
+                            <a th:href="${boardList[stat.index].postUrl}" class="board-icon-wrap">
+                                <span th:text="${boardList[stat.index].createDateStr}" class="mb-0"></span>
                             </a>
-                            <a th:href="@{/board/posts/{postNo}(postNo=${boardList[stat.index].postNo})}" class="content-center board-icon-wrap">
-                                <img th:src="@{/static/assets/icon/chat.svg}" th:text="${boardList[stat.index].commCnt}" class="pe-1">
+                            <a th:href="${boardList[stat.index].postUrl}" class="content-center board-icon-wrap">
+                                <span th:text="${boardList[stat.index].commCnt}" class="book-mark-span">
                             </a>
                         </div>
                     </div>
