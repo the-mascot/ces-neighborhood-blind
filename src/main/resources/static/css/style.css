@@ -93,6 +93,14 @@ body {
     margin-left: 14px;
 }
 
+.p-24 {
+    padding: 24px;
+}
+
+.f-b {
+    font-family: "Noto Sans KR Black";
+}
+
 .f-m {
     font-family: "Noto Sans KR Medium";
 }
@@ -103,6 +111,10 @@ body {
 
 .f-14 {
     font-size: 14px;
+}
+
+.f-16 {
+    font-size: 16px;
 }
 
 /*---common---*/
@@ -399,6 +411,18 @@ body {
     min-height: 800px;
 }
 
+.post-main-title-wrap {
+    padding: 0 0 29px;
+}
+
+.post-name {
+    margin-top: 14px;
+}
+
+.post-main-content {
+    border-top: 1px solid #eee;
+}
+
 .post-aside {
     width: 300px;
     margin-left: 64px;
@@ -424,4 +448,62 @@ body {
     vertical-align: middle;
 }
 
-.
+.three-dot-span::before {
+    content: url("/static/assets/icon/three-dots.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 10px 1px 0;
+    vertical-align: middle;
+}
+/* ---/post--- */
+
+/* /write */
+.write-wrap {
+    width: 750px;
+    display: grid;
+    place-items: center;
+}
+
+.write-title-wrap {
+    width: 560px;
+    min-height: 79px;
+    border-bottom: 1px solid #f6f7fa;
+}
+
+.write-content-wrap {
+    width: 560px;
+}
+
+.write-title {
+    width: 100%;
+    height: 75px;
+    font-size: 20px;
+    line-height: 1.25em;
+    padding: 26px 60px 24px 0;
+}
+
+.write-content {
+    width: 100%;
+    resize: none;
+    height: 260px;
+}
+
+.btn-ok {
+    width: 100%;
+    height: 48px;
+    margin: 0 6px;
+    background-color: #222;
+    font-size: 16px;
+    font-weight: normal;
+    color: #fff;
+}
+
+.modal-msg-wrap {
+    padding: 16px 0 30px;
+}
+
+.alert-modal {
+    width: 360px !important;
+    height: 160px !important;
+}

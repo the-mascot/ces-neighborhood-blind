@@ -37,7 +37,7 @@ public class BoardService {
         return boardRepository.save(board).getPostNo();
     }
 
-    public Board getPost(Long postNo) {
-        return boardRepository.findById(postNo).get();
+    public BoardDto getPost(Long postNo) {
+        return boardRepository.getBoard(postNo).get();
     }
 }

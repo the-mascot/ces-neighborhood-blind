@@ -17,8 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Builder
@@ -55,7 +53,7 @@ public class Board extends BaseEntity {
     private List<Comment> comment;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Recomment> Reply;
+    private List<Reply> Reply;
 
     public String getCreateDateStr() {
         return ComUtils.calculateTimeDifference(createDate);

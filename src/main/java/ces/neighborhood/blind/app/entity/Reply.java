@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Recomment extends BaseEntity {
+public class Reply extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMM_NO_SEQ")
     @SequenceGenerator(name = "COMM_NO_SEQ", sequenceName = "COMM_NO_SEQ", allocationSize = 50)
-    private Long commNo;
+    private Long replyNo;
 
     private String content;
 
@@ -39,6 +39,11 @@ public class Recomment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "mbr_id")
     private MbrInfo mbrInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "comment_no")
+    private Comment comment;
+
 
     @ManyToOne
     @JoinColumn(name = "post_no")

@@ -5,17 +5,28 @@
 <div layout:fragment="content">
     <div class="wrap content-left">
         <div class="post-main">
-            <a th:href="@{/board}" class="breadcrumb">게시판</a>
-            <h2 class="post-title" th:text="${board.title}"></h2>
-            <div class="post-name">
-                <p th:text="${board.mbrInfo.mbrNm}" class="f-l f-14"></p>
+            <div class="post-main-title-wrap">
+                <a th:href="@{/board}" class="breadcrumb">게시판</a>
+                <h2 class="post-title" th:text="${board.title}"></h2>
+                <div class="post-name">
+                    <p th:text="${board.nickName}" class="f-m f-14 mb-0"></p>
+                </div>
+                <div class="content-between f-l f-14 mt-14">
+                    <div>
+                        <span class="clock-span mr-14" th:text="${board.createDateStr}"></span>
+                        <span class="view-cnt-span mr-14" th:text="${board.viewCnt}"></span>
+                        <span class="comm-cnt-span mr-14" th:text="${board.commCnt}"></span>
+                    </div>
+                    <div>
+                        <span id="bookMark" class="book-mark-span"></span>
+                        <span id="more" class="three-dot-span"></span>
+                    </div>
+                </div>
             </div>
-            <div class="f-l f-14">
-                <span class="clock-span mr-14" th:text="${board.createDateStr}"></span>
-                <span class="view-cnt-span" th:text="${board.viewCnt}"></span>
+            <div class="post-main-content">
+                <p class="mt-30" th:text="${board.content}"></p>
+                <p th:text="${board.postNo}"></p>
             </div>
-            <p th:text="${board.content}"></p>
-            <p th:text="${board.postNo}"></p>
         </div>
         <aside class="post-aside">
             <div class="recommend-list">
@@ -27,6 +38,13 @@
 
 <th:block layout:fragment="script">
     <script>
+        document.getElementById('bookMark').addEventListener('click', function () {
+
+        });
+
+        document.getElementById('more').addEventListener('click', function () {
+
+        });
     </script>
 </th:block>
 </html>

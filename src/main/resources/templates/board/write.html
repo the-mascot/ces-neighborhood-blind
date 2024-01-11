@@ -4,19 +4,62 @@
       layout:decorate="~{layout}">
 
 <div layout:fragment="content">
-    <div class="wrap">
+    <div class="wrap content-center">
         <form id="boardForm">
-            <input type="text" name="title">타이틀
-            <input type="text" name="content">컨텐츠
+        <div class="write-wrap">
+            <div class="write-title-wrap">
+                <input class="form-control write-title f-m" type="text" id="title" name="title">
+            </div>
+            <div class="write-title-wrap">
+                <textarea class="form-control write-content" id="content" name="content" ></textarea>
+            </div>
+            <button onclick="post()">등록</button>
+            <div id="result">
+            </div>
+        </div>
         </form>
-        <button onclick="post()">등록</button>
-        <div id="result">
+    </div>
+
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content alert-modal">
+                <div class="modal-body p-24">
+                    <div class="modal-msg-wrap content-center">
+                        <p class="f-m f-16" id="alertMsg"></p>
+                    </div>
+                    <div class="btn-wrap content-center">
+                        <button id="closeModal" class="btn-ok f-m">확인</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <th:block layout:fragment="script">
     <script>
+        document.getElementById('closeModal').addEventListener('click', function() {
+            let modal = bootstrap.Modal.getInstance('#alertModal');
+            modal.hide();
+        });
+
+        document.getElementById('openModal').addEventListener('click', function() {
+            document.getElementById('alertMsg').innerText = '제목은 최대 100자까지 입력할 수 있습니다.';
+            const modal = new bootstrap.Modal('#alertModal');
+            modal.show();
+        });
+
+        document.getElementById('title').addEventListener('input', function() {
+            const maxLength = 100;
+            let currentLength = this.value.length;
+            if (currentLength > maxLength) {
+                this.value = this.value.substring(0, maxLength);
+                document.getElementById('alertMsg').innerText = '제목은 최대 100자까지 입력할 수 있습니다.';
+                const modal = new bootstrap.Modal('#alertModal');
+                modal.show();
+            }
+        });
+
         function post() {
             let form = document.getElementById('boardForm');
             let formData = new FormData(form);
