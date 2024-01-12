@@ -33,7 +33,7 @@ public class BoardService {
     public long saveMbrBoard(Board board, Principal principal) {
         board.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
         board.setCreateUser(principal.getName());
-        boardRepository.count();
+        board.setDelYn(Constant.N);
         return boardRepository.save(board).getPostNo();
     }
 

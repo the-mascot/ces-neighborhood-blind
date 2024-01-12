@@ -11,6 +11,12 @@ public class Constant {
     /*NULL*/
     public static final String NULL = "NULL";
 
+    /*Y*/
+    public static final String Y = "Y";
+
+    /*N*/
+    public static final String N = "N";
+
     /*게시판 타입 ALL*/
     public static final String BOARD_TYPE_ALL = "ALL";
 

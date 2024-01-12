@@ -49,7 +49,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/login", "/auth/login", "/logout",
-                                "/join", "/auth/join", "/static/**", "/board/**", "/board/posts/**"
+                                "/join", "/auth/join", "/static/**", "/board/"
                         ).permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
@@ -58,6 +58,9 @@ public class SpringSecurityConfig {
                         .loginProcessingUrl("/auth/login")  // 로그인 처리 url
                         .successHandler(loginSuccessHandler)    // 인증성공 처리 handler
                         .failureHandler(loginFailureHandler)    // 인증실패 처리 handler
+                )
+                .exceptionHandling(handler -> handler
+                        .accessDeniedPage("/login")
                 )
                 .oauth2Login(login -> login
                         .loginPage("/login")

@@ -87,4 +87,9 @@ public class AuthorityController {
         return "redirect:" + uriBuilder.toUriString();
     }
 
+    @GetMapping("/error")
+    public String errorPage() {
+        return "/error/error";
+    }
+
 }

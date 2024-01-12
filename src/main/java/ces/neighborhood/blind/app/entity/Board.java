@@ -1,6 +1,7 @@
 package ces.neighborhood.blind.app.entity;
 
 import ces.neighborhood.blind.common.utils.ComUtils;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -57,6 +58,10 @@ public class Board extends BaseEntity {
 
     public String getCreateDateStr() {
         return ComUtils.calculateTimeDifference(createDate);
+    }
+
+    public void setDelYn(String delYn) {
+        this.delYn = delYn;
     }
 
     public void setMbrInfo(MbrInfo mbrInfo) {
