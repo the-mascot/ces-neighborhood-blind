@@ -61,4 +61,14 @@ public class BoardController {
     public ResponseEntity post(@RequestBody Board board, Principal principal) {
         return ApiResponse.success(boardService.saveMbrBoard(board, principal));
     }
+
+    /**
+     * 게시글 편집 페이지
+     */
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @GetMapping("/board/edit/post/{postNo}")
+    public String edit(Model model, Principal principal, @PathVariable long postNo) {
+        model.addAttribute("board", boardService.getPost(postNo));
+        return "/board/edit";
+    }
 }

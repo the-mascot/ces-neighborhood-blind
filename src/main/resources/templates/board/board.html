@@ -14,10 +14,10 @@
                     <span class="board-category">썸 연애</span>
                     <div class="board-content-wrap">
                         <h3 class="board-title">
-                            <a th:href="${boardList[stat.index].postUrl}" th:text="${boardList[stat.index].title}" ></a>
+                            <a th:href="${boardList[stat.index].postUrl}" th:text="${boardList[stat.index].title}"></a>
                         </h3>
                         <p class="board-content">
-                            <a th:href="${boardList[stat.index].postUrl}" th:text="${boardList[stat.index].content}"></a>
+                            <a th:href="${boardList[stat.index].postUrl}" th:utext="${boardList[stat.index].content}"></a>
                         </p>
                     </div>
                     <div>
@@ -54,7 +54,7 @@
                             <a th:href="${boardList[stat.index + 1].postUrl}" th:text="${boardList[stat.index + 1].title}" ></a>
                         </h3>
                         <p class="board-content">
-                            <a th:href="${boardList[stat.index + 1].postUrl}" th:text="${boardList[stat.index + 1].content}"></a>
+                            <a th:href="${boardList[stat.index + 1].postUrl}" th:utext="${boardList[stat.index + 1].content}"></a>
                         </p>
                     </div>
                     <div>

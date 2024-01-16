@@ -35,4 +35,29 @@ const ComUtils = {
     }
 }
 
+const Editor = {
+    create: async function (target) {
+        return await ClassicEditor
+            .create(document.querySelector(target), {
+                toolbar: {
+                    items: [
+                        'undo', 'redo',
+                        '|', 'heading',
+                        '|', 'bold', 'italic',
+                        '|', 'link', 'uploadImage', 'blockQuote',
+                        '|', 'bulletedList', 'numberedList'
+                    ],
+                },
+            })
+            .then(newEditor => {
+                newEditor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new UploadAdapter(loader)
+                }
+                return newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+}
 

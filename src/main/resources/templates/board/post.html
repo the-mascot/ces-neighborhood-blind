@@ -24,8 +24,9 @@
                 </div>
             </div>
             <div class="post-main-content">
-                <p class="mt-30" th:text="${board.content}"></p>
+                <p class="mt-30" th:utext="${board.content}"></p>
                 <p th:text="${board.postNo}"></p>
+                <a th:href="@{/board/edit/post/{postNo}(postNo=${board.postNo})}">수정</a>
             </div>
         </div>
         <aside class="post-aside">

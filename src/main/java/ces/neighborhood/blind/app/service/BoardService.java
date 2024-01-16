@@ -1,6 +1,8 @@
 package ces.neighborhood.blind.app.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -27,6 +29,9 @@ public class BoardService {
         } else {
             boardList = boardRepository.getBoardList(boardType);
         }
+        boardList.forEach(boardDto -> {
+            boardDto.setContent(Jsoup.parse(boardDto.getContent()).text());
+        });
         return boardList;
     }
 

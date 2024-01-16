@@ -49,6 +49,11 @@ dependencies {
 
 	// Apache common-text
 	implementation group: 'org.apache.commons', name: 'commons-text', version: '1.11.0'
+	// Apache common-lang3
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
+	// Jsoup
+	implementation group: 'org.jsoup', name: 'jsoup', version: '1.17.2'
+
 
 	// devtools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
