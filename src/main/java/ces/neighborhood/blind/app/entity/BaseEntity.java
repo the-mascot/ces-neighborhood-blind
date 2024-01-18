@@ -4,21 +4,27 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @MappedSuperclass
+@SuperBuilder
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 public abstract class BaseEntity {
 
     // 마지막수정자
-    private String modifyUser;
+    protected String modifyUser;
 
     // 마지막수정일자
     @UpdateTimestamp
@@ -26,7 +32,7 @@ public abstract class BaseEntity {
     protected Timestamp modifyDate;
 
     // 최초생성자
-    private String createUser;
+    protected String createUser;
 
     // 최초생성일자
     @CreationTimestamp

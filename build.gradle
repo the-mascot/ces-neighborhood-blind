@@ -32,6 +32,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.1.5'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '3.1.5'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
 
 	implementation group: 'org.eclipse.jetty', name: 'jetty-reactive-httpclient', version: '4.0.1'
 

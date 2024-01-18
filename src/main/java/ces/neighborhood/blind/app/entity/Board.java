@@ -19,6 +19,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,9 +41,11 @@ public class Board extends BaseEntity {
 
     private String delYn;
 
-    private Integer viewCnt;
+    @Builder.Default
+    private Integer viewCnt = 0;
 
-    private Integer likeCnt;
+    @Builder.Default
+    private Integer likeCnt = 0;
 
     @Transient
     private String createDateStr;

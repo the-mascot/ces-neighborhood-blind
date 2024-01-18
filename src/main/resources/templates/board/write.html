@@ -42,7 +42,27 @@
         let editor;
 
         document.addEventListener('DOMContentLoaded', function() {
-            editor = Editor.create('#editor');
+            ClassicEditor
+                .create(document.querySelector('#editor'), {
+                    toolbar: {
+                        items: [
+                            'undo', 'redo',
+                            '|', 'heading',
+                            '|', 'bold', 'italic',
+                            '|', 'link', 'uploadImage', 'blockQuote',
+                            '|', 'bulletedList', 'numberedList'
+                        ],
+                    },
+                })
+                .then(newEditor => {
+                    newEditor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                        return new UploadAdapter(loader)
+                    }
+                    editor = newEditor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         });
 
         document.getElementById('closeModal').addEventListener('click', function() {

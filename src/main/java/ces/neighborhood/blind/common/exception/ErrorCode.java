@@ -18,7 +18,9 @@ public enum ErrorCode {
     CODE_1005("1005", "아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요."),
     CODE_1100("1100", "OAuth Login - Missing attribute name in UserInfoEndpoint"),
     CODE_1101("1101", "OAuth Login - Missing attribute or email in UserInfoEndpoint"),
-    CODE_8000("8001", "Image Upload Fail."),
+    CODE_8000("8001", "업로드 이미지 파일이 없습니다."),
+    CODE_8001("8001", "지원하지않는 파일 형식입니다."),
+    CODE_8002("8002", "이미지 업로드 실패"),
 
     CODE_9999("9999", "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
     ;

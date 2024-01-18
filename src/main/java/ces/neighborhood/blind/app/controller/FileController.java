@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.service.FileService;
+import ces.neighborhood.blind.app.service.S3Service;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,12 +20,22 @@ public class FileController {
 
     private final FileService fileService;
 
+    private final S3Service s3Service;
+
     /**
      * image upload
      */
     @PostMapping("/upload/image")
-    public ResponseEntity uploadImage(@RequestBody MultipartFile image) {
-        return ApiResponse.success(fileService.uploadImage(image));
+    public ResponseEntity uploadImage(@RequestBody MultipartFile image, Principal principal) {
+        return ApiResponse.success(fileService.uploadImage(image, principal));
+    }
+
+    /**
+     * image upload to S3
+     */
+    @PostMapping("/s3/upload/image")
+    public ResponseEntity uploadImageToS3(@RequestBody MultipartFile image, Principal principal) {
+        return ApiResponse.success(s3Service.uploadFileToS3(image));
     }
 
 }

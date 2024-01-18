@@ -4,23 +4,21 @@ class UploadAdapter {
         this.loader = loader;
     }
 
-    // Starts the upload process.
     upload() {
         return this.loader.file
-            .then(file => {
-                this._sendRequest(file);
-            });
-    }
-
-    _sendRequest(file) {
-        const data = new FormData();
-        data.append( 'image', file );
-        axios.post('http://localhost:8010/upload/image', data)
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+            .then(file => new Promise((resolve, reject) => {
+                const data = new FormData();
+                data.append( 'image', file);
+                axios.post('http://localhost:8010/s3/upload/image', data)
+                    .then(response => {
+                        resolve({
+                            default: response.data.data
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        reject('Upload Failed');
+                    });
+            }));
     }
 }

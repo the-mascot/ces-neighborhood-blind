@@ -1,7 +1,5 @@
 package ces.neighborhood.blind.app.controller;
 
-import org.eclipse.jetty.client.HttpResponse;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.service.BoardService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 
