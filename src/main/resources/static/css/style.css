@@ -505,7 +505,7 @@ body {
 
 .alert-modal {
     width: 360px !important;
-    height: 160px !important;
+    min-height: 160px !important;
 }
 
 .ck-editor__editable_inline:not(.ck-comment__input *) {

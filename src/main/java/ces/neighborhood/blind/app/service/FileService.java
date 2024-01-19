@@ -35,7 +35,7 @@ public class FileService {
     private String imageUploadServer;
 
     private static final List<String>
-            ALLOWED_IMAGE_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "bmp", "webp", "heic", "heif");
+            ALLOWED_IMAGE_EXTENSIONS = Arrays.asList( "jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif");
 
     private static final String IMAGE_FOLDER_PATTERN = "yyyyMMdd";
 

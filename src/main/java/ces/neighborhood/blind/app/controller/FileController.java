@@ -35,7 +35,7 @@ public class FileController {
      */
     @PostMapping("/s3/upload/image")
     public ResponseEntity uploadImageToS3(@RequestBody MultipartFile image, Principal principal) {
-        return ApiResponse.success(s3Service.uploadFileToS3(image));
+        return ApiResponse.success(s3Service.uploadFileToS3(image, principal));
     }
 
 }
