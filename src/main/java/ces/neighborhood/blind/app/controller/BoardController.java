@@ -56,7 +56,9 @@ public class BoardController {
     @ResponseBody
     @PostMapping("/board/write/post")
     public ResponseEntity post(@RequestBody Board board, Principal principal) {
-        return ApiResponse.success(boardService.saveMbrBoard(board, principal));
+//        return ApiResponse.success(boardService.saveMbrBoard(board, principal));
+        // img Base64 버전
+        return ApiResponse.success(boardService.saveBoard(board, principal));
     }
 
     /**

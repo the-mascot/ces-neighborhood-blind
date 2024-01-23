@@ -18,6 +18,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @MappedSuperclass
 @SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString

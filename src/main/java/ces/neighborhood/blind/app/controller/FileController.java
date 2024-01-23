@@ -37,5 +37,4 @@ public class FileController {
     public ResponseEntity uploadImageToS3(@RequestBody MultipartFile image, Principal principal) {
         return ApiResponse.success(s3Service.uploadFileToS3(image, principal));
     }
-
 }

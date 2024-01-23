@@ -42,42 +42,40 @@
         let editor;
 
         document.addEventListener('DOMContentLoaded', function() {
-            ClassicEditor
-                .create(document.querySelector('#editor'), {
-                    toolbar: {
-                        items: [
-                            'undo', 'redo',
-                            '|', 'heading',
-                            '|', 'bold', 'italic',
-                            '|', 'link', 'uploadImage', 'blockQuote',
-                            '|', 'bulletedList', 'numberedList'
-                        ],
-                    },
-                    image: {
-                        upload: {
-                            types: [ "jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif" ],
-                        }
-                    }
-                })
-                .then(newEditor => {
-                    newEditor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                        return new UploadAdapter(loader)
-                    }
-                    editor = newEditor;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            // ClassicEditor
+            //     .create(document.getElementById('editor'), {
+            //         language: 'ko',
+            //         toolbar: {
+            //             items: [
+            //                 'undo', 'redo',
+            //                 '|', 'heading',
+            //                 '|', 'bold', 'italic',
+            //                 '|', 'link', 'uploadImage', 'blockQuote',
+            //                 '|', 'bulletedList', 'numberedList'
+            //             ],
+            //         },
+            //         image: {
+            //             upload: {
+            //                 types: [ "jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif" ],
+            //             }
+            //         }
+            //     })
+            //     .then(newEditor => {
+            //         newEditor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            //             return new UploadAdapter(loader)
+            //         }
+            //         editor = newEditor;
+            //     })
+            //     .catch(error => {
+            //         console.error(error);
+            // });
+            editor = Editor.create('editor').then(result);
+            console.log(editor);
         });
 
         document.getElementById('closeModal').addEventListener('click', function() {
             let modal = bootstrap.Modal.getInstance('#alertModal');
-            modal.dispose();
-            // let modalBackdrop = document.getElementsByClassName('modal-backdrop fade show');
-            // const len = modalBackdrop.length;
-            // for (let i = 0; i < len; i++) {
-            //     modalBackdrop[0].remove();
-            // }
+            modal.hide();
         });
 
         document.getElementById('title').addEventListener('input', function() {
@@ -89,8 +87,10 @@
                 if (!modal) {
                     modal = new bootstrap.Modal('#alertModal');
                     document.getElementById('alertMsg').innerText = '제목은 최대 100자까지 입력할 수 있습니다.';
-                    modal.show();
+                } else {
+                    modal.hide();
                 }
+                modal.show();
             }
         });
 

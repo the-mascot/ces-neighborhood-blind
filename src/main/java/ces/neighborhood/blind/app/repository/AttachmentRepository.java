@@ -12,4 +12,6 @@ import java.util.Optional;
 
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
+    Attachment findByStoredFileName(String storedFileName);
+
 }
