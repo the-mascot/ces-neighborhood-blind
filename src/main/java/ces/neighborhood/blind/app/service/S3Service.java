@@ -71,8 +71,9 @@ public class S3Service {
             throw new BizException(ErrorCode.CODE_8002);
         }
 
-        attachmentRepository.save(Attachment.builder().
-                fileName(fileName)
+        attachmentRepository.save(Attachment.builder()
+                .folderPath(folderPath)
+                .fileName(fileName)
                 .storedFileName(storedFileName)
                 .fileExt(fileExt)
                 .fileSize(multipartFile.getSize())

@@ -1,5 +1,7 @@
 package ces.neighborhood.blind.common.code;
 
+import ces.neighborhood.blind.app.entity.Attachment;
+
 public class Constant {
 
     /*Asia/Seoul Timezone*/
@@ -28,4 +30,7 @@ public class Constant {
 
     /*일*/
     public static final String DAYS_KO = "일";
+
+    /*Attachment 참조타입 - BOARD*/
+    public static final String BOARD = "BOARD";
 }

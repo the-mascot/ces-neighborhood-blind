@@ -78,8 +78,9 @@ public class FileService {
             // 이미지 저장
             image.transferTo(uploadPath);
             // DB 첨부파일 저장
-            attachmentRepository.save(Attachment.builder().
-                    fileName(fileName)
+            attachmentRepository.save(Attachment.builder()
+                    .folderPath(folderPath)
+                    .fileName(fileName)
                     .storedFileName(storedFileName)
                     .fileExt(fileExt)
                     .fileSize(image.getSize())

@@ -21,6 +21,8 @@ public class Attachment extends BaseEntity {
     @SequenceGenerator(name = "ATTACHMENT_NO_SEQ", sequenceName = "ATTACHMENT_NO_SEQ", allocationSize = 50)
     private Long fileNo;
 
+    private String folderPath;
+
     private String fileName;
 
     private String storedFileName;

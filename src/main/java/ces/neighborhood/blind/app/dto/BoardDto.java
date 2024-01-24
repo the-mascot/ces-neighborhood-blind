@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.jsoup.Jsoup;
-
 @Getter
 @Setter
 @Builder
@@ -37,10 +35,20 @@ public class BoardDto {
 
     private Timestamp createDate;
 
+    private String folderPath;
+
+    private String fileName;
+
     private String postUrl;
+
+    private String imgSrc;
 
     public String getCreateDateStr() {
         return ComUtils.calculateTimeDifference(createDate);
+    }
+
+    public String getImgSrc() {
+        return "https://ces-neighborhood.s3.ap-northeast-2.amazonaws.com/" + folderPath + "/" + fileName;
     }
 
     public String getPostUrl() {
@@ -50,7 +58,7 @@ public class BoardDto {
     public BoardDto(Long postNo, String boardType, String nickName,
                     String title, String content, String delYn,
                     Integer viewCnt,
-                    Integer likeCnt, Integer commCnt, Timestamp createDate) {
+                    Integer likeCnt, Integer commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
@@ -61,12 +69,14 @@ public class BoardDto {
         this.likeCnt = likeCnt;
         this.commCnt = commCnt;
         this.createDate = createDate;
+        this.folderPath = folderPath;
+        this.fileName = fileName;
     }
 
     public BoardDto(Long postNo, String boardType, String nickName,
                     String title, String content, String delYn,
                     Integer viewCnt,
-                    Integer likeCnt, Long commCnt, Timestamp createDate) {
+                    Integer likeCnt, Long commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
@@ -77,5 +87,7 @@ public class BoardDto {
         this.likeCnt = likeCnt;
         this.commCnt = commCnt.intValue();
         this.createDate = createDate;
+        this.folderPath = folderPath;
+        this.fileName = fileName;
     }
 }

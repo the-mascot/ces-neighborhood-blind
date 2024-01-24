@@ -109,12 +109,28 @@ body {
     font-family: "Noto Sans KR Light";
 }
 
+.f-eb {
+    font-family: "Noto Sans KR ExtraBold";
+}
+
 .f-14 {
     font-size: 14px;
 }
 
 .f-16 {
     font-size: 16px;
+}
+
+.red-btn {
+    background-color: #da3238;
+    border: solid 1px #da3238;
+    color: #fff;
+    width: 82px;
+    height: 40px;
+    margin-left: 10px;
+    font-size: 14px;
+    font-family: "Noto Sans KR ExtraBold";
+    line-height: 38px;
 }
 
 /*---common---*/
@@ -286,6 +302,7 @@ body {
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     padding: 10px;
+    position: relative;
 }
 
 .right-border {
@@ -293,7 +310,7 @@ body {
 }
 
 .board-lnb-wrap {
-    justify-content: initial;
+
 }
 
 .board-category {
@@ -306,6 +323,8 @@ body {
 
 .board-title {
     height: 52px;
+    padding-right: 105px;
+
 }
 
 .board-title a {
@@ -323,6 +342,7 @@ body {
 .board-content {
     height: 43px;
     max-height: 43px;
+    padding-right: 105px;
 }
 
 .board-content a {
@@ -388,6 +408,21 @@ body {
     height: 16px;
     margin: -1px 10px 1px 0;
     vertical-align: middle;
+}
+
+.board-img-wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    display: block;
+    width: 80px;
+    height: 80px;
+    background-color: #e7e7e7;
+}
+
+.board-img {
+
 }
 
 /* ---/board--- */

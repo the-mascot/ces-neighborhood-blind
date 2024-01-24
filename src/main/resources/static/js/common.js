@@ -37,39 +37,29 @@ const ComUtils = {
 
 const Editor = {
     create: function (id) {
-        return new Promise((resolve) => {
-            ClassicEditor
-                .create(document.getElementById(id), {
-                    language: 'ko',
-                    toolbar: {
-                        items: [
-                            'undo', 'redo',
-                            '|', 'heading',
-                            '|', 'bold', 'italic',
-                            '|', 'link', 'uploadImage', 'blockQuote',
-                            '|', 'bulletedList', 'numberedList'
-                        ],
-                    },
-                    image: {
-                        upload: {
-                            types: [ "jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif" ],
-                        }
+        return ClassicEditor
+            .create(document.getElementById(id), {
+                language: 'ko',
+                toolbar: {
+                    items: [
+                        'undo', 'redo',
+                        '|', 'heading',
+                        '|', 'bold', 'italic',
+                        '|', 'link', 'uploadImage', 'blockQuote',
+                        '|', 'bulletedList', 'numberedList'
+                    ],
+                },
+                image: {
+                    upload: {
+                        types: [ "jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif" ],
                     }
-                })
-                .then(newEditor => {
-                    newEditor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                        return new UploadAdapter(loader)
-                    }
-                })
-                .then(newEditor => {
-                    resolve({
-                        default: newEditor
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        })
+                }
+            })
+            .then(editor => {
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => { return new UploadAdapter(loader); }
+                return editor;
+            })
+            .catch(error => { console.error(error); });
     }
 }
 

@@ -1,6 +1,5 @@
 package ces.neighborhood.blind.app.service;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,15 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
+import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.AttachmentRepository;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.common.code.Constant;
-import java.io.ByteArrayInputStream;
 import java.security.Principal;
-import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -70,13 +68,14 @@ public class BoardService {
             if (attachment != null) {
                 attachment.setRefNo(postNo);
                 attachment.setModifyUser(principal.getName());
+                attachment.setRefType(Constant.BOARD);
                 attachmentRepository.save(attachment);
             }
         }
         return postNo;
     }
 
-    public BoardDto getPost(Long postNo) {
-        return boardRepository.getBoard(postNo).get();
+    public PostDto getPost(Long postNo) {
+        return boardRepository.getPost(postNo).get();
     }
 }

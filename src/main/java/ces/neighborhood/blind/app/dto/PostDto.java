@@ -17,7 +17,7 @@ public class PostDto {
 
     private String boardType;
 
-    private String mbrNm;
+    private String nickName;
 
     private String title;
 
@@ -29,11 +29,49 @@ public class PostDto {
 
     private Integer likeCnt;
 
-    private Long commCnt;
+    private Integer commCnt;
 
     private Timestamp createDate;
 
+    private String postUrl;
+
     public String getCreateDateStr() {
         return ComUtils.calculateTimeDifference(createDate);
+    }
+
+    public String getPostUrl() {
+        return "/board/post/" + postNo;
+    }
+
+    public PostDto(Long postNo, String boardType, String nickName,
+                    String title, String content, String delYn,
+                    Integer viewCnt,
+                    Integer likeCnt, Integer commCnt, Timestamp createDate) {
+        this.postNo = postNo;
+        this.boardType = boardType;
+        this.nickName = nickName;
+        this.title = title;
+        this.content = content;
+        this.delYn = delYn;
+        this.viewCnt = viewCnt;
+        this.likeCnt = likeCnt;
+        this.commCnt = commCnt;
+        this.createDate = createDate;
+    }
+
+    public PostDto(Long postNo, String boardType, String nickName,
+                    String title, String content, String delYn,
+                    Integer viewCnt,
+                    Integer likeCnt, Long commCnt, Timestamp createDate) {
+        this.postNo = postNo;
+        this.boardType = boardType;
+        this.nickName = nickName;
+        this.title = title;
+        this.content = content;
+        this.delYn = delYn;
+        this.viewCnt = viewCnt;
+        this.likeCnt = likeCnt;
+        this.commCnt = commCnt.intValue();
+        this.createDate = createDate;
     }
 }

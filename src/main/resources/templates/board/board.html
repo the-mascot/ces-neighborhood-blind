@@ -5,10 +5,10 @@
 <div layout:fragment="content">
     <div class="wrap content-center">
         <div class="content-column">
-            <div class="board-lnb-wrap">
-                <p>title</p>
+            <div class="content-between p-4">
+                <p class="f-b f-16">APT 이야기</p>
+                <button class="red-btn" onclick="goWrite()">글쓰기</button>
             </div>
-            <button onclick="goWrite()">글쓰기</button>
             <div th:each="board, stat : ${boardList}" th:if="${stat.index % 2 == 0}" class="content-left">
                 <div class="board-layout right-border">
                     <span class="board-category">썸 연애</span>
@@ -19,6 +19,10 @@
                         <p class="board-content">
                             <a th:href="${boardList[stat.index].postUrl}" th:utext="${boardList[stat.index].content}"></a>
                         </p>
+                        <span class="board-img-wrap">
+                            <a th:href="${boardList[stat.index].postUrl}"></a>
+                            <img class="board-img" src="${boardList[stat.index].imgSrc}">
+                        </span>
                     </div>
                     <div>
                         <a th:href="${boardList[stat.index].postUrl}" class="board-sub-wrap">
