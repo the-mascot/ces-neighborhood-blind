@@ -48,6 +48,17 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * Oauth2 UserService 구현체
+ * </pre>
+ *
+ * @see OAuth2UserService
+ * @see DefaultOAuth2UserService
+ * @version 1.0
+ * @author mascot
+ * @since 2023.12.07
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -63,6 +74,13 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     private final Oauth2UserRepository oauth2UserRepository;
 
+    /**
+     * Resource 서버에서 받아온 userInfo DB 저장
+     * @see DefaultOAuth2UserService#loadUser(OAuth2UserRequest)
+     * @param userRequest
+     * @return OAuth2User
+     * @throws
+     */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException {
@@ -97,10 +115,11 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
         // 공급자 ID ex) google, naver. SNS_TYPE으로 사용
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        // userInfo 요청
+        // userInfo 요청 entity 생성
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(userRequest);
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {});
+        // resource 서버에 userInfo 요청
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {});
         Map<String, Object> userAttributes = StringUtils.equals(registrationId, NAVER) ? (Map<String, Object>) response.getBody().get(userNameAttributeName) : response.getBody();
 
         if (userAttributes == null || userAttributes.get("email") == null) {
@@ -117,6 +136,14 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         return new DefaultOAuth2User(authorities, userAttributes, "email");
     }
 
+    /**
+     * RefreshToken 저장
+     * 현재는 (Session 을 이용한 로그인 사용 + OAuth2 유저정보 DB 저장) 형태라 refreshToken 을 사용하지 않으나,
+     * JWT 로그인 사용 할 경우 Access Token 을 재활성화 하기 위해 refresh Token 저장.
+     * @param oAuth2User, refreshToken
+     * @return
+     * @throws
+     */
     public void saveRefreshToken(OAuth2User oAuth2User, OAuth2RefreshToken refreshToken) {
         oauth2UserRepository.save(SnsMbrInfo
                 .builder()
@@ -130,6 +157,12 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .build());
     }
 
+    /**
+     * attributes -> MbrInfo convert
+     * @param attributes
+     * @return attributes -> MbrInfo entity로 변환
+     * @throws
+     */
     private MbrInfo convertToMbrInfo(Map<String, Object> attributes) {
         return MbrInfo.builder()
                 .mbrId(String.valueOf(attributes.get("email")))
@@ -140,6 +173,12 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .build();
     }
 
+    /**
+     * attributes -> SnsMbrInfo convert
+     * @param attributes, registrationId
+     * @return attributes -> SnsMbrInfo entity로 변환
+     * @throws
+     */
     private SnsMbrInfo convertToSnsMbrInfo(Map<String, Object> attributes, String registrationId) {
         return SnsMbrInfo.builder()
                 .snsMbrInfoKey(SnsMbrInfoKey.builder()
@@ -152,10 +191,16 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
     }
 
     /**
-     * Access Token 요청 entity 생성
+     * userInfo 요청 entity 생성
+     * @see org.springframework.security.oauth2.client.userinfo.OAuth2UserRequestEntityConverter#convert(OAuth2UserRequest)
+     * @param userRequest
+     * @return Resource 서버에 userInfo 를 요청하기 위한 Request Entity
+     * @throws
      */
     private RequestEntity<MultiValueMap<String, String>> getRequestEntity(OAuth2UserRequest userRequest) {
+        // userInfo 요청 entity body 생성
         MultiValueMap<String, String> parameter = this.convertParameter(userRequest);
+        // userInfo 요청 entity header 생성
         HttpHeaders headers = this.convertHeaders();
 
         URI uri = UriComponentsBuilder
@@ -166,7 +211,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
     }
 
     /**
-     * Access Token 요청 body 변환
+     * userInfo 요청 entity body 생성
      */
     private MultiValueMap<String, String> convertParameter(OAuth2UserRequest userRequest) {
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
@@ -175,7 +220,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
     }
 
     /**
-     * Access Token 요청 header 변환
+     * userInfo 요청 entity header 생성
      */
     private HttpHeaders convertHeaders() {
         HttpHeaders headers = new HttpHeaders();

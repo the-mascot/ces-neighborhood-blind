@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -44,7 +48,21 @@ public class BoardController {
      * 게시글 상세 페이지
      */
     @GetMapping("/board/post/{postNo}")
-    public String posts(Model model, @PathVariable Long postNo) {
+    public String posts(HttpServletRequest request, Model model, @PathVariable Long postNo) {
+        HttpSession session = request.getSession();
+        // session에서 조회한 게시물 목록 받아오기
+        List<Long> viewedPosts = (List<Long>) session.getAttribute("viewedPosts");
+        if (viewedPosts == null) {
+            viewedPosts = new ArrayList<>();
+        }
+
+        // 해당 게시물을 이번 세션에서 조회한 적이 없으면 조회수 증가
+        if (!viewedPosts.contains(postNo)) {
+            boardService.increaseViewCount(postNo);
+            viewedPosts.add(postNo);
+        }
+
+        session.setAttribute("viewedPosts", viewedPosts);
         model.addAttribute("board", boardService.getPost(postNo));
         return "/board/post";
     }

@@ -1,9 +1,5 @@
 package ces.neighborhood.blind.app.service;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,12 +14,19 @@ import ces.neighborhood.blind.app.dto.LoginReqDto;
 import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * 회원가입, 로그인 및 권한 관련 Service
+ * </pre>
+ *
+ * @version 1.0
+ * @author mascot
+ * @since 2023.11.27
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,9 @@ public class AuthorityService {
 
     /**
      * 회원가입 Service
+     * @param loginReqDto
+     * @return
+     * @throws
      */
     public void joinMember(LoginReqDto loginReqDto) {
         memberRepository.save(convertToMbrInfo(loginReqDto));
@@ -51,6 +57,9 @@ public class AuthorityService {
 
     /**
      * LoginReqDto -> MbrInfo convert
+     * @param loginReqDto
+     * @return LoginReqDto -> MbrInfo entity로 변환
+     * @throws
      */
     private MbrInfo convertToMbrInfo(LoginReqDto loginReqDto) {
         return MbrInfo.builder()
@@ -60,6 +69,13 @@ public class AuthorityService {
                 .build();
     }
 
+    /**
+     * 네이버 로그인 Authorization Code 요청
+     * Spring OAuth 가 아닌 직접 요청 구현을 위해 작성. 현재 Spring OAuth 사용으로 사용 x
+     * @param param
+     * @return Authorization Code 요청 response
+     * @throws
+     */
     public String authenticate(Map<String, Object> param) {
         WebClient webClient = WebClient.builder().baseUrl("https://nid.naver.com/oauth2.0/authorize").build();
         String response = webClient.get()

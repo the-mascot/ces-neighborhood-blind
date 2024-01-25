@@ -20,9 +20,11 @@ spring:
 
 
 server:
-  shutdown: graceful
+  shutdown: graceful  # 서버 종료시 마지막 요청 처리 후 종료
   port: 8010
-
+#  servlet:
+#    session:
+#      timeout: 2m
 ---
 # local
 spring:

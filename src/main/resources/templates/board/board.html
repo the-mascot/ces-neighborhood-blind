@@ -19,9 +19,10 @@
                         <p class="board-content">
                             <a th:href="${boardList[stat.index].postUrl}" th:utext="${boardList[stat.index].content}"></a>
                         </p>
-                        <span class="board-img-wrap">
-                            <a th:href="${boardList[stat.index].postUrl}"></a>
-                            <img class="board-img" src="${boardList[stat.index].imgSrc}">
+                        <span th:if="${boardList[stat.index].imgSrc != null}" class="board-img-wrap">
+                            <a th:href="${boardList[stat.index].postUrl}">
+                                <img class="board-img" th:src="${boardList[stat.index].imgSrc}">
+                            </a>
                         </span>
                     </div>
                     <div>
@@ -60,6 +61,11 @@
                         <p class="board-content">
                             <a th:href="${boardList[stat.index + 1].postUrl}" th:utext="${boardList[stat.index + 1].content}"></a>
                         </p>
+                        <span th:if="${boardList[stat.index + 1].imgSrc != null}" class="board-img-wrap">
+                            <a th:href="${boardList[stat.index + 1].postUrl}">
+                                <img class="board-img" th:src="${boardList[stat.index + 1].imgSrc}">
+                            </a>
+                        </span>
                     </div>
                     <div>
                         <a th:href="${boardList[stat.index + 1].postUrl}" class="board-sub-wrap">

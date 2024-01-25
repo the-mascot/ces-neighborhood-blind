@@ -1,6 +1,7 @@
 package ces.neighborhood.blind.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -30,7 +31,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "from Board b left join b.comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
             "left join Attachment a on b.postNo = a.refNo and a.refType = 'BOARD' and a.delYn = 'N' " +
             "where b.boardType is null and b.delYn = 'N' " +
-            "and a.fileNo = (select min(aa.fileNo) from Attachment aa where aa.refNo = b.postNo and aa.refType = 'BOARD' and aa.delYn = 'N' ) " +
+            "and a.fileNo = (select min(aa.fileNo) from Attachment aa where aa.refNo = b.postNo and aa.refType = 'BOARD' and aa.delYn = 'N' ) or a.fileNo is null " +
             "group by b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
             "substring(b.content, 1, 300), b.delYn, b.viewCnt, b.likeCnt, b.createDate, a.folderPath, a.storedFileName " +
             "order by b.createDate desc")
@@ -44,4 +45,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "group by b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
             "substring(b.content, 1, 300), b.delYn, b.viewCnt, b.likeCnt, b.createDate ")
     Optional<PostDto> getPost(@Param("postNo") Long postNo);
+
+    @Modifying
+    @Query("update Board b set b.viewCnt = b.viewCnt + 1 where b.postNo = :postNo ")
+    void updateViewCount(@Param("postNo") Long postNo);
 }

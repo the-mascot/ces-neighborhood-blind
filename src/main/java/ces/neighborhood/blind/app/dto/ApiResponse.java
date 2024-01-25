@@ -29,6 +29,11 @@ public class ApiResponse<T> {
         return headers;
     }
 
+    public static ResponseEntity<ApiResponse<Void>> success() {
+        ApiResponse<Void> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), null);
+        return new ResponseEntity<>(apiResponse, apiResponse.getHeaders(), HttpStatus.OK);
+    }
+
     public static <T> ResponseEntity<ApiResponse<T>> success(T data) {
         ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), data);
         return new ResponseEntity<>(apiResponse, apiResponse.getHeaders(), HttpStatus.OK);

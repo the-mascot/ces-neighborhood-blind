@@ -26,6 +26,15 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * File Upload 관련 Service
+ * </pre>
+ *
+ * @version 1.0
+ * @author mascot
+ * @since 2024.01.12
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,8 +50,17 @@ public class FileService {
 
     private final AttachmentRepository attachmentRepository;
 
+    // 파일사이즈 제한 10MB
+    private static final int limitImageSize = 10 * 1024 * 1024;
+
     private String imageSrc;
 
+    /**
+     * 이미지 업로드
+     * @param image, principal
+     * @return 이미지 업로드 경로 (upload server/Base64Enc(yyyyMMdd)/UUID.확장자)
+     * @throws
+     */
     public String uploadImage(MultipartFile image, Principal principal) {
         if (image.isEmpty()) {
             throw new BizException(ErrorCode.CODE_8000);
@@ -56,7 +74,12 @@ public class FileService {
         if (!ALLOWED_IMAGE_EXTENSIONS.contains(fileExt)) {
             throw new BizException(ErrorCode.CODE_8001);
         }
-        Map<String, Object> result = new HashMap<>();
+
+        // 파일 사이즈 검사
+        if (image.getSize() > limitImageSize) {
+            throw new BizException(ErrorCode.CODE_8003);
+        }
+
         try {
             // base64 encoding 한 yyyyMMdd 형태의 폴더이름
             String folderPath = Base64.getEncoder().encodeToString(
@@ -77,7 +100,7 @@ public class FileService {
             Path uploadPath = Paths.get(uploadFolderPath.toString(), storedFileName);
             // 이미지 저장
             image.transferTo(uploadPath);
-            // DB 첨부파일 저장
+            // Attachment 저장
             attachmentRepository.save(Attachment.builder()
                     .folderPath(folderPath)
                     .fileName(fileName)

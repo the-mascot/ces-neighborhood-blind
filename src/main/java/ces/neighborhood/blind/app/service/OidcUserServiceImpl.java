@@ -1,24 +1,9 @@
 package ces.neighborhood.blind.app.service;
 
-import ces.neighborhood.blind.app.dto.Role;
-import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.common.exception.BizException;
-import ces.neighborhood.blind.common.exception.ErrorCode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import static org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService.createDefaultClaimTypeConverters;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -31,11 +16,33 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * <pre>
+ * Oidc(OpenID Connect) UserService 구현체
+ * </pre>
+ *
+ * @see OAuth2UserService
+ * @see org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
+ * @version 1.0
+ * @author mascot
+ * @since 2023.12.15
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -51,6 +58,13 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
 
     private final MemberRepository memberRepository;
 
+    /**
+     * Resource 서버에서 받아온 userInfo DB 저장
+     * @see org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService#loadUser(OidcUserRequest)
+     * @param userRequest
+     * @return OAuth2User
+     * @throws
+     */
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest)
             throws OAuth2AuthenticationException {
@@ -90,6 +104,12 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
         return getUser(userRequest, userInfo, authorities);
     }
 
+    /**
+     * attributes -> MbrInfo convert
+     * @param attributes
+     * @return attributes -> MbrInfo entity로 변환
+     * @throws
+     */
     private MbrInfo convertToMbrInfo(Map<String, Object> attributes) {
         return MbrInfo.builder()
                 .mbrId(String.valueOf(attributes.get("email")))
@@ -97,6 +117,12 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
                 .build();
     }
 
+    /**
+     * ID Token claims 가져오기
+     * @param userRequest, oauth2User
+     * @return ID Token claims에 있는 userInfo
+     * @throws
+     */
     private Map<String, Object> getClaims(OidcUserRequest userRequest, OAuth2User oauth2User) {
         Converter<Map<String, Object>, Map<String, Object>> converter = this.claimTypeConverterFactory
                 .apply(userRequest.getClientRegistration());
@@ -106,6 +132,12 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
         return DEFAULT_CLAIM_TYPE_CONVERTER.convert(oauth2User.getAttributes());
     }
 
+    /**
+     * Default OidcUser 생성
+     * @param userRequest, userInfo, authorities
+     * @return OidcUser
+     * @throws
+     */
     private OidcUser getUser(OidcUserRequest userRequest, OidcUserInfo userInfo, Set<GrantedAuthority> authorities) {
         ClientRegistration.ProviderDetails providerDetails = userRequest.getClientRegistration().getProviderDetails();
         String userNameAttributeName = providerDetails.getUserInfoEndpoint().getUserNameAttributeName();

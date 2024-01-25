@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
+
 @Getter
 @Setter
 @Builder
@@ -48,7 +50,8 @@ public class BoardDto {
     }
 
     public String getImgSrc() {
-        return "https://ces-neighborhood.s3.ap-northeast-2.amazonaws.com/" + folderPath + "/" + fileName;
+        return StringUtils.isEmpty(folderPath) || StringUtils.isEmpty(fileName) ? null :
+        "https://ces-neighborhood.s3.ap-northeast-2.amazonaws.com/" + folderPath + "/" + fileName;
     }
 
     public String getPostUrl() {
