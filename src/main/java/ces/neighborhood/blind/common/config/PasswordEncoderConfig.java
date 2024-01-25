@@ -7,11 +7,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 /**
  * <pre>
  * BCryptPasswordEncoder Bean 등록 config
+ * SpringSecurityConfig 에 두면 순환참조 error 발생으로 따로 config 파일에 빼둠.
  * </pre>
- * SpringSecurityConfig에 두면 순환참조 error 발생으로 따로 config 파일에 빼둠.
  *
  * @version 1.0
  * @author the-mascot
+ * @since 2023.11.28
  */
 @Configuration
 public class PasswordEncoderConfig {

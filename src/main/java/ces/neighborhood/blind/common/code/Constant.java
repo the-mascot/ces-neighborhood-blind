@@ -1,7 +1,14 @@
 package ces.neighborhood.blind.common.code;
 
-import ces.neighborhood.blind.app.entity.Attachment;
-
+/**
+ * <pre>
+ * 상수 정의
+ * </pre>
+ *
+ * @version 1.0
+ * @author mascot
+ * @since 2024.01.05
+ */
 public class Constant {
 
     /*Asia/Seoul Timezone*/

@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see org.springframework.security.authentication.dao.DaoAuthenticationProvider
  * @version 1.0
  * @author mascot
- * @since 2023.12.07
+ * @since 2023.11.28
  */
 @Slf4j
 @Component

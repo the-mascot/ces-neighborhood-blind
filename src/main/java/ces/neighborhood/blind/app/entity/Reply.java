@@ -23,8 +23,8 @@ import lombok.NoArgsConstructor;
 public class Reply extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMM_NO_SEQ")
-    @SequenceGenerator(name = "COMM_NO_SEQ", sequenceName = "COMM_NO_SEQ", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REPLY_NO_SEQ")
+    @SequenceGenerator(name = "REPLY_NO_SEQ", sequenceName = "REPLY_NO_SEQ", allocationSize = 50)
     private Long replyNo;
 
     private String content;

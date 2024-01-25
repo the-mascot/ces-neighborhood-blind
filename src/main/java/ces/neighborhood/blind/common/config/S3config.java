@@ -9,6 +9,15 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
+/**
+ * <pre>
+ * AWS S3 configuration
+ * </pre>
+ *
+ * @version 1.0
+ * @author the-mascot
+ * @since 2024.01.18
+ */
 @Configuration
 public class S3config {
 

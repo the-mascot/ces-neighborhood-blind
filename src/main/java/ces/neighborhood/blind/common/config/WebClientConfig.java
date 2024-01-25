@@ -15,6 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
+/**
+ * <pre>
+ * WebClient Configuration
+ * </pre>
+ *
+ * @version 1.0
+ * @author the-mascot
+ * @since 2023.12.26
+ */
 @Slf4j
 @Configuration
 public class WebClientConfig {

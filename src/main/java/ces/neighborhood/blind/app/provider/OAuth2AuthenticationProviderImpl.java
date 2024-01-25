@@ -47,6 +47,17 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * OAuth2 로그인 인증 Provider, AuthenticationProvider 구현체
+ * </pre>
+ *
+ * @see AuthenticationProvider
+ * @see org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationProvider
+ * @version 1.0
+ * @author mascot
+ * @since 2023.12.20
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -59,6 +70,13 @@ public class OAuth2AuthenticationProviderImpl implements
 
     private final Oauth2UserServiceImpl userService;
 
+    /**
+     * OAuth2 로그인 인증
+     * @see org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationProvider#authenticate(Authentication)
+     * @param authentication
+     * @return Authentication
+     * @throws
+     */
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
@@ -92,7 +110,7 @@ public class OAuth2AuthenticationProviderImpl implements
         // Access Token
         OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenResponseDto.getAccessToken(), Instant.now(), Instant.now().plusSeconds(30));
         // Refresh Token
-        OAuth2RefreshToken refreshToken = new OAuth2RefreshToken(accessTokenResponseDto.getRefreshToken(), Instant.now(), null);
+        OAuth2RefreshToken refreshToken = StringUtils.equals(clientRegistration.getRegistrationId(), "google") ? null : new OAuth2RefreshToken(accessTokenResponseDto.getRefreshToken(), Instant.now(), null);
         Map<String, Object> additionalParameters = new HashMap<>();
         OAuth2User oauth2User = this.userService.loadUser(new OAuth2UserRequest(
                 clientRegistration, accessToken, additionalParameters
@@ -119,6 +137,9 @@ public class OAuth2AuthenticationProviderImpl implements
 
     /**
      * Access Token 요청 entity 생성
+     * @param clientRegistration, authorizationResponse
+     * @return Access Token 요청하기 위한 RequestEntity
+     * @throws
      */
     private RequestEntity<MultiValueMap<String, String>> getRequestEntity(ClientRegistration clientRegistration, OAuth2AuthorizationResponse authorizationResponse) {
         MultiValueMap<String, String> parameter = this.convertParameter(clientRegistration, authorizationResponse);
@@ -138,6 +159,7 @@ public class OAuth2AuthenticationProviderImpl implements
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add(OAuth2ParameterNames.GRANT_TYPE, clientRegistration.getAuthorizationGrantType().getValue());
         parameter.add(OAuth2ParameterNames.CODE, authorizationResponse.getCode());
+        parameter.add(OAuth2ParameterNames.REDIRECT_URI, authorizationResponse.getRedirectUri());
         return parameter;
     }
 
@@ -150,6 +172,8 @@ public class OAuth2AuthenticationProviderImpl implements
         headers.setAcceptCharset(List.of(Charset.forName("UTF-8")));
         final MediaType contentType = MediaType.valueOf(MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         headers.setContentType(contentType);
+        // client_secret_basic 인 경우 clientId, clientSecret URL Ecoder 로 encoding 해서 Basic Auth 로 header 에 보내야함.
+        // google, naver 둘다 현재 Basic 방식.
         if (ClientAuthenticationMethod.CLIENT_SECRET_BASIC.equals(clientRegistration.getClientAuthenticationMethod())) {
             String clientId = encodeClientCredential(clientRegistration.getClientId());
             String clientSecret = encodeClientCredential(clientRegistration.getClientSecret());
@@ -158,6 +182,9 @@ public class OAuth2AuthenticationProviderImpl implements
         return headers;
     }
 
+    /**
+     * client 정보 URL encoding
+     */
     public static String encodeClientCredential(String clientCredential) {
         try {
             return URLEncoder.encode(clientCredential, StandardCharsets.UTF_8.toString());

@@ -15,7 +15,6 @@ import ces.neighborhood.blind.app.provider.CustomOauth2AuthorizationRequestResol
 import ces.neighborhood.blind.app.provider.OAuth2AuthenticationProviderImpl;
 import ces.neighborhood.blind.common.filter.LoginFailureHandler;
 import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -25,6 +24,7 @@ import lombok.RequiredArgsConstructor;
  *
  * @version 1.0
  * @author the-mascot
+ * @since 2023.11.27
  */
 @Configuration
 @EnableWebSecurity

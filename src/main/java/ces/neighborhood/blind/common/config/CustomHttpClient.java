@@ -9,6 +9,17 @@ import org.springframework.stereotype.Component;
 import java.net.URI;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * WebClient 요청 시 Logging 을 위한 커스텀 HttpClient
+ * TODO: WebClient 요청 사용 시 정상동작 테스트 해봐야함.
+ * </pre>
+ *
+ * @see WebClientConfig
+ * @version 1.0
+ * @author the-mascot
+ * @since 2023.12.26
+ */
 @Slf4j
 @Component
 public class CustomHttpClient extends HttpClient {

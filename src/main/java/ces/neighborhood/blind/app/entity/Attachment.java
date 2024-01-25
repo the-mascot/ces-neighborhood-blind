@@ -17,8 +17,8 @@ import lombok.experimental.SuperBuilder;
 public class Attachment extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ATTACHMENT_NO_SEQ")
-    @SequenceGenerator(name = "ATTACHMENT_NO_SEQ", sequenceName = "ATTACHMENT_NO_SEQ", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FILE_NO_SEQ")
+    @SequenceGenerator(name = "FILE_NO_SEQ", sequenceName = "FILE_NO_SEQ", allocationSize = 50)
     private Long fileNo;
 
     private String folderPath;
