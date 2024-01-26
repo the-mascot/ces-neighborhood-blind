@@ -13,8 +13,8 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
 import ces.neighborhood.blind.app.provider.CustomOauth2AuthorizationRequestResolver;
 import ces.neighborhood.blind.app.provider.OAuth2AuthenticationProviderImpl;
-import ces.neighborhood.blind.common.filter.LoginFailureHandler;
-import ces.neighborhood.blind.common.filter.LoginSuccessHandler;
+import ces.neighborhood.blind.common.handler.LoginFailureHandler;
+import ces.neighborhood.blind.common.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 
 /**

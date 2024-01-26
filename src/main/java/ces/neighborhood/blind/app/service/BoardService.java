@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -13,12 +14,18 @@ import ces.neighborhood.blind.app.dto.BoardDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Board;
+import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.AttachmentRepository;
 import ces.neighborhood.blind.app.repository.BoardRepository;
+import ces.neighborhood.blind.app.repository.LikesRepository;
 import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.utils.ComUtils;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -38,6 +45,8 @@ public class BoardService {
 
     private final AttachmentRepository attachmentRepository;
 
+    private final LikesRepository likesRepository;
+
     /**
      * 게시판 목록 가져오기
      * @param model
@@ -45,13 +54,14 @@ public class BoardService {
      * @throws
      */
     public List<BoardDto> getBoardList(Model model) {
+        Authentication authentication = ComUtils.getAuthentication();
         String boardType = String.valueOf(model.getAttribute("boardType"));
         List<BoardDto> boardList;
         // TODO: 게시판 타입 결정 후 코드 변경 요
         if (StringUtils.equals(boardType, Constant.BOARD_TYPE_ALL) || StringUtils.equals(boardType, Constant.NULL.toLowerCase())) {
-            boardList = boardRepository.getBoardList();
+            boardList = boardRepository.getBoardList(authentication.getName());
         } else {
-            boardList = boardRepository.getBoardList(boardType);
+            boardList = boardRepository.getBoardList(boardType, authentication.getName());
         }
         boardList.forEach(boardDto -> {
             // 본문 미리보기를 위해 HTML -> 평문으로 변환
@@ -116,8 +126,9 @@ public class BoardService {
      * @return PostDto
      * @throws
      */
-    public PostDto getPost(Long postNo) {
-        return boardRepository.getPost(postNo).get();
+    public Optional<PostDto> getPost(Long postNo) {
+        Authentication authentication = ComUtils.getAuthentication();
+        return boardRepository.getPost(postNo, authentication.getName());
     }
 
     /**
@@ -129,5 +140,33 @@ public class BoardService {
     @Transactional
     public void increaseViewCount(Long postNo) {
         boardRepository.updateViewCount(postNo);
+    }
+
+    /**
+     * 게시글 좋아요 기능
+     * @param postNo
+     * @return
+     * @throws
+     */
+    public Map<String, Object> like (Long postNo) {
+        Authentication authentication = ComUtils.getAuthentication();
+        Likes.LikesId likesId = Likes.LikesId.builder()
+                .postNo(postNo)
+                .mbrId(authentication.getName())
+                .build();
+        Optional<Likes> likes = likesRepository.findById(likesId);
+        boolean isLiked = likes.isPresent();
+        if (isLiked) {
+            likesRepository.delete(likes.get());
+        } else {
+            likesRepository.save(Likes.builder()
+                    .likesId(likesId)
+                    .build());
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("isLiked", !isLiked);
+        result.put("likeCnt", likesRepository.getLikeCount(postNo));
+        return result;
     }
 }

@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
+import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -38,7 +41,6 @@ public class BoardController {
     /**
      * 게시글 작성 페이지
      */
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
     @GetMapping("/board/write")
     public String write(Model model) {
         return "/board/write";
@@ -46,11 +48,12 @@ public class BoardController {
 
     /**
      * 게시글 상세 페이지
+     * 조회수 증가 서비스 프로세스 : 세션당 일회 증가 가능
      */
     @GetMapping("/board/post/{postNo}")
-    public String posts(HttpServletRequest request, Model model, @PathVariable Long postNo) {
+    public String posts(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable Long postNo) throws Exception {
         HttpSession session = request.getSession();
-        // session에서 조회한 게시물 목록 받아오기
+        // session 에서 조회한 게시물 목록 받아오기
         List<Long> viewedPosts = (List<Long>) session.getAttribute("viewedPosts");
         if (viewedPosts == null) {
             viewedPosts = new ArrayList<>();
@@ -63,7 +66,11 @@ public class BoardController {
         }
 
         session.setAttribute("viewedPosts", viewedPosts);
-        model.addAttribute("board", boardService.getPost(postNo));
+        Optional<PostDto> postDto = boardService.getPost(postNo);
+        if (postDto.isEmpty()) {
+            response.sendRedirect("/error");
+        }
+        model.addAttribute("board", postDto);
         return "/board/post";
     }
 
@@ -82,10 +89,18 @@ public class BoardController {
     /**
      * 게시글 편집 페이지
      */
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
     @GetMapping("/board/edit/post/{postNo}")
-    public String edit(Model model, Principal principal, @PathVariable long postNo) {
+    public String edit(Model model, @PathVariable Long postNo) {
         model.addAttribute("board", boardService.getPost(postNo));
         return "/board/edit";
+    }
+
+    /**
+     * 게시글 좋아요
+     */
+    @ResponseBody
+    @PostMapping("/board/like")
+    public ResponseEntity like(@RequestBody Long postNo) {
+        return ApiResponse.success(boardService.like(postNo));
     }
 }

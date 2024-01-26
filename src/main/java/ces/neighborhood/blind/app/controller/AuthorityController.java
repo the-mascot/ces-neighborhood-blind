@@ -79,9 +79,10 @@ public class AuthorityController {
         return "redirect:" + uriBuilder.toUriString();
     }
 
-    @GetMapping("/error")
-    public String errorPage() {
-        return "/error/error";
-    }
+//    @GetMapping("/error")
+//    public String errorPage(Model model) {
+//        model.addAttribute("error");
+//        return "/error";
+//    }
 
 }

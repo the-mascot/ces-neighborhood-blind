@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <div layout:fragment="content">
@@ -35,9 +36,11 @@
                             <a th:href="${boardList[stat.index].postUrl}" class="content-center board-icon-wrap">
                                 <span th:text="${boardList[stat.index].viewCnt} " class="view-cnt-span"></span>
                             </a>
-                            <a th:href="@{/}" class="content-center board-icon-wrap">
-                                <span th:text="${boardList[stat.index].likeCnt == 0 ? '좋아요' : boardList[stat.index].likeCnt}" class="like-cnt-span"></span>
-                            </a>
+                            <div class="content-center board-icon-wrap">
+                                <span th:text="${boardList[stat.index].likeCnt == 0 ? '좋아요' : boardList[stat.index].likeCnt}"
+                                      th:class="${boardList[stat.index].isLiked} ? 'like-cnt-span-on' : 'like-cnt-span'"
+                                      th:onclick="like([[${boardList[stat.index].postNo}]], this)"></span>
+                            </div>
                             <a th:href="${boardList[stat.index].postUrl}" class="content-center board-icon-wrap">
                                 <span th:text="${boardList[stat.index].commCnt}" class="comm-cnt-span"></span>
                             </a>
@@ -77,9 +80,11 @@
                             <a th:href="${boardList[stat.index + 1].postUrl}" class="content-center board-icon-wrap">
                                 <span th:text="${boardList[stat.index + 1].viewCnt} " class="view-cnt-span"></span>
                             </a>
-                            <a th:href="@{/}" class="content-center board-icon-wrap">
-                                <span th:text="${boardList[stat.index +1].likeCnt == 0 ? '좋아요' : boardList[stat.index + 1].likeCnt}" class="like-cnt-span"></span>
-                            </a>
+                            <div class="content-center board-icon-wrap">
+                                <span th:text="${boardList[stat.index + 1].likeCnt == 0 ? '좋아요' : boardList[stat.index + 1].likeCnt}"
+                                      th:class="${boardList[stat.index + 1].isLiked} ? 'like-cnt-span-on' : 'like-cnt-span'"
+                                      th:onclick="like([[${boardList[stat.index + 1].postNo}]], this)"></span>
+                            </div>
                             <a th:href="${boardList[stat.index + 1].postUrl}" class="content-center board-icon-wrap">
                                 <span th:text="${boardList[stat.index + 1].commCnt}" class="comm-cnt-span"></span>
                             </a>
@@ -108,6 +113,17 @@
         function goPosts(postNo) {
             window.location.href = '/board/posts/' + postNo;
         }
+
+        function like(postNo, element) {
+            axios.post('/board/like', postNo)
+                .then(response => {
+                    element.innerHTML = response.data.data.likeCnt === 0 ? '좋아요' : response.data.data.likeCnt;
+                    element.className = '';
+                    element.classList.add(response.data.data.isLiked ? 'like-cnt-span-on' : 'like-cnt-span')
+                })
+                .catch(error => { console.error(error) })
+        }
+
     </script>
 </th:block>
 </html>

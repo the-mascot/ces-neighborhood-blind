@@ -31,7 +31,9 @@ public class BoardDto {
 
     private Integer viewCnt;
 
-    private Integer likeCnt;
+    private Long likeCnt;
+
+    private Boolean isLiked;
 
     private Integer commCnt;
 
@@ -60,8 +62,8 @@ public class BoardDto {
 
     public BoardDto(Long postNo, String boardType, String nickName,
                     String title, String content, String delYn,
-                    Integer viewCnt,
-                    Integer likeCnt, Integer commCnt, Timestamp createDate, String folderPath, String fileName) {
+                    Integer viewCnt, Long likeCnt, Boolean isLiked,
+                    Integer commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
@@ -70,6 +72,7 @@ public class BoardDto {
         this.delYn = delYn;
         this.viewCnt = viewCnt;
         this.likeCnt = likeCnt;
+        this.isLiked = isLiked;
         this.commCnt = commCnt;
         this.createDate = createDate;
         this.folderPath = folderPath;
@@ -78,8 +81,8 @@ public class BoardDto {
 
     public BoardDto(Long postNo, String boardType, String nickName,
                     String title, String content, String delYn,
-                    Integer viewCnt,
-                    Integer likeCnt, Long commCnt, Timestamp createDate, String folderPath, String fileName) {
+                    Integer viewCnt, Long likeCnt, Boolean isLiked,
+                    Long commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
@@ -88,6 +91,7 @@ public class BoardDto {
         this.delYn = delYn;
         this.viewCnt = viewCnt;
         this.likeCnt = likeCnt;
+        this.isLiked = isLiked;
         this.commCnt = commCnt.intValue();
         this.createDate = createDate;
         this.folderPath = folderPath;

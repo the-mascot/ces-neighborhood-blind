@@ -20,6 +20,18 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 import org.springframework.web.util.WebUtils;
 
+/**
+ * <pre>
+ * Request, Response logging 을 위한 필터
+ * API logging 을 위해 만들었으나 view 요청도 logging 되어 현재 사용 x
+ * TODO: API 만 logging 할 수 있도록 변경 혹은 삭제
+ * </pre>
+ *
+ * @deprecated
+ * @version 1.0
+ * @author mascot
+ * @since 2023.12.27
+ */
 @Slf4j
 public class ReqResLoggingFilter implements Filter {
 

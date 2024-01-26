@@ -1,7 +1,6 @@
 package ces.neighborhood.blind.app.entity;
 
 import ces.neighborhood.blind.common.utils.ComUtils;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Builder
@@ -43,9 +40,6 @@ public class Board extends BaseEntity {
 
     @Builder.Default
     private Integer viewCnt = 0;
-
-    @Builder.Default
-    private Integer likeCnt = 0;
 
     @Transient
     private String createDateStr;

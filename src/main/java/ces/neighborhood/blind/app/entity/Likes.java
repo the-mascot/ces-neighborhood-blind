@@ -7,43 +7,37 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @Builder
-@RequiredArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class SnsMbrInfo {
+public class Likes {
 
     @EmbeddedId
-    private SnsMbrInfoKey snsMbrInfoKey;
-
-    private String snsName;
+    private LikesId likesId;
 
     @CreationTimestamp
     @Column(updatable = false)
-    private String snsContDate;
-
-    private String refreshToken;
-
-    private String mbrId;
+    private Timestamp createDate;
 
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode
     @Embeddable
-    public static class SnsMbrInfoKey implements Serializable {
+    public static class LikesId implements Serializable {
 
-        private String snsId;
+        private Long postNo;
 
-        private String snsType;
-
+        private String mbrId;
     }
 }

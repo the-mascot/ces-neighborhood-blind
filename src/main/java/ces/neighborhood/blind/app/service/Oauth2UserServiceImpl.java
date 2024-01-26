@@ -10,15 +10,12 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -29,13 +26,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import ces.neighborhood.blind.common.code.ComCode;
 import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.SnsMbrInfo;
-import ces.neighborhood.blind.app.entity.SnsMbrInfoKey;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.app.repository.Oauth2UserRepository;
+import ces.neighborhood.blind.common.code.ComCode;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.net.URI;
@@ -148,7 +144,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         oauth2UserRepository.save(SnsMbrInfo
                 .builder()
                 .snsMbrInfoKey(
-                        SnsMbrInfoKey.builder()
+                        SnsMbrInfo.SnsMbrInfoKey.builder()
                                 .snsId((String) oAuth2User.getAttribute("email"))
                                 .snsType((String) oAuth2User.getAttribute("snsType"))
                                 .build()
@@ -181,7 +177,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
      */
     private SnsMbrInfo convertToSnsMbrInfo(Map<String, Object> attributes, String registrationId) {
         return SnsMbrInfo.builder()
-                .snsMbrInfoKey(SnsMbrInfoKey.builder()
+                .snsMbrInfoKey(SnsMbrInfo.SnsMbrInfoKey.builder()
                         .snsId(String.valueOf(attributes.get(StringUtils.equals(NAVER, registrationId) ? "id" : "sub")))
                         .snsType(registrationId)
                         .build())

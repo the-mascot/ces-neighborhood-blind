@@ -1,11 +1,12 @@
 package ces.neighborhood.blind.common.utils;
 
-import ces.neighborhood.blind.app.entity.Board;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ces.neighborhood.blind.common.code.Constant;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -15,8 +16,15 @@ import java.util.Map;
 import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * <pre>
+ * 공통 유틸
+ * </pre>
+ *
+ * @version 1.0
+ * @author mascot
+ * @since 2023.12.22
+ */
 @Slf4j
 public class ComUtils {
 
@@ -88,5 +96,9 @@ public class ComUtils {
         } else {
             return days + Constant.DAYS_KO;
         }
+    }
+
+    public static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }

@@ -379,7 +379,7 @@ body {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin: -1px 10px 1px 0;
+    margin: -1px 5px 1px 0px;
     vertical-align: middle;
 }
 
@@ -388,8 +388,25 @@ body {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin: -1px 10px 1px 0;
+    margin: 0px 5px 1px 0px;
     vertical-align: middle;
+}
+
+.like-cnt-span-on::before {
+    content: url("/static/assets/icon/like-on.svg");
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: -1px 5px 1px 0px;
+    vertical-align: middle;
+}
+
+.like-cnt-span:hover {
+    cursor: pointer;
+}
+
+.like-cnt-span-on:hover {
+    cursor: pointer;
 }
 
 .comm-cnt-span::before {
@@ -397,7 +414,7 @@ body {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin: -1px 10px 1px 0;
+    margin: -1px 5px 1px 0px;
     vertical-align: middle;
 }
 
@@ -406,7 +423,7 @@ body {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin: -1px 10px 1px 0;
+    margin: -1px 10px 1px 0px;
     vertical-align: middle;
 }
 

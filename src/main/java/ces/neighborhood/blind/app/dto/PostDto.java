@@ -27,7 +27,9 @@ public class PostDto {
 
     private Integer viewCnt;
 
-    private Integer likeCnt;
+    private Long likeCnt;
+
+    private Boolean isLiked;
 
     private Integer commCnt;
 
@@ -44,9 +46,9 @@ public class PostDto {
     }
 
     public PostDto(Long postNo, String boardType, String nickName,
-                    String title, String content, String delYn,
-                    Integer viewCnt,
-                    Integer likeCnt, Integer commCnt, Timestamp createDate) {
+                   String title, String content, String delYn,
+                   Integer viewCnt, Long likeCnt, Boolean isLiked,
+                   Integer commCnt, Timestamp createDate) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
@@ -54,15 +56,16 @@ public class PostDto {
         this.content = content;
         this.delYn = delYn;
         this.viewCnt = viewCnt;
+        this.likeCnt = likeCnt;
         this.likeCnt = likeCnt;
         this.commCnt = commCnt;
         this.createDate = createDate;
     }
 
     public PostDto(Long postNo, String boardType, String nickName,
-                    String title, String content, String delYn,
-                    Integer viewCnt,
-                    Integer likeCnt, Long commCnt, Timestamp createDate) {
+                   String title, String content, String delYn,
+                   Integer viewCnt, Long likeCnt, Boolean isLiked,
+                   Long commCnt, Timestamp createDate) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
@@ -71,6 +74,7 @@ public class PostDto {
         this.delYn = delYn;
         this.viewCnt = viewCnt;
         this.likeCnt = likeCnt;
+        this.isLiked = isLiked;
         this.commCnt = commCnt.intValue();
         this.createDate = createDate;
     }

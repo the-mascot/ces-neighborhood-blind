@@ -1,15 +1,27 @@
-package ces.neighborhood.blind.common.exception;
+package ces.neighborhood.blind.common.handler;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import ces.neighborhood.blind.common.exception.ApiExceptionResponse;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * RestC
+ * </pre>
+ *
+ * @version 1.0
+ * @author the-mascot
+ * @since 2023.12.05
+ */
 @Slf4j
 @RestControllerAdvice
-public class ApiExceptionAdvice {
+public class RestExceptionAdviceHandler {
 
     @ExceptionHandler({BizException.class})
     public ResponseEntity<ApiExceptionResponse> exceptionHandler(HttpServletRequest request, final BizException e) {
@@ -24,8 +36,8 @@ public class ApiExceptionAdvice {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ApiExceptionResponse> exceptionHandler(HttpServletRequest request, final Exception e) {
-        log.error("[ExceptionHandler] errMsg: {}", e.getMessage());
-        log.error("[ExceptionHandler] err 호출지점: {}", e.getStackTrace()[0]);
+        log.error("[RestExceptionHandler] errMsg: {}", e.getMessage());
+        log.error("[RestExceptionHandler] err 호출지점: {}", e.getStackTrace()[0]);
         e.printStackTrace();
         return ResponseEntity
                 .status(ErrorCode.CODE_9999.getHttpStatus())
