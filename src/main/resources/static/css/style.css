@@ -514,6 +514,15 @@ body {
     margin: -1px 10px 1px 0;
     vertical-align: middle;
 }
+
+.more-wrap {
+    display: inline-block;
+}
+
+.more-dropdown-menu {
+    --bs-dropdown-min-width: 163px;
+}
+
 /* ---/post--- */
 
 /* /write */

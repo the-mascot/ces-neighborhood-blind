@@ -14,12 +14,21 @@
                 <div class="content-between f-l f-14 mt-14">
                     <div>
                         <span class="clock-span mr-14" th:text="${board.createDateStr}"></span>
+                        <span th:text="${board.likeCnt == 0 ? '좋아요' : board.likeCnt}"
+                              th:class="${board.isLiked} ? 'like-cnt-span-on mr-14' : 'like-cnt-span mr-14'"
+                              th:postNo="${board.postNo}"
+                              onclick="like(this.getAttribute('postNo'), this)"></span>
                         <span class="view-cnt-span mr-14" th:text="${board.viewCnt}"></span>
                         <span class="comm-cnt-span mr-14" th:text="${board.commCnt}"></span>
                     </div>
                     <div>
                         <span id="bookMark" class="book-mark-span"></span>
-                        <span id="more" class="three-dot-span"></span>
+                        <div class="dropdown more-wrap">
+                            <span class="three-dot-span" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 62px"></span>
+                            <ul class="dropdown-menu more-dropdown-menu">
+                                <li><p class="dropdown-item f-l f-14" onclick="copyLink()">링크복사</p></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,22 +43,48 @@
                 <h1>추천 글</h1>
             </div>
         </aside>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast align-items-center border-0 text-bg-dark" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        링크가 클립보드에 복사되었습니다.
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <th:block layout:fragment="script">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
         });
 
         document.getElementById('bookMark').addEventListener('click', function () {
 
         });
 
-        document.getElementById('more').addEventListener('click', function () {
+        function like(postNo, element) {
+            axios.post('/board/like', postNo)
+                .then(response => {
+                    element.innerHTML = response.data.data.likeCnt === 0 ? '좋아요' : response.data.data.likeCnt;
+                    element.className = '';
+                    element.classList.add(response.data.data.isLiked ? 'like-cnt-span-on' : 'like-cnt-span');
+                    element.classList.add('mr-14');
+                })
+                .catch(error => { console.error(error) })
+        }
 
-        });
+        function copyLink() {
+            let currentURL = window.location.href;
+            window.navigator.clipboard.writeText(currentURL).then(function () {
+                const toastLiveExample = document.getElementById('liveToast');
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+            });
+        }
     </script>
 </th:block>
 </html>

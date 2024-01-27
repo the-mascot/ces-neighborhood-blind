@@ -20,7 +20,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "from Board b left join b.comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
             "left join Attachment a on b.postNo = a.refNo and a.refType = 'BOARD' and a.delYn = 'N' " +
             "left join Likes l on b.postNo = l.likesId.postNo " +
-            "left join Likes i on b.postNo = l.likesId.postNo and l.likesId.mbrId = :mbrId " +
+            "left join Likes i on b.postNo = i.likesId.postNo and i.likesId.mbrId = :mbrId " +
             "where b.boardType = :boardType and b.delYn = 'N' " +
             "and a.fileNo = (select min(aa.fileNo) from Attachment aa where aa.refNo = b.postNo and aa.refType = 'BOARD' and aa.delYn = 'N' ) " +
             "group by b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
@@ -35,7 +35,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "from Board b left join b.comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
             "left join Attachment a on b.postNo = a.refNo and a.refType = 'BOARD' and a.delYn = 'N' " +
             "left join Likes l on b.postNo = l.likesId.postNo " +
-            "left join Likes i on b.postNo = l.likesId.postNo and l.likesId.mbrId = :mbrId " +
+            "left join Likes i on b.postNo = i.likesId.postNo and i.likesId.mbrId = :mbrId " +
             "where b.boardType is null and b.delYn = 'N' " +
             "and a.fileNo = (select min(aa.fileNo) from Attachment aa where aa.refNo = b.postNo and aa.refType = 'BOARD' and aa.delYn = 'N' ) or a.fileNo is null " +
             "group by b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
@@ -49,7 +49,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "(count(c) + count(r)), b.createDate) " +
             "from Board b left join b.comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
             "left join Likes l on b.postNo = l.likesId.postNo " +
-            "left join Likes i on b.postNo = l.likesId.postNo and l.likesId.mbrId = :mbrId " +
+            "left join Likes i on b.postNo = i.likesId.postNo and i.likesId.mbrId = :mbrId " +
             "where b.boardType is null and b.postNo = :postNo and b.delYn = 'N' " +
             "group by b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
             "substring(b.content, 1, 300), b.delYn, b.viewCnt, i.likesId.postNo, b.createDate ")

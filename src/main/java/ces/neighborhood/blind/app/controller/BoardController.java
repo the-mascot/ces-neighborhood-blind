@@ -70,7 +70,7 @@ public class BoardController {
         if (postDto.isEmpty()) {
             response.sendRedirect("/error");
         }
-        model.addAttribute("board", postDto);
+        model.addAttribute("board", postDto.get());
         return "/board/post";
     }
 
