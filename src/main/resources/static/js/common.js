@@ -28,6 +28,23 @@ function validatePassword (password) {
     return passwordRegex.test(password);
 }
 
+function like(evt) {
+    let element = evt.target;
+    let data = {};
+    data.postNo = element.getAttribute('data-post-no');
+    data.postType = element.getAttribute('data-post-type') === null ? 'POST' : element.getAttribute('data-post-type');
+    axios.post('/board/like', data)
+        .then(response => {
+            element.innerHTML = response.data.data.likeCnt === 0 ? '좋아요' : response.data.data.likeCnt;
+            element.className = '';
+            element.classList.add(response.data.data.isLiked ? 'like-cnt-span-on' : 'like-cnt-span');
+            element.classList.add('mr-14');
+        })
+        .catch(error => {
+            console.error(error);
+        })
+}
+
 const ComUtils = {
     nullCheck: function(value) {
         if (value === null || value === '') {

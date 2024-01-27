@@ -94,13 +94,4 @@ public class BoardController {
         model.addAttribute("board", boardService.getPost(postNo));
         return "/board/edit";
     }
-
-    /**
-     * 게시글 좋아요
-     */
-    @ResponseBody
-    @PostMapping("/board/like")
-    public ResponseEntity like(@RequestBody Long postNo) {
-        return ApiResponse.success(boardService.like(postNo));
-    }
 }

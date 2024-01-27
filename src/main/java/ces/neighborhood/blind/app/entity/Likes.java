@@ -36,6 +36,8 @@ public class Likes {
     @Embeddable
     public static class LikesId implements Serializable {
 
+        private String postType;
+
         private Long postNo;
 
         private String mbrId;

@@ -12,38 +12,40 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
- * RestC
+ * RestException 처리 Handler
  * </pre>
  *
  * @version 1.0
  * @author the-mascot
- * @since 2023.12.05
+ * @since 2023.11.27
  */
 @Slf4j
 @RestControllerAdvice
 public class RestExceptionAdviceHandler {
 
+    /**
+     * BizException Exception 처리
+     */
     @ExceptionHandler({BizException.class})
     public ResponseEntity<ApiExceptionResponse> exceptionHandler(HttpServletRequest request, final BizException e) {
         log.error("[BizExceptionHandler] errCode: {}, errMsg: {}", e.getErrorCode().getCode(), e.getErrorCode().getMessage());
-        return ResponseEntity
-                .status(e.getErrorCode().getHttpStatus())
-                .body(ApiExceptionResponse.builder()
-                        .errCode(e.getErrorCode().getCode())
-                        .errMsg(e.getErrorCode().getMessage())
-                        .build());
+        return new ResponseEntity<>(ApiExceptionResponse.builder()
+                .errCode(e.getErrorCode().getCode())
+                .errMsg(e.getErrorCode().getMessage())
+                .build(), e.getErrorCode().getHttpStatus());
     }
 
+    /**
+     * 최상위 Exception 처리
+     */
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ApiExceptionResponse> exceptionHandler(HttpServletRequest request, final Exception e) {
         log.error("[RestExceptionHandler] errMsg: {}", e.getMessage());
         log.error("[RestExceptionHandler] err 호출지점: {}", e.getStackTrace()[0]);
         e.printStackTrace();
-        return ResponseEntity
-                .status(ErrorCode.CODE_9999.getHttpStatus())
-                .body(ApiExceptionResponse.builder()
-                        .errCode(ErrorCode.CODE_9999.getCode())
-                        .errMsg(ErrorCode.CODE_9999.getMessage())
-                        .build());
+        return new ResponseEntity<>(ApiExceptionResponse.builder()
+                .errCode(ErrorCode.CODE_9999.getCode())
+                .errMsg(ErrorCode.CODE_9999.getMessage())
+                .build(), ErrorCode.CODE_9999.getHttpStatus());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
+import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Board;
@@ -22,9 +23,7 @@ import ces.neighborhood.blind.app.repository.LikesRepository;
 import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.utils.ComUtils;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -144,29 +143,33 @@ public class BoardService {
 
     /**
      * 게시글 좋아요 기능
-     * @param postNo
-     * @return
+     * @param likeDto
+     * @return LikeDto(좋아요 여부, 좋아요 개수)
      * @throws
      */
-    public Map<String, Object> like (Long postNo) {
+    public LikeDto like(LikeDto likeDto) {
         Authentication authentication = ComUtils.getAuthentication();
         Likes.LikesId likesId = Likes.LikesId.builder()
-                .postNo(postNo)
+                .postType(likeDto.getPostType())
+                .postNo(likeDto.getPostNo())
                 .mbrId(authentication.getName())
                 .build();
+        // 해당 게시물에 좋아요를 한적 있는지 확인
         Optional<Likes> likes = likesRepository.findById(likesId);
         boolean isLiked = likes.isPresent();
         if (isLiked) {
+            // 좋아요 상태면 좋아요 해제
             likesRepository.delete(likes.get());
         } else {
+            // 좋아요 추가
             likesRepository.save(Likes.builder()
                     .likesId(likesId)
                     .build());
         }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("isLiked", !isLiked);
-        result.put("likeCnt", likesRepository.getLikeCount(postNo));
-        return result;
+        return LikeDto.builder()
+                .isLiked(!isLiked)
+                .likeCnt(likesRepository.getLikeCount(likeDto.getPostNo()))
+                .build();
     }
 }

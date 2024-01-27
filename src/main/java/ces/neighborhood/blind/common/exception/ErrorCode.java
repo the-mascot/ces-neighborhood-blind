@@ -21,7 +21,6 @@ public enum ErrorCode {
     CODE_8001("8001", "지원하지않는 파일 형식입니다."),
     CODE_8002("8002", "이미지 업로드 실패"),
     CODE_8003("8002", "첨부할 수 있는 이미지 용량은 최대 10MB 까지입니다."),
-
     CODE_9998("9998", "Oops! Something went wrong.", HttpStatus.INTERNAL_SERVER_ERROR),
     CODE_9999("9999", "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
     ;

@@ -15,9 +15,8 @@
                     <div>
                         <span class="clock-span mr-14" th:text="${board.createDateStr}"></span>
                         <span th:text="${board.likeCnt == 0 ? '좋아요' : board.likeCnt}"
-                              th:class="${board.isLiked} ? 'like-cnt-span-on mr-14' : 'like-cnt-span mr-14'"
-                              th:postNo="${board.postNo}"
-                              onclick="like(this.getAttribute('postNo'), this)"></span>
+                              th:class="${board.isLiked} ? 'like-cnt like-cnt-span-on mr-14' : 'like-cnt like-cnt-span mr-14'"
+                              th:attr="data-post-no=${board.postNo}, data-post-type='POST'"></span>
                         <span class="view-cnt-span mr-14" th:text="${board.viewCnt}"></span>
                         <span class="comm-cnt-span mr-14" th:text="${board.commCnt}"></span>
                     </div>
@@ -26,7 +25,7 @@
                         <div class="dropdown more-wrap">
                             <span class="three-dot-span" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 62px"></span>
                             <ul class="dropdown-menu more-dropdown-menu">
-                                <li><p class="dropdown-item f-l f-14" onclick="copyLink()">링크복사</p></li>
+                                <li><p id="dropDownCopyLink" class="dropdown-item f-l f-14">링크복사</p></li>
                             </ul>
                         </div>
                     </div>
@@ -36,6 +35,19 @@
                 <p class="mt-30" th:utext="${board.content}"></p>
                 <p th:text="${board.postNo}"></p>
                 <a th:href="@{/board/edit/post/{postNo}(postNo=${board.postNo})}">수정</a>
+            </div>
+            <div class="post-main-comment">
+                <h3 class="f-b f-16" th:text="'댓글 ' + ${board.commCnt}"></h3>
+                <div class="comment-btn-wrap">
+                    <form class="content-left">
+                        <img src="/static/assets/icon/camera.svg" class="ms-3 me-1">
+                        <button id="commentBtn" class="comment-btn">댓글을 남겨주세요.</button>
+                        <input type="file" name="image" class="comment-file">
+                        <div id="commentContentWrap" class="comment-content-wrap hidden">
+                            <textarea id="commentContent" class="comment-content" rows="4"></textarea>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
         <aside class="post-aside">
@@ -66,25 +78,32 @@
 
         });
 
-        function like(postNo, element) {
-            axios.post('/board/like', postNo)
-                .then(response => {
-                    element.innerHTML = response.data.data.likeCnt === 0 ? '좋아요' : response.data.data.likeCnt;
-                    element.className = '';
-                    element.classList.add(response.data.data.isLiked ? 'like-cnt-span-on' : 'like-cnt-span');
-                    element.classList.add('mr-14');
-                })
-                .catch(error => { console.error(error) })
-        }
+        document.querySelectorAll('.like-cnt').forEach(element => {
+            element.addEventListener('click', function (evt) {
+                like(evt);
+            });
+        });
 
-        function copyLink() {
+        document.getElementById('dropDownCopyLink').addEventListener('click', function () {
             let currentURL = window.location.href;
             window.navigator.clipboard.writeText(currentURL).then(function () {
                 const toastLiveExample = document.getElementById('liveToast');
                 const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
                 toastBootstrap.show();
             });
-        }
+        });
+
+        document.getElementById('commentBtn').addEventListener('click', function (evt) {
+            evt.preventDefault();
+            this.classList.add('hidden');
+            document.getElementById('commentContentWrap').classList.remove('hidden');
+        });
+
+        document.getElementById('commentContent').addEventListener('input', function () {
+            this.style.height = 'auto'; // 초기 높이로 되돌림
+            this.style.height = this.scrollHeight + 'px'; // 스크롤 높이로 설정
+        })
+
     </script>
 </th:block>
 </html>

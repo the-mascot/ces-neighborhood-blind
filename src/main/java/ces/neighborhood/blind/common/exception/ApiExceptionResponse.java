@@ -19,5 +19,4 @@ public class ApiExceptionResponse {
         this.errMsg = errMsg;
         this.responseTime = LocalDateTime.now();
     }
-
 }

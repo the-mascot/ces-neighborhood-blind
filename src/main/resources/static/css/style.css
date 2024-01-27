@@ -133,6 +133,10 @@ body {
     line-height: 38px;
 }
 
+.hidden {
+    display: none;
+}
+
 /*---common---*/
 
 /*gnb*/
@@ -481,6 +485,12 @@ body {
     border-top: 1px solid #eee;
 }
 
+.post-main-comment {
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+    padding: 26px 0 0;
+}
+
 .post-aside {
     width: 300px;
     margin-left: 64px;
@@ -502,7 +512,7 @@ body {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin: -1px 10px 1px 0;
+    margin: -1px 10px 1px 0px;
     vertical-align: middle;
 }
 
@@ -511,7 +521,7 @@ body {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin: -1px 10px 1px 0;
+    margin: -1px 10px 1px 0px;
     vertical-align: middle;
 }
 
@@ -521,6 +531,41 @@ body {
 
 .more-dropdown-menu {
     --bs-dropdown-min-width: 163px;
+}
+
+.comment-btn-wrap {
+    border: 1px solid #d4d4d4;
+    margin-top: 21px;
+    padding: 0;
+}
+
+.comment-btn {
+    height: 63px;
+    border: 0;
+    font-size: 16px;
+    font-family: "Noto Sans KR Medium";
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    text-align: left;
+}
+
+.comment-file {
+    display: none;
+}
+
+.comment-content-wrap {
+
+}
+
+.comment-content {
+    min-height: 96px;
+    padding: 0 4px;
+    font-size: 16px;
+    line-height: 1.5em;
+    resize: none;
+    overflow: hidden;
 }
 
 /* ---/post--- */
