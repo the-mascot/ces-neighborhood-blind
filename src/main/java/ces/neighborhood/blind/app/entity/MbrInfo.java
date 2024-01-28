@@ -1,18 +1,5 @@
 package ces.neighborhood.blind.app.entity;
 
-import ces.neighborhood.blind.common.code.ComCode;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Collections;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,10 +7,23 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import ces.neighborhood.blind.common.code.ComCode;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class MbrInfo implements UserDetails {
 
@@ -60,6 +60,10 @@ public class MbrInfo implements UserDetails {
     @UpdateTimestamp
     @Column(insertable = false)
     private Timestamp modifyDate;
+
+    public MbrInfo(String mbrId) {
+        this.mbrId = mbrId;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

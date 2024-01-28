@@ -137,6 +137,41 @@ body {
     display: none;
 }
 
+.white-btn-s {
+    width: 62px;
+    height: 32px;
+    background-color: #fff;
+    border: solid 1px #d4d4d4;
+    color: #222;
+    font-family: "Noto Sans KR SemiBold";
+    font-size: 16px;
+}
+
+.black-btn-s {
+    width: 62px;
+    height: 32px;
+    background-color: black;
+    border: 0;
+    color: #fff;
+    font-family: "Noto Sans KR SemiBold";
+    font-size: 16px;
+}
+
+.preview-image-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.preview-image-del::before {
+    content: url("/static/assets/icon/x-square-fill.svg");
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+}
+
 /*---common---*/
 
 /*gnb*/
@@ -536,36 +571,68 @@ body {
 .comment-btn-wrap {
     border: 1px solid #d4d4d4;
     margin-top: 21px;
-    padding: 0;
 }
 
 .comment-btn {
     height: 63px;
+    padding-left: 60px;
     border: 0;
-    font-size: 16px;
-    font-family: "Noto Sans KR Medium";
+    font-size: 15px;
+    font-family: "Noto Sans KR";
     width: 100%;
     border: 0;
     background-color: transparent;
     cursor: pointer;
     text-align: left;
+    position: relative;
+}
+
+.comment-btn::before {
+    left: 20px;
+    top: 20px;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    content: url("/static/assets/icon/camera.svg");
 }
 
 .comment-file {
     display: none;
 }
 
-.comment-content-wrap {
+.comment-content-area {
+    padding: 18px 20px 17px;
+    width: 100%;
+    position: relative;
+}
 
+.comment-content-wrap {
+    margin-left: 36px;
 }
 
 .comment-content {
     min-height: 96px;
     padding: 0 4px;
-    font-size: 16px;
     line-height: 1.5em;
     resize: none;
     overflow: hidden;
+    width: 100%;
+    font-size: 15px;
+    font-family: "Noto Sans KR";
+    border: 0;
+}
+
+.comment-image-btn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer;
+}
+
+.comment-write-btn-wrap {
+    display: flex;
+    justify-content: right;
+    margin-top: 5px;
 }
 
 /* ---/post--- */

@@ -1,9 +1,6 @@
 package ces.neighborhood.blind.app.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +40,7 @@ public class S3Service {
     private String buket;
 
     private static final List<String>
-            ALLOWED_IMAGE_EXTENSIONS = Arrays.asList( "jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif");
+            ALLOWED_IMAGE_EXTENSIONS = Arrays.asList("jpg", "jfif", "pjpeg", "jpeg", "pjp", "png", "gif", "bmp", "dib", "webp", "heic", "heif");
 
     private static final String IMAGE_FOLDER_PATTERN = "yyyyMMdd";
 
@@ -95,7 +92,7 @@ public class S3Service {
         } catch (IOException e) {
             throw new BizException(ErrorCode.CODE_8002);
         }
-        
+
         // Attachment 저장
         attachmentRepository.save(Attachment.builder()
                 .folderPath(folderPath)

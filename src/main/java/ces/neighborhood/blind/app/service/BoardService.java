@@ -11,14 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
+import ces.neighborhood.blind.app.dto.CommentDto;
 import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Board;
+import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.AttachmentRepository;
 import ces.neighborhood.blind.app.repository.BoardRepository;
+import ces.neighborhood.blind.app.repository.CommentRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
 import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.utils.ComUtils;
@@ -26,6 +29,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -36,6 +40,7 @@ import lombok.RequiredArgsConstructor;
  * @author mascot
  * @since 2023.12.01
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -45,6 +50,8 @@ public class BoardService {
     private final AttachmentRepository attachmentRepository;
 
     private final LikesRepository likesRepository;
+
+    private final CommentRepository commentRepository;
 
     /**
      * 게시판 목록 가져오기
@@ -170,6 +177,14 @@ public class BoardService {
         return LikeDto.builder()
                 .isLiked(!isLiked)
                 .likeCnt(likesRepository.getLikeCount(likeDto.getPostNo()))
+                .build();
+    }
+
+    public void writeComment(CommentDto commentDto) {
+        Authentication authentication = ComUtils.getAuthentication();
+        Comment.builder()
+                .mbrInfo(new MbrInfo(authentication.getName()))
+                .content(commentDto.getContent())
                 .build();
     }
 }
