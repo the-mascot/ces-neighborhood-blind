@@ -568,12 +568,12 @@ body {
     --bs-dropdown-min-width: 163px;
 }
 
-.comment-btn-wrap {
+.comment-add-wrap {
     border: 1px solid #d4d4d4;
     margin-top: 21px;
 }
 
-.comment-btn {
+.comment-add-btn {
     height: 63px;
     padding-left: 60px;
     border: 0;
@@ -587,7 +587,7 @@ body {
     position: relative;
 }
 
-.comment-btn::before {
+.comment-add-btn::before {
     left: 20px;
     top: 20px;
     width: 24px;
@@ -600,17 +600,17 @@ body {
     display: none;
 }
 
-.comment-content-area {
+.w-comment-wrap {
     padding: 18px 20px 17px;
     width: 100%;
     position: relative;
 }
 
-.comment-content-wrap {
+.w-comment-content-wrap {
     margin-left: 36px;
 }
 
-.comment-content {
+.w-comment-content {
     min-height: 96px;
     padding: 0 4px;
     line-height: 1.5em;
@@ -622,17 +622,35 @@ body {
     border: 0;
 }
 
-.comment-image-btn {
+.w-comment-image-btn {
     position: absolute;
     left: 20px;
     top: 20px;
     cursor: pointer;
 }
 
-.comment-write-btn-wrap {
+.w-comment-btn-wrap {
     display: flex;
     justify-content: right;
     margin-top: 5px;
+}
+
+.comment-wrap {
+    padding:  12px 20px 19px;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-name {
+    margin-top: 9px;
+    color: #94969b;
+    font-size: 12px;
+    line-height: 1.33em;
+}
+
+.comment-content {
+    margin-top: 5px;
+    font-size: 16px;
+    line-height: 1.5em;
 }
 
 /* ---/post--- */

@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
+import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
@@ -24,10 +25,6 @@ public class JpaTest {
 
     @Autowired
     private LikesRepository likesRepository;
-
-    @Test
-    public void joinTest() {
-    }
 
     @Test
     public void convertDate() {
@@ -66,4 +63,30 @@ public class JpaTest {
         List<Likes> likes = likesRepository.findAllByLikesId_PostNo(Long.valueOf(503));
     }
 
+    @Test
+    public void nPlusOneTest() {
+        // JPA 의 N + 1 문제 테스트
+        // Board 와 즉지 로딩인 MbrInfo select 발생
+        List<Board> boardList = boardRepository.findAll();
+        System.out.println("findAll 종료");
+        // 지연 로딩인 Comment select 발생
+        // 부모 Board의 개수 만큼 +1 의 Comment select 쿼리 발생.
+        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+    }
+
+    @Test
+    public void joinTest() {
+        // 일반 Join 테스트
+        List<Board> boardList = boardRepository.findAllWithJustJoin();
+        System.out.println("findAllWithJustJoin 종료");
+        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+    }
+
+    @Test
+    public void fetchJoinTest() {
+        // Fetch Join 테스트
+        List<Board> boardList = boardRepository.findAllWithFetchJoin();
+        System.out.println("findAllWithFetchJoin 종료");
+        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+    }
 }

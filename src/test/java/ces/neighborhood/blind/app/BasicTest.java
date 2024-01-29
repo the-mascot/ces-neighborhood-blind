@@ -1,5 +1,10 @@
 package ces.neighborhood.blind.app;
 
+import org.jsoup.Jsoup;
+import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
 import java.io.File;
 import java.nio.file.Path;
@@ -7,12 +12,6 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.jsoup.Jsoup;
-import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BasicTest {
 

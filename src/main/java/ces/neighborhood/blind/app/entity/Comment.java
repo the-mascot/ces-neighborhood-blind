@@ -34,16 +34,14 @@ public class Comment extends BaseEntity {
 
     private String delYn;
 
-    private Integer likeCnt;
-
     @Transient
     private String createDateStr;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mbr_id")
     private MbrInfo mbrInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_no")
     private Board board;
 

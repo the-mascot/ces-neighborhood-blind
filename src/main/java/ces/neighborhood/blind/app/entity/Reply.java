@@ -31,8 +31,6 @@ public class Reply extends BaseEntity {
 
     private String delYn;
 
-    private Integer likeCnt;
-
     @Transient
     private String createDateStr;
 

@@ -11,18 +11,21 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@ToString
 public class Board extends BaseEntity {
 
     @Id
@@ -44,15 +47,19 @@ public class Board extends BaseEntity {
     @Transient
     private String createDateStr;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mbr_id")
     private MbrInfo mbrInfo;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Comment> comment;
+    private List<Comment> comment = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Reply> Reply;
+    private List<Reply> Reply = new ArrayList<>();
+
+    public Board(Long postNo) {
+        this.postNo = postNo;
+    }
 
     public String getCreateDateStr() {
         return ComUtils.calculateTimeDifference(createDate);

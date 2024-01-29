@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
-import ces.neighborhood.blind.app.dto.CommentDto;
 import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
@@ -52,6 +52,8 @@ public class BoardService {
     private final LikesRepository likesRepository;
 
     private final CommentRepository commentRepository;
+
+    private final S3Service s3Service;
 
     /**
      * 게시판 목록 가져오기
@@ -180,11 +182,16 @@ public class BoardService {
                 .build();
     }
 
-    public void writeComment(CommentDto commentDto) {
+    @Transactional
+    public void writeComment(String postNo, String content, MultipartFile image) {
         Authentication authentication = ComUtils.getAuthentication();
-        Comment.builder()
+        commentRepository.save(Comment.builder()
                 .mbrInfo(new MbrInfo(authentication.getName()))
-                .content(commentDto.getContent())
-                .build();
+                .board(new Board(Long.valueOf(postNo)))
+                .content(content)
+                .build());
+        if (!image.isEmpty()) {
+            s3Service.uploadFileToS3(image, authentication);
+        }
     }
 }

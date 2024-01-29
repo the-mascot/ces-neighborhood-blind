@@ -33,10 +33,10 @@ public class BoardRestController {
      * 댓글 등록
      */
     @PostMapping("/board/write/comment")
-    public ResponseEntity writeComment(@RequestPart(value = "content", required = false) String Content,
+    public ResponseEntity writeComment(@RequestPart(value = "content", required = false) String content ,
                                        @RequestPart(value = "postNo", required = false) String postNo,
                                        @RequestPart(value = "image", required = false) MultipartFile image) {
-        log.error("hello");
+        boardService.writeComment(postNo, content, image);
         return ApiResponse.success();
     }
 

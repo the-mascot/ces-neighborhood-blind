@@ -51,6 +51,16 @@ const ComUtils = {
             return true;
         }
         return false;
+    },
+    modal: function(msg) {
+        let modal = bootstrap.Modal.getInstance('#alertModal');
+        if (!modal) {
+            modal = new bootstrap.Modal('#alertModal');
+            document.getElementById('alertMsg').innerText = msg;
+        } else {
+            modal.hide();
+        }
+        modal.show();
     }
 }
 
