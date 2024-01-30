@@ -37,7 +37,7 @@ public class Comment extends BaseEntity {
     @Transient
     private String createDateStr;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mbr_id")
     private MbrInfo mbrInfo;
 

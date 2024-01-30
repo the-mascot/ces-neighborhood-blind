@@ -1,5 +1,6 @@
 package ces.neighborhood.blind.app;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -88,5 +89,14 @@ public class JpaTest {
         List<Board> boardList = boardRepository.findAllWithFetchJoin();
         System.out.println("findAllWithFetchJoin 종료");
         boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+    }
+
+    @Test
+    @DisplayName("EntityGraph 테스트")
+    public void entityGraphTest() {
+        List<Board> boardList = boardRepository.findAll();
+        System.out.println("EntityGraph 종료");
+        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+        boardList.forEach(s -> System.out.println("nickname : " + s.getMbrInfo().getMbrNickname()));
     }
 }

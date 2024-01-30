@@ -1,5 +1,6 @@
 package ces.neighborhood.blind.app.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -67,5 +68,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     // Fecth Join
     @Query("select b from Board b join fetch b.comment ")
     List<Board> findAllWithFetchJoin();
+
+    @Override
+    @EntityGraph(attributePaths = {"comment"}, type = EntityGraph.EntityGraphType.LOAD)
+    List<Board> findAll();
 
 }
