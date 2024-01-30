@@ -51,9 +51,11 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "mbr_id")
     private MbrInfo mbrInfo;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Comment> comment = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Reply> Reply = new ArrayList<>();
 

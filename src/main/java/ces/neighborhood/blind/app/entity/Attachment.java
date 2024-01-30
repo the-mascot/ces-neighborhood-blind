@@ -6,13 +6,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Attachment extends BaseEntity {
 
@@ -37,4 +39,11 @@ public class Attachment extends BaseEntity {
 
     private String delYn;
 
+    public void setRefNo(Long refNo) {
+        this.refNo = refNo;
+    }
+
+    public void setRefType(String refType) {
+        this.refType = refType;
+    }
 }
