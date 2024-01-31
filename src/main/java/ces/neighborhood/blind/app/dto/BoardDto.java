@@ -27,8 +27,6 @@ public class BoardDto {
 
     private String content;
 
-    private String delYn;
-
     private Integer viewCnt;
 
     private Long likeCnt;
@@ -61,15 +59,13 @@ public class BoardDto {
     }
 
     public BoardDto(Long postNo, String boardType, String nickName,
-                    String title, String content, String delYn,
-                    Integer viewCnt, Long likeCnt, Boolean isLiked,
+                    String title, String content, Integer viewCnt, Long likeCnt, Boolean isLiked,
                     Integer commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
         this.title = title;
         this.content = content;
-        this.delYn = delYn;
         this.viewCnt = viewCnt;
         this.likeCnt = likeCnt;
         this.isLiked = isLiked;
@@ -80,15 +76,13 @@ public class BoardDto {
     }
 
     public BoardDto(Long postNo, String boardType, String nickName,
-                    String title, String content, String delYn,
-                    Integer viewCnt, Long likeCnt, Boolean isLiked,
+                    String title, String content, Integer viewCnt, Long likeCnt, Boolean isLiked,
                     Long commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
         this.boardType = boardType;
         this.nickName = nickName;
         this.title = title;
         this.content = content;
-        this.delYn = delYn;
         this.viewCnt = viewCnt;
         this.likeCnt = likeCnt;
         this.isLiked = isLiked;

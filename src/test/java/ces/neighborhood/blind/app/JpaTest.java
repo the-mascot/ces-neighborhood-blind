@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -13,12 +14,15 @@ import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
+import ces.neighborhood.blind.common.TestQueryDslConfig;
 import java.util.List;
 
-@ActiveProfiles("test")
-@DataJpaTest
-@TestPropertySource(locations = "classpath:application-test.yml")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest    // JPA 슬라이싱 테스트. JPA 관련 Component 들만 로드 시키고 테스트 떄 넣은 Data 도 롤백 된다.
+@ActiveProfiles("test") // 테스트 프로파일
+@TestPropertySource(locations = "classpath:application-test.yml")   // 테스트 프로파일 위치
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)    // Replace.NONE 실제 데이터 베이스 사용.
+@Import(TestQueryDslConfig.class) /*QueryDsl 추가로 JpaQueryFactory Bean 등록을 위해 추가.
+JpaQueryFactory 는 persistenceLayer가 아니라서 추가 bean등록이 필요하다.*/
 public class JpaTest {
 
     @Autowired
@@ -98,5 +102,22 @@ public class JpaTest {
         System.out.println("EntityGraph 종료");
         boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
         boardList.forEach(s -> System.out.println("nickname : " + s.getMbrInfo().getMbrNickname()));
+    }
+
+    @Test
+    @DisplayName("queryDsl 테스트")
+    public void simpleQueryDslTest() {
+        List<BoardDto> boardList = boardRepository.findAllByPostNoAndMbrId("dmstn1812@naver.com");
+        boardList.forEach(s -> System.out.println(s.getPostNo()));
+    }
+
+    @Test
+    @DisplayName("queryDsl 테스트")
+    public void ss() {
+        List<BoardDto> boardList = boardRepository.getBoardList("dmstn1812@naver.com");
+        boardList.forEach(s -> {
+            System.out.println("postNo : " + s.getPostNo());
+            System.out.println("nickname : " + s.getNickName());
+        });
     }
 }

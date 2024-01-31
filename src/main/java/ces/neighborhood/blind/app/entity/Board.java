@@ -51,13 +51,14 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "mbr_id")
     private MbrInfo mbrInfo;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Comment> comment = new ArrayList<>();
+    // N:1 관계 금지!! 실무에서 사용 X
+//    @Builder.Default
+//    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+//    private List<Comment> comment = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Reply> Reply = new ArrayList<>();
+    private List<Likes> likes = new ArrayList<>();
 
     public Board(Long postNo) {
         this.postNo = postNo;

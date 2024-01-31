@@ -6,6 +6,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import lombok.AccessLevel;
@@ -28,6 +32,11 @@ public class Likes {
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_no")
+    @MapsId("postNo")
+    private Board board;
 
     @Builder
     @NoArgsConstructor
