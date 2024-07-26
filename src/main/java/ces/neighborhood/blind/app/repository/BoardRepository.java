@@ -18,7 +18,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardDslRep
             "b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
             "substring(b.content, 1, 300), b.viewCnt, count(l.likesId.postNo), case when i.likesId.postNo is null then false else true end, " +
             "(count(c) + count(r)) , b.createDate, a.folderPath, a.storedFileName) " +
-            "from Board b left join b.comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
+            "from Board b left join Comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
             "left join Attachment a on b.postNo = a.refNo and a.refType = 'BOARD' and a.delYn = 'N' " +
             "left join Likes l on b.postNo = l.likesId.postNo " +
             "left join Likes i on b.postNo = i.likesId.postNo and i.likesId.mbrId = :mbrId " +
@@ -33,7 +33,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardDslRep
             "b.postNo, b.boardType, b.mbrInfo.mbrNickname ,b.title, " +
             "substring(b.content, 1, 300), b.viewCnt, count(l.likesId.postNo), case when i.likesId.postNo is null then false else true end, " +
             "(count(c) + count(r)), b.createDate, a.folderPath, a.storedFileName) " +
-            "from Board b left join b.comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
+            "from Board b left join Comment c on c.delYn = 'N' left join Reply r on c.delYn = 'N' " +
             "left join Attachment a on b.postNo = a.refNo and a.refType = 'BOARD' and a.delYn = 'N' " +
             "left join Likes l on b.postNo = l.likesId.postNo " +
             "left join Likes i on b.postNo = i.likesId.postNo and i.likesId.mbrId = :mbrId " +
@@ -50,7 +50,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardDslRep
             "(count(c) + count(r)), b.createDate) " +
             "from Board b " +
             "left join Comment c on b.postNo = c.board.postNo and c.delYn = 'N' " +
-            "left join Reply r on b.postNo = r.board.postNo and c.delYn = 'N' " +
+            "left join Reply r on c.commentNo = r.comment.commentNo and c.delYn = 'N' " +
             "left join Likes l on b.postNo = l.likesId.postNo " +
             "left join Likes i on b.postNo = i.likesId.postNo and i.likesId.mbrId = :mbrId " +
             "where b.boardType is null and b.postNo = :postNo and b.delYn = 'N' " +
@@ -63,11 +63,11 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardDslRep
     void updateViewCount(@Param("postNo") Long postNo);
 
     // 일반 Join
-    @Query("select b from Board b left join b.comment ")
+    @Query("select b from Board b left join Comment c")
     List<Board> findAllWithJustJoin();
 
     // Fecth Join
-    @Query("select b from Board b join fetch b.comment ")
+    @Query("select b from Board b join fetch Comment c")
     List<Board> findAllWithFetchJoin();
 
     @Override

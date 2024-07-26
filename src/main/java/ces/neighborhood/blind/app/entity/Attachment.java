@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,6 +40,14 @@ public class Attachment extends BaseEntity {
     private Long refNo;
 
     private String delYn;
+
+    @ManyToOne
+    @JoinColumn(name = "post_no")
+    private Board board;
+
+    @ManyToOne
+    @JoinColumn(name = "reply_no")
+    private Reply reply;
 
     public void setRefNo(Long refNo) {
         this.refNo = refNo;

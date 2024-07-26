@@ -186,7 +186,6 @@ public class BoardService {
     public void writeComment(String postNo, String content, MultipartFile image) {
         Authentication authentication = ComUtils.getAuthentication();
         commentRepository.save(Comment.builder()
-                .mbrInfo(new MbrInfo(authentication.getName()))
                 .board(new Board(Long.valueOf(postNo)))
                 .content(content)
                 .build());

@@ -11,6 +11,8 @@ package ces.neighborhood.blind.common.code;
  */
 public class Constant {
 
+    public static final String BASE_URL = "/blind/api/v1";
+
     /*Asia/Seoul Timezone*/
     public static final String SEOUL_TIMEZONE = "Asia/Seoul";
 

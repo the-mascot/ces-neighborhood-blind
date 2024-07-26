@@ -71,12 +71,12 @@ public class JpaTest {
     @Test
     public void nPlusOneTest() {
         // JPA 의 N + 1 문제 테스트
-        // Board 와 즉지 로딩인 MbrInfo select 발생
+        // Board 와 즉시 로딩인 MbrInfo select 발생
         List<Board> boardList = boardRepository.findAll();
         System.out.println("findAll 종료");
         // 지연 로딩인 Comment select 발생
         // 부모 Board의 개수 만큼 +1 의 Comment select 쿼리 발생.
-        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : ");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class JpaTest {
         // 일반 Join 테스트
         List<Board> boardList = boardRepository.findAllWithJustJoin();
         System.out.println("findAllWithJustJoin 종료");
-        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class JpaTest {
         // Fetch Join 테스트
         List<Board> boardList = boardRepository.findAllWithFetchJoin();
         System.out.println("findAllWithFetchJoin 종료");
-        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class JpaTest {
     public void entityGraphTest() {
         List<Board> boardList = boardRepository.findAll();
         System.out.println("EntityGraph 종료");
-        boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
         boardList.forEach(s -> System.out.println("nickname : " + s.getMbrInfo().getMbrNickname()));
     }
 
