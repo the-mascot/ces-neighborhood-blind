@@ -5,14 +5,14 @@ spring:
         registration:
           google:
             client-id: 512417503371-1e9a5bfkatecboi4aq3jl4qv04mj36q0.apps.googleusercontent.com
-            client-secret: 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
+            client-secret: ENC(UScBvuzYI36wrSqcsHJ5YPz5nh1N1XqxmylyKFslcXInStiR1mhonDL3i03Iv3T3)
             scope:
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
           naver:
             client-id: UpEJjnGzwwLj_hk4mbB6
-            client-secret: VLojXtDiDS
+            client-secret: ENC(n9Zp2zZ17KdDJ0eL6Z1aY7knuXQBuIIX)
             scope:
               - id
               - email

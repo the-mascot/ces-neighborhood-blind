@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.controller;
+package ces.neighborhood.blind.app.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

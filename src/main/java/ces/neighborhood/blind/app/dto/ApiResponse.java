@@ -38,4 +38,9 @@ public class ApiResponse<T> {
         ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), data);
         return new ResponseEntity<>(apiResponse, apiResponse.getHeaders(), HttpStatus.OK);
     }
+
+    public static <T> ResponseEntity<ApiResponse<T>> success(T data, HttpHeaders headers) {
+        ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), data);
+        return new ResponseEntity<>(apiResponse, headers, HttpStatus.OK);
+    }
 }

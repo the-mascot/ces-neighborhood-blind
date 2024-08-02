@@ -49,7 +49,8 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/login", "/auth/login", "/logout",
-                                "/join", "/auth/join", "/static/**", "/board/"
+                                "/join", "/auth/join", "/static/**", "/board/",
+                                "/api/v1/**"
                         ).permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
@@ -73,6 +74,7 @@ public class SpringSecurityConfig {
                 )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())  // Session 방식
+                        .ignoringRequestMatchers("/api/v1/**")
                         /*.csrfTokenRepository(new CookieCsrfTokenRepository())   // Cookie 방식*/
                 )
                 .authenticationProvider(oAuth2AuthenticationProvider)

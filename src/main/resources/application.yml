@@ -36,8 +36,8 @@ spring:
     hikari:
       driver-class-name: org.postgresql.Driver
       jdbc-url: jdbc:postgresql://localhost:5432/neighborhooddb
-      username: master
-      password: 1234
+      username: ENC(Oy+tIiSyGqRI+e/cIBvNpg==)
+      password: ENC(DKleP4Bs7OkPNCiWCfvgNw==)
       minimum-idle: 10
       maximum-pool-size: 50
 
@@ -65,8 +65,8 @@ cloud:
     s3:
       buket: ces-neighborhood
     credentials:
-      access-key: AKIAQ3EGPG3XRHQMGOWO
-      secret-key: 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
+      access-key: ENC(4EpWW4esyg46rysYV68h3DXIlfVyBz0OMP+9BI6mLLw=)
+      secret-key: ENC(Orm1WG6bUSNFUC3Ud92NhQgrCSv+4T5SxVjHmy78GZAFBmUQ17ZXHXn2rxokCStGy8nTklAvIiw=)
     region:
       static: ap-northeast-2
       auto: false
@@ -82,3 +82,10 @@ file:
   upload:
     image:
       server: /static/images/
+
+jwt:
+  header: Authorization
+  secret: ENC(HfJqrC4QOfOtOYryrViTFTU/dn8+4rTuvgeJTzC0FlKdtJCZPH2ejtm3xEcb9jUPuu57QzSLyvQ=)
+  issuer: neighborhood
+  access-token-expire-time: 60000
+  refresh-token-expire-time: 120000

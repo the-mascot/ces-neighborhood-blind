@@ -1,7 +1,10 @@
 package ces.neighborhood.blind.app.service;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.NullRememberMeServices;
 import org.springframework.security.web.authentication.RememberMeServices;
@@ -12,8 +15,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import ces.neighborhood.blind.app.dto.LoginReqDto;
 import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.provider.JwtTokenProvider;
+import ces.neighborhood.blind.app.record.LoginReq;
 import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,15 +40,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthorityService {
 
     private final PasswordEncoder passwordEncoder;
-
     private final MemberRepository memberRepository;
-
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
     private RememberMeServices rememberMeServices = new NullRememberMeServices();
-
-
     private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
             .getContextHolderStrategy();
-
     private SecurityContextRepository
             securityContextRepository = new RequestAttributeSecurityContextRepository();
 
@@ -91,5 +95,38 @@ public class AuthorityService {
                 //.queryParam("redirect_uri", "http://localhost:8010/login/oauth2/code/naver")
         log.error(response);
         return response;
+    }
+
+    /**
+     * JWT 로그인 인증
+     * @param loginReq
+     * @return
+     * @throws
+     */
+    public TokenDto authenticate(LoginReq loginReq) {
+        // ID 값으로 회원정보조회
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginReq.userId());
+        // 비밀번호 확인
+        this.credentialChecks(loginReq, userDetails);
+        String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority());
+        String refreshToken = jwtTokenProvider.createRefreshToken(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority());
+        return TokenDto.builder()
+                .grantType("authorization_code")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    /**
+     * Bcrypt 비밀번호 확인
+     * authentication: 입력된 비밀번호, userDetails: DB 저장된 비밀번호
+     * @param loginReq, userDetails
+     * @return
+     * @throws
+     */
+    protected void credentialChecks(LoginReq loginReq, UserDetails userDetails) {
+        if (!this.passwordEncoder.matches(loginReq.password(), userDetails.getPassword())) {
+            throw new BadCredentialsException(ErrorCode.CODE_1002.getMessage());
+        }
     }
 }

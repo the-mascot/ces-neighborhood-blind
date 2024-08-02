@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.common.code.ComCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -98,5 +99,9 @@ public class MbrInfo implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean hasRole(Role role) {
+        return getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role.getRoleName()::equals);
     }
 }
