@@ -8,7 +8,6 @@ import org.jsoup.select.Elements;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
@@ -55,15 +54,18 @@ public class BoardService {
 
     private final S3Service s3Service;
 
+    public List<Board> getBoardList() {
+        return boardRepository.findAll();
+    }
+
     /**
      * 게시판 목록 가져오기
-     * @param model
+     * @param boardType
      * @return List<BoardDto>
      * @throws
      */
-    public List<BoardDto> getBoardList(Model model) {
+    public List<BoardDto> getBoardList(String boardType) {
         Authentication authentication = ComUtils.getAuthentication();
-        String boardType = String.valueOf(model.getAttribute("boardType"));
         List<BoardDto> boardList;
         // TODO: 게시판 타입 결정 후 코드 변경 요
         if (StringUtils.equals(boardType, Constant.BOARD_TYPE_ALL) || StringUtils.equals(boardType, Constant.NULL.toLowerCase())) {

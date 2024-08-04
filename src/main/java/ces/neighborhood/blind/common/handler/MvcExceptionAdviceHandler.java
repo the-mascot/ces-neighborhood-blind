@@ -33,7 +33,7 @@ public class MvcExceptionAdviceHandler {
         log.error("[MvcExceptionHandler] errMsg: {}", e.getMessage());
         log.error("[MvcExceptionHandler] err 호출지점: {}", e.getStackTrace()[0]);
         e.printStackTrace();
-        model.addAttribute("error", ErrorCode.CODE_9998.getMessage());
+        model.addAttribute("error", ErrorCode.CODE_9999.getMessage());
         return "error";
     }
 

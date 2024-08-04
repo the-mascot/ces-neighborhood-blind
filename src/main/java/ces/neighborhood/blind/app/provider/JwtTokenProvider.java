@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import ces.neighborhood.blind.app.dto.TokenDto;
+import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.service.MemberService;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
@@ -18,6 +20,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -31,13 +34,25 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenProvider {
 
+    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "Bearer";
-    private static final String HEADER_TYPE = "JWT";
+    private static final String BEARER_TYPE = "Bearer"; // authorization type
+
+    private static final  String ACCESS_TOKEN_HEADER_NAME = "Access-Token";
+
+    private static final  String REFRESH_TOKEN_HEADER_NAME = "Refresh-Token";   // refresh token 의 응답 header name
+
+    private static final String TOKEN_HEADER_TYPE = "JWT";
+
     private long ACCESS_TOKEN_EXPIRE_TIME;    // 30분
+
     private long REFRESH_TOKEN_EXPIRE_TIME;   // 7일
+
     private SecretKey key;
+
     private String issuer;
+
+    private MemberService memberService;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
                             @Value("${jwt.access-token-expire-time}") long accessTime,
@@ -52,10 +67,10 @@ public class JwtTokenProvider {
 
     protected String createToken(String mbrId, String mbrRole, long tokenValid) {
         Date now = new Date();
-        Claims claims = Jwts.claims().add("", mbrRole).subject(mbrId).issuer(issuer).build();
+        Claims claims = Jwts.claims().add(AUTHORITIES_KEY, mbrRole).subject(mbrId).issuer(issuer).build();
         return Jwts.builder()
                 .header()
-                .type(HEADER_TYPE)
+                .type(TOKEN_HEADER_TYPE)
                 .and()
                 .claims(claims)
                 .issuedAt(now)
@@ -72,16 +87,13 @@ public class JwtTokenProvider {
         return this.createToken(mbrId, mbrRole, REFRESH_TOKEN_EXPIRE_TIME);
     }
 
-    public String getMemberEmailByToken(String token) {
-        // 토큰의 claim의 sub 키에 이메일 값이 들어있다.
-        return this.parseClaims(token).getSubject();
-    }
-
     public TokenDto createTokenDTO(String accessToken, String refreshToken) {
         return TokenDto.builder()
+                .authorizationType(BEARER_TYPE)
+                .accessTokenHeaderName(ACCESS_TOKEN_HEADER_NAME)
+                .refreshTokenHeaderName(REFRESH_TOKEN_HEADER_NAME)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .grantType(BEARER_TYPE)
                 .build();
     }
 
@@ -89,11 +101,11 @@ public class JwtTokenProvider {
             BizException {
         Claims claims = parseClaims(accessToken);
 
-        if(claims.get(AUTHORITIES_KEY) == null || !StringUtils.isNotBlank(claims.get(AUTHORITIES_KEY).toString())) {
+        if(claims.get(AUTHORITIES_KEY) == null || StringUtils.isBlank(claims.get(AUTHORITIES_KEY).toString())) {
             throw new BizException(ErrorCode.CODE_1000);
         }
-        log.debug("claims.getAuth = {}", claims.get(AUTHORITIES_KEY));
-        log.debug("claims.getEmail = {}", claims.getSubject());
+        log.debug("[JwtTokenProvider - getAuthentication] claims.getAuth = {}", claims.get(AUTHORITIES_KEY));
+        log.debug("[JwtTokenProvider - getAuthentication] claims.getEmail = {}", claims.getSubject());
 
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
@@ -102,7 +114,7 @@ public class JwtTokenProvider {
                         .collect(Collectors.toList());
 
         authorities.stream().forEach(o -> {
-            log.debug("getAuthentication -> authorities = {}", o.getAuthority());
+            log.debug("[JwtTokenProvider - getAuthentication] authorities = {}", o.getAuthority());
         });
 
         // UserDetails 객체를 만들어서 Authentication 리턴
@@ -110,25 +122,76 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
+    /**
+     * refresh token 으로 access token 재발급
+     * @param refreshToken
+     * @return
+     */
+    public String refreshAccessToken(String refreshToken) {
+        // 토큰 payload 가져오기, 만료여부 validation
+        Claims claims = this.parseClaims(refreshToken);
+        // 회원정보조회
+        MbrInfo mbrInfo = memberService.getMbrInfo(claims.getSubject());
+
+        if (!StringUtils.equals(refreshToken, mbrInfo.getRefreshToken())) {
+            throw new BizException(ErrorCode.CODE_1121);
+        }
+        return createAccessToken(mbrInfo.getMbrId(), mbrInfo.getRole());
+    }
+
+    /**
+     * 토큰 유효성 검사
+     * @param token
+     * @return 1: 토큰유효, 2: 토큰만료, 3: 유효하지 않은 토큰
+     */
     public int validateToken(String token) {
         try {
-            Jwts.parser().decryptWith(key).build().parseSignedClaims(token).getPayload().getExpiration();
+            Jwts.parser().decryptWith(key).build().parseSignedClaims(token).getPayload();
             return 1;
         } catch (ExpiredJwtException e) {
-            log.info("[JwtTokenProvider] 만료된 JWT 토큰입니다. token : {}", token);
+            log.info("[JwtTokenProvider] 만료된 JWT 토큰입니다.");
             return 2;
         } catch (Exception e) {
-            log.debug("잘못된 토큰입니다.");
+            log.debug("[JwtTokenProvider] 유효하지 않은 토큰입니다.");
             return -1;
         }
     }
 
+    /**
+     * 토큰에서 payload 부분 가져오기
+     * @param accessToken
+     * @return
+     */
     public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parser().decryptWith(key).build().parseSignedClaims(accessToken).getPayload();
         } catch (ExpiredJwtException e) {
-            return e.getClaims();
+            throw new BizException(ErrorCode.CODE_1120);
+        } catch (Exception e) {
+            throw new BizException(ErrorCode.CODE_1121);
         }
     }
 
+    /**
+     * request header 에서 access token 가져오기
+     * @param request
+     * @return
+     */
+    public String resolveAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER_NAME);
+        if (StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_NAME);
+        if (StringUtils.isNotBlank(refreshToken)) {
+            return refreshToken;
+        }
+
+        return null;
+    }
 }

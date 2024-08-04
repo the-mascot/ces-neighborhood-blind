@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.common.exception.BizException;
-import ces.neighborhood.blind.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -24,7 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     /**
-     * 회원정보 상세 가져오기
+     * 회원정보 상세 조회
      * @param mbrId
      * @return MbrInfo
      * @throws

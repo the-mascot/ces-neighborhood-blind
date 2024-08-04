@@ -13,6 +13,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import ces.neighborhood.blind.app.provider.AuthenticationProviderImpl;
 import ces.neighborhood.blind.app.provider.CustomOauth2AuthorizationRequestResolver;
 import ces.neighborhood.blind.app.provider.OAuth2AuthenticationProviderImpl;
+import ces.neighborhood.blind.common.handler.CustomAuthenticationEntryPoint;
 import ces.neighborhood.blind.common.handler.LoginFailureHandler;
 import ces.neighborhood.blind.common.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,7 @@ public class SpringSecurityConfig {
 
     private final CustomOauth2AuthorizationRequestResolver authorizationRequestResolver;
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,18 +52,18 @@ public class SpringSecurityConfig {
                         .requestMatchers(
                                 "/", "/login", "/auth/login", "/logout",
                                 "/join", "/auth/join", "/static/**", "/board/",
-                                "/api/v1/**"
+                                "/api/v1/login"
                         ).permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
-                .formLogin(login -> login
+/*                .formLogin(login -> login
                         .loginPage("/login")    // 로그인 페이지 url
                         .loginProcessingUrl("/auth/login")  // 로그인 처리 url
                         .successHandler(loginSuccessHandler)    // 인증성공 처리 handler
                         .failureHandler(loginFailureHandler)    // 인증실패 처리 handler
-                )
+                )*/
                 .exceptionHandling(handler -> handler
-                        .accessDeniedPage("/login")
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)   // 권한없는 페이지 접근처리
                 )
                 .oauth2Login(login -> login
                         .loginPage("/login")

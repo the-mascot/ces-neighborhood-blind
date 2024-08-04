@@ -6,10 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.stereotype.Component;
 
 import ces.neighborhood.blind.app.service.UserDetailServiceImpl;
@@ -69,7 +66,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
      * @throws
      */
     protected void credentialChecks(Authentication authentication, UserDetails userDetails) {
-        if (!this.passwordEncoder.matches(String.valueOf(authentication.getCredentials()), userDetails.getPassword())) {
+        if (!this.passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
             throw new BadCredentialsException(ErrorCode.CODE_1002.getMessage());
         }
     }

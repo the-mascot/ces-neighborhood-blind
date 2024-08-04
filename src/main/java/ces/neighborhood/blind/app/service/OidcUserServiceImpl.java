@@ -112,7 +112,7 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
      */
     private MbrInfo convertToMbrInfo(Map<String, Object> attributes) {
         return MbrInfo.builder()
-                .mbrId(String.valueOf(attributes.get("email")))
+                .mbrId(attributes.get("email").toString())
                 .role(Role.ROLE_MEMBER.getRoleName())
                 .build();
     }

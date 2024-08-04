@@ -13,8 +13,14 @@ import lombok.Setter;
 @Builder
 public class TokenDto {
 
-    private String grantType;
+    private String authorizationType;
+
+    private String accessTokenHeaderName;
+
+    private String refreshTokenHeaderName;
+
     private String accessToken;
+
     private String refreshToken;
 
 }

@@ -53,6 +53,10 @@ body {
     flex-direction: column;
 }
 
+.hidden {
+    display: none;
+}
+
 .mt-10 {
     margin-top: 10px;
 }
@@ -133,9 +137,7 @@ body {
     line-height: 38px;
 }
 
-.hidden {
-    display: none;
-}
+
 
 .white-btn-s {
     width: 62px;

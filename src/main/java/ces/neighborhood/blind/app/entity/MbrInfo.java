@@ -39,6 +39,9 @@ public class MbrInfo implements UserDetails {
     // 권한
     private String role;
 
+    // 토큰
+    private String refreshToken;
+
     // 닉네임
     private String mbrNickname;
 

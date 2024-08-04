@@ -110,11 +110,7 @@ public class AuthorityService {
         this.credentialChecks(loginReq, userDetails);
         String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority());
         String refreshToken = jwtTokenProvider.createRefreshToken(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority());
-        return TokenDto.builder()
-                .grantType("authorization_code")
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return jwtTokenProvider.createTokenDTO(accessToken, refreshToken);
     }
 
     /**

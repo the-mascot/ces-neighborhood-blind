@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +35,8 @@ public class BoardController {
      */
     @GetMapping("/board")
     public String board(Model model) {
-        model.addAttribute("boardList", boardService.getBoardList(model));
+        String boardType = Objects.toString(model.getAttribute("boardType"), "");
+        model.addAttribute("boardList", boardService.getBoardList(boardType));
         return "/board/board";
     }
 

@@ -161,7 +161,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
      */
     private MbrInfo convertToMbrInfo(Map<String, Object> attributes) {
         return MbrInfo.builder()
-                .mbrId(String.valueOf(attributes.get("email")))
+                .mbrId(attributes.get("email").toString())
                 .role(Role.ROLE_MEMBER.getRoleName())
                 .mbrNm(String.valueOf(attributes.get("name")))
                 .mbrEmail(String.valueOf(attributes.get("email")))

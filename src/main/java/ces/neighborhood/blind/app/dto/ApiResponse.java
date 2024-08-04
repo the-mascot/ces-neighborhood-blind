@@ -29,6 +29,14 @@ public class ApiResponse<T> {
         return headers;
     }
 
+    private static HttpHeaders getTokenHeaders(TokenDto tokenDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add(tokenDto.getAccessTokenHeaderName(), tokenDto.getAccessToken());
+        headers.add(tokenDto.getRefreshTokenHeaderName(), tokenDto.getRefreshToken());
+        return headers;
+    }
+
     public static ResponseEntity<ApiResponse<Void>> success() {
         ApiResponse<Void> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), null);
         return new ResponseEntity<>(apiResponse, apiResponse.getHeaders(), HttpStatus.OK);
@@ -39,8 +47,8 @@ public class ApiResponse<T> {
         return new ResponseEntity<>(apiResponse, apiResponse.getHeaders(), HttpStatus.OK);
     }
 
-    public static <T> ResponseEntity<ApiResponse<T>> success(T data, HttpHeaders headers) {
-        ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), data);
-        return new ResponseEntity<>(apiResponse, headers, HttpStatus.OK);
+    public static <T> ResponseEntity<ApiResponse<T>> success(TokenDto tokenDto) {
+        ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), null);
+        return new ResponseEntity<>(apiResponse, getTokenHeaders(tokenDto), HttpStatus.OK);
     }
 }
