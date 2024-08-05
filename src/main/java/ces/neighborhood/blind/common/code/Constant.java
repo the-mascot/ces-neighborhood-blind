@@ -31,6 +31,12 @@ public class Constant {
     /*Access Token 헤더 name*/
     public static final  String ACCESS_TOKEN_HEADER_NAME = "Access-Token";
 
+    /*Access Token 헤더 name*/
+    public static final  String REFRESH_TOKEN_HEADER_NAME = "Refresh-Token";
+
+    /*Authorization Type(Bearer )*/
+    public static final String BEARER_TYPE = "Bearer ";
+
     /*게시판 타입 ALL*/
     public static final String BOARD_TYPE_ALL = "ALL";
 

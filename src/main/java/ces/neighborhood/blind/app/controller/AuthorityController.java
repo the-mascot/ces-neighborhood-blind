@@ -1,88 +1,30 @@
 package ces.neighborhood.blind.app.controller;
 
-import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
-import org.springframework.security.crypto.keygen.StringKeyGenerator;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriUtils;
+import org.springframework.web.bind.annotation.RestController;
 
-import ces.neighborhood.blind.app.dto.LoginReqDto;
+import ces.neighborhood.blind.app.dto.ApiResponse;
+import ces.neighborhood.blind.app.dto.TokenDto;
+import ces.neighborhood.blind.app.record.LoginReq;
 import ces.neighborhood.blind.app.service.AuthorityService;
-import ces.neighborhood.blind.common.exception.ErrorCode;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import ces.neighborhood.blind.common.code.Constant;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@Controller
+@RestController
+@RequestMapping(Constant.BASE_API_URL + "/auth")
 @RequiredArgsConstructor
 public class AuthorityController {
 
     private final AuthorityService authorityService;
 
-    /**
-     * 로그인 페이지
-     */
-    @RequestMapping("/login")
-    public String login(@RequestParam(required = false) boolean error , Model model) {
-        if (error) {
-            model.addAttribute("loginStatus", ErrorCode.CODE_1005.getMessage());
-        }
-        model.addAttribute("loginReqDto", new LoginReqDto());
-        return "/authority/login";
+    @PostMapping("/login")
+    public ResponseEntity login(@Valid @RequestBody LoginReq loginReq) {
+        TokenDto tokenDto = authorityService.authenticate(loginReq);
+        return ApiResponse.success(tokenDto);
     }
-
-    /**
-     * 회원가입 페이지
-     */
-    @RequestMapping("/join")
-    public String join(Model model) {
-        // th:object 사용을 위해 view controller에 model 객체를 같이 보내줘야한다.
-        model.addAttribute("loginReqDto", new LoginReqDto());
-        return "/authority/join";
-    }
-
-    /**
-     * 회원가입
-     */
-    @PostMapping("/auth/join")
-    public String joinMember(@ModelAttribute LoginReqDto loginReqDto) {
-        authorityService.joinMember(loginReqDto);
-        return "redirect:/authority/login";
-    }
-
-    /**
-     * OAuth2 커스텀 로그인
-     */
-    @GetMapping("/oauth/login")
-    public String oAuth2Login(HttpServletRequest request, HttpServletResponse response) {
-        //String redirectUri = authorityService.authorize();
-        StringKeyGenerator stringKeyGenerator = new Base64StringKeyGenerator(Base64.getUrlEncoder());
-        String encodedRedirectUri = UriUtils.encode("http://localhost:8010/oauth/redirect", StandardCharsets.UTF_8);
-        String encodedState = UriUtils.encode(stringKeyGenerator.generateKey(), StandardCharsets.UTF_8);
-
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString("https://nid.naver.com/oauth2.0/authorize");
-        uriBuilder.queryParam("response_type", "code");
-        uriBuilder.queryParam("client_id", "UpEJjnGzwwLj_hk4mbB6");
-        uriBuilder.queryParam("redirect_uri", "http://localhost:8010/oauth/redirect");
-        uriBuilder.queryParam("state", encodedState);
-
-        return "redirect:" + uriBuilder.toUriString();
-    }
-
-//    @GetMapping("/error")
-//    public String errorPage(Model model) {
-//        model.addAttribute("error");
-//        return "/error";
-//    }
 
 }

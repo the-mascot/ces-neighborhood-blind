@@ -10,14 +10,12 @@ spring:
   config:
     activate:
       on-profile: "common"
-
-  thymeleaf:
-    prefix: classpath:templates/
-    suffix: .html
-    cache: false  #기본 true, 개발시에는 false로 캐싱 없에야 편함
+  # spring-starter-web 에서 페이지 mapping 안하기 위한 설정 (매핑되는 컨트롤러 없는 경우 401 에러 뜨는 걸 404로 바꾸기 위해 설정)
+  web:
+    resources:
+      add-mappings: false
   mvc:
-    static-path-pattern: /static/** # static 파일 경로 설정
-
+    throw-exception-if-no-handler-found: true
 
 server:
   shutdown: graceful  # 서버 종료시 마지막 요청 처리 후 종료

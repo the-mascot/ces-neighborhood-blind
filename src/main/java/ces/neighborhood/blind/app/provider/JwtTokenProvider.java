@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.service.MemberService;
+import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
@@ -36,11 +37,6 @@ public class JwtTokenProvider {
 
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "Bearer"; // authorization type
-
-    private static final  String ACCESS_TOKEN_HEADER_NAME = "Access-Token";
-
-    private static final  String REFRESH_TOKEN_HEADER_NAME = "Refresh-Token";   // refresh token 의 응답 header name
 
     private static final String TOKEN_HEADER_TYPE = "JWT";
 
@@ -89,16 +85,15 @@ public class JwtTokenProvider {
 
     public TokenDto createTokenDTO(String accessToken, String refreshToken) {
         return TokenDto.builder()
-                .authorizationType(BEARER_TYPE)
-                .accessTokenHeaderName(ACCESS_TOKEN_HEADER_NAME)
-                .refreshTokenHeaderName(REFRESH_TOKEN_HEADER_NAME)
+                .authorizationType(Constant.BEARER_TYPE)
+                .accessTokenHeaderName(Constant.ACCESS_TOKEN_HEADER_NAME)
+                .refreshTokenHeaderName(Constant.REFRESH_TOKEN_HEADER_NAME)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    public Authentication getAuthentication(String accessToken) throws
-            BizException {
+    public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
         if(claims.get(AUTHORITIES_KEY) == null || StringUtils.isBlank(claims.get(AUTHORITIES_KEY).toString())) {
@@ -146,7 +141,7 @@ public class JwtTokenProvider {
      */
     public int validateToken(String token) {
         try {
-            Jwts.parser().decryptWith(key).build().parseSignedClaims(token).getPayload();
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return 1;
         } catch (ExpiredJwtException e) {
             log.info("[JwtTokenProvider] 만료된 JWT 토큰입니다.");
@@ -164,7 +159,7 @@ public class JwtTokenProvider {
      */
     public Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parser().decryptWith(key).build().parseSignedClaims(accessToken).getPayload();
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(accessToken).getPayload();
         } catch (ExpiredJwtException e) {
             throw new BizException(ErrorCode.CODE_1120);
         } catch (Exception e) {
@@ -173,23 +168,14 @@ public class JwtTokenProvider {
     }
 
     /**
-     * request header 에서 access token 가져오기
+     * request header 에서 token 가져와서 Bearer 제거 후 return
      * @param request
-     * @return
+     * @return token | null
      */
-    public String resolveAccessToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER_NAME);
-        if (StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
+    public String resolveToken(HttpServletRequest request, String headerName) {
+        String bearerToken = request.getHeader(headerName);
+        if (StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith(Constant.BEARER_TYPE)) {
             return bearerToken.substring(7);
-        }
-
-        return null;
-    }
-
-    public String resolveRefreshToken(HttpServletRequest request) {
-        String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_NAME);
-        if (StringUtils.isNotBlank(refreshToken)) {
-            return refreshToken;
         }
 
         return null;

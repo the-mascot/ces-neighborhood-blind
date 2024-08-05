@@ -1,8 +1,10 @@
 package ces.neighborhood.blind.common.handler;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import ces.neighborhood.blind.common.exception.ApiExceptionResponse;
 import ces.neighborhood.blind.common.exception.BizException;
@@ -47,5 +49,13 @@ public class RestExceptionAdviceHandler {
                 .errCode(ErrorCode.CODE_9999.getCode())
                 .errMsg(ErrorCode.CODE_9999.getMessage())
                 .build(), ErrorCode.CODE_9999.getHttpStatus());
+    }
+
+    /**
+     * mapping 되는 컨트롤러 없는 경우 (404) 에러 handler
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NoHandlerFoundException ex) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -19,6 +19,7 @@ public enum ErrorCode {
     CODE_1101("1101", "OAuth Login - Missing attribute or email in UserInfoEndpoint"),
     CODE_1120("1120", "토큰 유효기간 만료"),
     CODE_1121("1121", "유효하지 않은 토큰입니다."),
+    CODE_1122("1122", "권한이 낮습니다."),
     CODE_8000("8001", "업로드 이미지 파일이 없습니다."),
     CODE_8001("8001", "지원하지않는 파일 형식입니다."),
     CODE_8002("8002", "이미지 업로드 실패"),

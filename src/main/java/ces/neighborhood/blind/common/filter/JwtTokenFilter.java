@@ -13,6 +13,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,13 +32,23 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private static final List<String> SKIP_URLS = Arrays.asList(
+            "/api/v1/auth/",
+            "/static"
+            );
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        if (isSkipUrl(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // access 토큰 resolve
-        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+        String accessToken = jwtTokenProvider.resolveToken(request, Constant.ACCESS_TOKEN_HEADER_NAME);
         log.debug("[JwtTokenFilter] token : {}", accessToken);
 
         // 토큰 validation
@@ -47,7 +59,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (result == 2) {   // 엑세스 토큰 만료
             // refresh 토큰 resolve
-            String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+            String refreshToken = jwtTokenProvider.resolveToken(request, Constant.REFRESH_TOKEN_HEADER_NAME);
             // refresh 토큰으로 access 토큰 재발급
             String freshAccessToken = jwtTokenProvider.refreshAccessToken(refreshToken);
 
@@ -57,5 +69,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throw new BizException(ErrorCode.CODE_1121);
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isSkipUrl(String requestUri) {
+        return SKIP_URLS.stream().anyMatch(requestUri::startsWith);
     }
 }

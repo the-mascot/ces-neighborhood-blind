@@ -23,4 +23,11 @@ public class TokenDto {
 
     private String refreshToken;
 
+    public String getAccessToken() {
+        return authorizationType + accessToken;
+    }
+
+    public String getRefreshToken() {
+        return authorizationType + refreshToken;
+    }
 }

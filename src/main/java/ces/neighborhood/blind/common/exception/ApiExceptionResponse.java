@@ -11,12 +11,12 @@ public class ApiExceptionResponse {
 
     private String errCode;
     private String errMsg;
-    private LocalDateTime responseTime;
+    private String responseTime;
 
     @Builder
     public ApiExceptionResponse(String errCode, String errMsg) {
         this.errCode = errCode;
         this.errMsg = errMsg;
-        this.responseTime = LocalDateTime.now();
+        this.responseTime = LocalDateTime.now().toString();
     }
 }
