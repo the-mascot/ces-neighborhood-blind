@@ -1,14 +1,12 @@
 package ces.neighborhood.blind.app.repository;
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
 import ces.neighborhood.blind.app.entity.QAttachment;
-import ces.neighborhood.blind.app.entity.QBoard;
 import ces.neighborhood.blind.app.entity.QComment;
 import ces.neighborhood.blind.app.entity.QLikes;
+import ces.neighborhood.blind.app.entity.QPost;
 import ces.neighborhood.blind.app.entity.QReply;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +18,15 @@ public class BoardRepositoryImpl implements BoardDslRepository {
 
     @Override
     public List<BoardDto> findAllByPostNoAndMbrId(String mbrId) {
-        QBoard board = QBoard.board;
+        QPost board = QPost.post;
         QAttachment attachment = QAttachment.attachment;
         QComment comment = QComment.comment;
         QReply reply = QReply.reply;
         QLikes likes = QLikes.likes;
+        // alias i
         QLikes i = new QLikes("i");
-
-        return jpaQueryFactory
+        return null;
+        /*return jpaQueryFactory
                 .select(Projections.constructor(BoardDto.class,
                         board.postNo,
                         board.boardType,
@@ -52,11 +51,11 @@ public class BoardRepositoryImpl implements BoardDslRepository {
                         .and(attachment.delYn.eq("N")))
                 .leftJoin(board.likes, likes).fetchJoin()
                 .on(likes.likesId.postType.eq("POST"))
-                .leftJoin(board.likes, i).fetchJoin()
+                .leftJoin(boar.likes, i).fetchJoin()
                 .on(i.likesId.postType.eq("POST")
                         .and(i.likesId.mbrId.eq(mbrId)))
                 .where(board.boardType.isNull()
                         .and(attachment.fileNo.eq(jpaQueryFactory.select(attachment.fileNo.min()).from(attachment))))
-                .fetch();
+                .fetch();*/
     }
 }

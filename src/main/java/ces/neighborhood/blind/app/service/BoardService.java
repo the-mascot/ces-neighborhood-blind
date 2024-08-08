@@ -14,10 +14,10 @@ import ces.neighborhood.blind.app.dto.BoardDto;
 import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
-import ces.neighborhood.blind.app.entity.Board;
 import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.repository.AttachmentRepository;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.CommentRepository;
@@ -54,7 +54,7 @@ public class BoardService {
 
     private final S3Service s3Service;
 
-    public List<Board> getBoardList() {
+    public List<Post> getBoardList() {
         return boardRepository.findAll();
     }
 
@@ -82,15 +82,15 @@ public class BoardService {
 
     /**
      * 게시글 저장 (이미지 파일 없는 버전)
-     * @param board, principal
+     * @param post, principal
      * @return postNo
      * @throws
      */
-    public long saveBoardWithoutFile(Board board, Principal principal) {
-        board.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
-        board.setCreateUser(principal.getName());
-        board.setDelYn(Constant.N);
-        return boardRepository.save(board).getPostNo();
+    public long saveBoardWithoutFile(Post post, Principal principal) {
+        post.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
+        post.setCreateUser(principal.getName());
+        post.setDelYn(Constant.N);
+        return boardRepository.save(post).getPostNo();
     }
 
     /**
@@ -101,19 +101,19 @@ public class BoardService {
      * 게시글 등록 후 : 게시글 저장 -> 본문에 img 태그 불러와서 최종 저장된 img만 Attachment 참조번호(refNo) 업데이트
      * -> S3에 업로드 되었으나, 최종 저장하지 않은(refNo가 없는) 파일은 batch로 일정 기간 후 삭제 예정.
      *
-     * @param board, principal
+     * @param post, principal
      * @return postNo
      * @throws
      */
-    public long saveBoard(Board board, Principal principal) {
-        board.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
-        board.setCreateUser(principal.getName());
-        board.setDelYn(Constant.N);
+    public long saveBoard(Post post, Principal principal) {
+        post.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
+        post.setCreateUser(principal.getName());
+        post.setDelYn(Constant.N);
         // 게시글 저장
-        Long postNo = boardRepository.save(board).getPostNo();
+        Long postNo = boardRepository.save(post).getPostNo();
 
         // 첨부 이미지 refNo 업데이트
-        Document doc = Jsoup.parse(board.getContent());
+        Document doc = Jsoup.parse(post.getContent());
         Elements imgTags = doc.select("img");
         for (Element imgTag : imgTags) {
             String src =  imgTag.attr("src");
@@ -188,7 +188,7 @@ public class BoardService {
     public void writeComment(String postNo, String content, MultipartFile image) {
         Authentication authentication = ComUtils.getAuthentication();
         commentRepository.save(Comment.builder()
-                .board(new Board(Long.valueOf(postNo)))
+                .post(new Post(Long.valueOf(postNo)))
                 .content(content)
                 .build());
         if (!image.isEmpty()) {

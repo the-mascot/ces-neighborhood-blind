@@ -182,7 +182,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                         .snsType(registrationId)
                         .build())
                 .snsName(String.valueOf(attributes.get("name")))
-                .mbrId(String.valueOf(attributes.get("email")))
+                .mbrInfo(new MbrInfo(String.valueOf(attributes.get("email"))))
                 .build();
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
  * @author mascot
  * @since 2023.11.24
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -30,5 +32,17 @@ public class MemberService {
     public MbrInfo getMbrInfo(String mbrId) {
         return memberRepository.findById(mbrId)
                 .orElseThrow(() -> new RuntimeException());
+    }
+
+    /**
+     * ID 중복체크
+     * @param mbrId
+     * @return 해당 아이디가 존재하면 true / 존재하지 않으면 false
+     * @throws
+     */
+    public Boolean verifyIdDuplicate(String mbrId) {
+        Boolean isDuplicate = memberRepository.existsById(mbrId);
+        log.info("[MemberService - verifyIdDuplicate] mbrId: {}, isDuplicate: {}", mbrId, isDuplicate);
+        return isDuplicate;
     }
 }

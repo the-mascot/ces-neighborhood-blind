@@ -18,8 +18,10 @@ import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
+import ces.neighborhood.blind.app.record.JoinReq;
 import ces.neighborhood.blind.app.record.LoginReq;
 import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.common.code.ComCode;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +53,20 @@ public class AuthorityService {
 
     /**
      * 회원가입 Service
-     * @param loginReqDto
+     * @param joinReq
      * @return
      * @throws
      */
-    public void joinMember(LoginReqDto loginReqDto) {
-        memberRepository.save(convertToMbrInfo(loginReqDto));
+    public void joinMember(JoinReq joinReq) {
+        MbrInfo mbrInfo = MbrInfo.builder()
+                .mbrId(joinReq.userId())
+                .mbrPw(joinReq.password())
+                .mbrNickname(joinReq.nickname())
+                .mbrEmail(joinReq.userId())
+                .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
+                .build();
+        log.debug("[AuthorityService - joinMember] mbrInfo : {}", mbrInfo);
+        memberRepository.save(mbrInfo);
     }
 
     /**

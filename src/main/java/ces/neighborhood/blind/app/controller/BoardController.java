@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.dto.LikeDto;
-import ces.neighborhood.blind.app.entity.Board;
+import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.service.BoardService;
 import ces.neighborhood.blind.common.code.Constant;
 import jakarta.validation.Valid;
@@ -43,20 +43,20 @@ public class BoardController {
      */
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @ResponseBody
-    @PostMapping("/board/write/post")
-    public ResponseEntity post(@RequestBody Board board, Principal principal) {
+    @PostMapping("/board/post")
+    public ResponseEntity post(@RequestBody Post post, Principal principal) {
 //        return ApiResponse.success(boardService.saveMbrBoard(board, principal));
         // img Base64 버전
-        return ApiResponse.success(boardService.saveBoard(board, principal));
+        return ApiResponse.success(boardService.saveBoard(post, principal));
     }
 
     /**
      * 게시글 편집 페이지
      */
-    @GetMapping("/board/edit/post/{postNo}")
-    public String edit(Model model, @PathVariable Long postNo) {
+    @PutMapping("/board/post/{postNo}")
+    public ResponseEntity edit(Model model, @PathVariable Long postNo) {
         model.addAttribute("board", boardService.getPost(postNo));
-        return "/board/edit";
+        return ApiResponse.success();
     }
 
     /**

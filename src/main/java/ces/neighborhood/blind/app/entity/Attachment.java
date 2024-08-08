@@ -43,7 +43,7 @@ public class Attachment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "post_no")
-    private Board board;
+    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "reply_no")

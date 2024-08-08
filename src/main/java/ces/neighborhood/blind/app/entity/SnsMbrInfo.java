@@ -6,6 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +34,9 @@ public class SnsMbrInfo {
 
     private String refreshToken;
 
-    private String mbrId;
+    @ManyToOne
+    @JoinColumn(name = "mbr_id", referencedColumnName = "mbrId")
+    private MbrInfo mbrInfo;
 
     @Builder
     @NoArgsConstructor

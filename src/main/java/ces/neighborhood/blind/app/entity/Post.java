@@ -1,6 +1,8 @@
 package ces.neighborhood.blind.app.entity;
 
 import ces.neighborhood.blind.common.utils.ComUtils;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -8,11 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Transient;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +23,9 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
 @ToString
-public class Board extends BaseEntity {
+@Entity
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POST_NO_SEQ")
@@ -35,6 +34,7 @@ public class Board extends BaseEntity {
 
     private String boardType;
 
+    @Access(AccessType.PROPERTY)
     private String title;
 
     private String content;
@@ -56,11 +56,7 @@ public class Board extends BaseEntity {
 //    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
 //    private List<Comment> comment = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Likes> likes = new ArrayList<>();
-
-    public Board(Long postNo) {
+    public Post(Long postNo) {
         this.postNo = postNo;
     }
 
@@ -74,5 +70,10 @@ public class Board extends BaseEntity {
 
     public void setMbrInfo(MbrInfo mbrInfo) {
         this.mbrInfo = mbrInfo;
+    }
+
+    @Access(AccessType.PROPERTY)
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

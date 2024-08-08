@@ -29,18 +29,17 @@ import lombok.NoArgsConstructor;
 public class MbrInfo implements UserDetails {
 
     @Id
-    @Column(name = "mbr_id")
     // 회원 ID (이메일 형식)
     private String mbrId;
 
     // 비밀번호
     private String mbrPw;
 
-    // 권한
-    private String role;
-
     // 토큰
     private String refreshToken;
+
+    // 권한
+    private String role;
 
     // 닉네임
     private String mbrNickname;
@@ -105,6 +104,7 @@ public class MbrInfo implements UserDetails {
     }
 
     public boolean hasRole(Role role) {
-        return getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role.getRoleName()::equals);
+        return getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(
+                role::equals);
     }
 }

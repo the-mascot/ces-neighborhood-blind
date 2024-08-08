@@ -36,7 +36,7 @@ public class Likes {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_no")
     @MapsId("postNo")
-    private Board board;
+    private Post post;
 
     @Builder
     @NoArgsConstructor
