@@ -40,9 +40,9 @@ public class MemberService {
      * @return 해당 아이디가 존재하면 true / 존재하지 않으면 false
      * @throws
      */
-    public Boolean verifyIdDuplicate(String mbrId) {
+    public Boolean checkIdDuplicate(String mbrId) {
         Boolean isDuplicate = memberRepository.existsById(mbrId);
-        log.info("[MemberService - verifyIdDuplicate] mbrId: {}, isDuplicate: {}", mbrId, isDuplicate);
+        log.info("[MemberService - checkDuplicate] mbrId: {}, isDuplicate: {}", mbrId, isDuplicate);
         return isDuplicate;
     }
 }

@@ -85,5 +85,5 @@ jwt:
   header: Authorization
   secret: ENC(HfJqrC4QOfOtOYryrViTFTU/dn8+4rTuvgeJTzC0FlKdtJCZPH2ejtm3xEcb9jUPuu57QzSLyvQ=)
   issuer: neighborhood
-  access-token-expire-time: 60000
+  access-token-expire-time: 1800000
   refresh-token-expire-time: 120000

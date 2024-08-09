@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(name = Constant.BASE_API_URL + "/member")
+@RequestMapping(Constant.BASE_API_URL + "/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @GetMapping("/check/{userId}")
-    public ResponseEntity verifyIdDuplicate(@Valid @PathVariable String userId) {
-        return ApiResponse.success(memberService.verifyIdDuplicate(userId));
+    public ResponseEntity checkIdDuplicate(@Valid @PathVariable String userId) {
+        return ApiResponse.success(memberService.checkIdDuplicate(userId));
     }
 }
