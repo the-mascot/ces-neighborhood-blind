@@ -60,7 +60,8 @@ public class AuthorityService {
     public void joinMember(JoinReq joinReq) {
         MbrInfo mbrInfo = MbrInfo.builder()
                 .mbrId(joinReq.userId())
-                .mbrPw(joinReq.password())
+                .mbrPw(passwordEncoder.encode(joinReq.password()))
+                .role(Role.ROLE_MEMBER.getRoleName())
                 .mbrNickname(joinReq.nickname())
                 .mbrEmail(joinReq.userId())
                 .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())

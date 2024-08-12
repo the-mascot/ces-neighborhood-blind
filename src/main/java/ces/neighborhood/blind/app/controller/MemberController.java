@@ -32,8 +32,13 @@ public class MemberController {
         return ApiResponse.success(memberService.getMbrInfo(mbrId));
     }
 
-    @GetMapping("/check/{userId}")
+    @GetMapping("/check/id/{userId}")
     public ResponseEntity checkIdDuplicate(@Valid @PathVariable String userId) {
         return ApiResponse.success(memberService.checkIdDuplicate(userId));
+    }
+
+    @GetMapping("/check/nickname/{nickname}")
+    public ResponseEntity checkNicknameDuplicate(@Valid @PathVariable String nickname) {
+        return ApiResponse.success(memberService.checkNicknameDuplicate(nickname));
     }
 }

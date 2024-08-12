@@ -42,7 +42,19 @@ public class MemberService {
      */
     public Boolean checkIdDuplicate(String mbrId) {
         Boolean isDuplicate = memberRepository.existsById(mbrId);
-        log.info("[MemberService - checkDuplicate] mbrId: {}, isDuplicate: {}", mbrId, isDuplicate);
+        log.info("[MemberService - checkIdDuplicate] mbrId: {}, isDuplicate: {}", mbrId, isDuplicate);
+        return isDuplicate;
+    }
+
+    /**
+     * nickname 중복체크
+     * @param nickname
+     * @return 해당 닉네임이 존재하면 true / 존재하지 않으면 false
+     * @throws
+     */
+    public Boolean checkNicknameDuplicate(String nickname) {
+        Boolean isDuplicate = memberRepository.existsByMbrNickname(nickname);
+        log.info("[MemberService - checkNicknameDuplicate] nickname: {}, isDuplicate: {}", nickname, isDuplicate);
         return isDuplicate;
     }
 }

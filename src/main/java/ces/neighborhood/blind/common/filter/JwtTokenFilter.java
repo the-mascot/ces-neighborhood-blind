@@ -33,8 +33,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final List<String> SKIP_URLS = Arrays.asList(
-            "/api/v1/auth/",
+            "/api/v1/auth",
             "/api/v1/member/check",
+            "/oauth2/authorization",
             "/static"
             );
 
