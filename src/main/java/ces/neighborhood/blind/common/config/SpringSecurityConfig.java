@@ -13,6 +13,7 @@ import ces.neighborhood.blind.app.provider.JwtTokenProvider;
 import ces.neighborhood.blind.common.filter.JwtTokenFilter;
 import ces.neighborhood.blind.common.handler.CustomAccessDeniedHandler;
 import ces.neighborhood.blind.common.handler.CustomAuthenticationEntryPoint;
+import ces.neighborhood.blind.common.handler.Oauth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -36,11 +37,13 @@ public class SpringSecurityConfig {
 
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/member/check/**", "/oauth2/authorization/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/api/v1/member/check/**").permitAll()
                         .anyRequest().authenticated()   // permitAll url을 제외하고 모든 요청 인증필요
                 )
                 // API 서버이므로 CSRF disable
@@ -57,6 +60,8 @@ public class SpringSecurityConfig {
                         // 인증된 사용자이지만 권한이 없는 경우 접근처리
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
+                .oauth2Login((oauth) -> oauth.userInfoEndpoint(endpoint -> endpoint.and()
+                        .successHandler(oauth2LoginSuccessHandler)))
                 .build();
     }
 

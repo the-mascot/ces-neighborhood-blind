@@ -35,6 +35,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private static final List<String> SKIP_URLS = Arrays.asList(
             "/api/v1/auth",
             "/api/v1/member/check",
+            "/api/v1/login/oauth2/code",
             "/oauth2/authorization",
             "/static"
             );
@@ -44,6 +45,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        log.info("[JwtTokenFilter] Request URI : {}", request.getRequestURI());
         if (isSkipUrl(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
