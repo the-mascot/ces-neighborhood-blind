@@ -10,8 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import ces.neighborhood.blind.app.dto.BoardDto;
-import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.entity.Likes;
+import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
 import ces.neighborhood.blind.common.TestQueryDslConfig;

@@ -3,9 +3,6 @@ package ces.neighborhood.blind.app.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.stereotype.Service;
 
 import ces.neighborhood.blind.app.repository.MemberRepository;
@@ -31,7 +28,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     /**
-     * username 으로 DB에서 user 정보 가져오기
+     * username으로 DB에서 user 정보 가져오기
      * @param mbrId
      * @return UserDetails
      * @throws

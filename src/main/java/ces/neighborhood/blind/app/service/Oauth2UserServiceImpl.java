@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -28,7 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.entity.SnsMbrInfo;
+import ces.neighborhood.blind.app.entity.OauthMbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.app.repository.Oauth2UserRepository;
 import ces.neighborhood.blind.common.code.ComCode;
@@ -36,10 +35,13 @@ import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -122,36 +124,24 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
             throw new BizException(ErrorCode.CODE_1101);
         }
 
-        // mbrInfo 저장
-        memberRepository.save(convertToMbrInfo(userAttributes));
-        // snsMbrInfo 저장
-        oauth2UserRepository.save(convertToSnsMbrInfo(userAttributes, registrationId));
+        Optional<MbrInfo> optionalMbrInfo = memberRepository.findById((String) userAttributes.get("email"));
+        if(optionalMbrInfo.isPresent()) {
+            MbrInfo mbrInfo = optionalMbrInfo.get();
+            mbrInfo.setLastLoginDate(Timestamp.valueOf(LocalDateTime.now()));
+        } else {
+            // mbrInfo 저장
+            memberRepository.save(convertToMbrInfo(userAttributes));
+            // snsMbrInfo 저장
+            oauth2UserRepository.save(
+                    convertToOauthMbrInfo(userAttributes, registrationId));
+        }
+
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         authorities.add(new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName()));
 
         return new DefaultOAuth2User(authorities, userAttributes, "email");
     }
 
-    /**
-     * RefreshToken 저장
-     * 현재는 (Session 을 이용한 로그인 사용 + OAuth2 유저정보 DB 저장) 형태라 refreshToken 을 사용하지 않으나,
-     * JWT 로그인 사용 할 경우 Access Token 을 재활성화 하기 위해 refresh Token 저장.
-     * @param oAuth2User, refreshToken
-     * @return
-     * @throws
-     */
-    public void saveRefreshToken(OAuth2User oAuth2User, OAuth2RefreshToken refreshToken) {
-        oauth2UserRepository.save(SnsMbrInfo
-                .builder()
-                .snsMbrInfoKey(
-                        SnsMbrInfo.SnsMbrInfoKey.builder()
-                                .snsId((String) oAuth2User.getAttribute("email"))
-                                .snsType((String) oAuth2User.getAttribute("snsType"))
-                                .build()
-                )
-                .refreshToken((String) refreshToken.getTokenValue())
-                .build());
-    }
 
     /**
      * attributes -> MbrInfo convert
@@ -163,25 +153,24 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         return MbrInfo.builder()
                 .mbrId(attributes.get("email").toString())
                 .role(Role.ROLE_MEMBER.getRoleName())
-                .mbrNm(String.valueOf(attributes.get("name")))
+                .mbrNickname(String.valueOf(attributes.get("nickname")))
                 .mbrEmail(String.valueOf(attributes.get("email")))
                 .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
                 .build();
     }
 
     /**
-     * attributes -> SnsMbrInfo convert
+     * attributes -> OauthMbrInfo convert
      * @param attributes, registrationId
-     * @return attributes -> SnsMbrInfo entity로 변환
+     * @return attributes -> OauthMbrInfo entity로 변환
      * @throws
      */
-    private SnsMbrInfo convertToSnsMbrInfo(Map<String, Object> attributes, String registrationId) {
-        return SnsMbrInfo.builder()
-                .snsMbrInfoKey(SnsMbrInfo.SnsMbrInfoKey.builder()
-                        .snsId(String.valueOf(attributes.get(StringUtils.equals(NAVER, registrationId) ? "id" : "sub")))
-                        .snsType(registrationId)
+    private OauthMbrInfo convertToOauthMbrInfo(Map<String, Object> attributes, String registrationId) {
+        return OauthMbrInfo.builder()
+                .oauthMbrInfoKey(OauthMbrInfo.OauthMbrInfoKey.builder()
+                        .oauthId(String.valueOf(attributes.get(StringUtils.equals(NAVER, registrationId) ? "id" : "sub")))
+                        .provider(registrationId)
                         .build())
-                .snsName(String.valueOf(attributes.get("name")))
                 .mbrInfo(new MbrInfo(String.valueOf(attributes.get("email"))))
                 .build();
     }

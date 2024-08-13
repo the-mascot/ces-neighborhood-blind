@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;

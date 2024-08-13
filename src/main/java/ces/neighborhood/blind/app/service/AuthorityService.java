@@ -1,10 +1,11 @@
 package ces.neighborhood.blind.app.service;
 
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.NullRememberMeServices;
 import org.springframework.security.web.authentication.RememberMeServices;
@@ -13,7 +14,6 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import ces.neighborhood.blind.app.dto.LoginReqDto;
 import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
@@ -43,7 +43,7 @@ public class AuthorityService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private RememberMeServices rememberMeServices = new NullRememberMeServices();
     private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
@@ -68,20 +68,6 @@ public class AuthorityService {
                 .build();
         log.debug("[AuthorityService - joinMember] mbrInfo : {}", mbrInfo);
         memberRepository.save(mbrInfo);
-    }
-
-    /**
-     * LoginReqDto -> MbrInfo convert
-     * @param loginReqDto
-     * @return LoginReqDto -> MbrInfo entity로 변환
-     * @throws
-     */
-    private MbrInfo convertToMbrInfo(LoginReqDto loginReqDto) {
-        return MbrInfo.builder()
-                .mbrId(loginReqDto.getUserId())
-                .mbrPw(passwordEncoder.encode(loginReqDto.getPassword()))
-                .role(Role.ROLE_MEMBER.getRoleName())
-                .build();
     }
 
     /**
@@ -119,8 +105,10 @@ public class AuthorityService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginReq.userId());
         // 비밀번호 확인
         this.credentialChecks(loginReq, userDetails);
-        String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority());
-        String refreshToken = jwtTokenProvider.createRefreshToken(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getAuthorities());
+
+        String accessToken = jwtTokenProvider.createAccessToken(authentication);
+        String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
         return jwtTokenProvider.createTokenDTO(accessToken, refreshToken);
     }
 

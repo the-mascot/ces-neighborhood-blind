@@ -83,6 +83,24 @@ public class JwtTokenProvider {
         return this.createToken(mbrId, mbrRole, REFRESH_TOKEN_EXPIRE_TIME);
     }
 
+    public String createAccessToken(Authentication authentication) {
+        String role = authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElseThrow(() -> new BizException(ErrorCode.CODE_1000));
+        return this.createToken(authentication.getName(), role, ACCESS_TOKEN_EXPIRE_TIME);
+    }
+
+    public String createRefreshToken(Authentication authentication) {
+        String role = authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElseThrow(() -> new BizException(ErrorCode.CODE_1000));
+        return this.createToken(authentication.getName(), role, REFRESH_TOKEN_EXPIRE_TIME);
+    }
+
     public TokenDto createTokenDTO(String accessToken, String refreshToken) {
         return TokenDto.builder()
                 .authorizationType(Constant.BEARER_TYPE)

@@ -12,27 +12,23 @@ import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class SnsMbrInfo {
+public class OauthMbrInfo {
 
     @EmbeddedId
-    private SnsMbrInfoKey snsMbrInfoKey;
-
-    private String snsName;
+    private OauthMbrInfoKey oauthMbrInfoKey;
 
     @CreationTimestamp
     @Column(updatable = false)
     private String snsContDate;
-
-    private String refreshToken;
 
     @ManyToOne
     @JoinColumn(name = "mbr_id", referencedColumnName = "mbrId")
@@ -43,11 +39,11 @@ public class SnsMbrInfo {
     @AllArgsConstructor
     @EqualsAndHashCode
     @Embeddable
-    public static class SnsMbrInfoKey implements Serializable {
+    public static class OauthMbrInfoKey implements Serializable {
 
-        private String snsId;
+        private String oauthId;
 
-        private String snsType;
+        private String provider;
 
     }
 }
