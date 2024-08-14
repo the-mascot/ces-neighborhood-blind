@@ -44,9 +44,8 @@ public class MbrInfo implements UserDetails {
     // 닉네임
     private String mbrNickname;
 
-    private String mbrNm;
-
-    private String mbrEmail;
+    // 회원 프로필 주소
+    private String mbrProfileImageUrl;
 
     private String mbrStd;
 

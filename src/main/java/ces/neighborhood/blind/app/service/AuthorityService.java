@@ -63,7 +63,6 @@ public class AuthorityService {
                 .mbrPw(passwordEncoder.encode(joinReq.password()))
                 .role(Role.ROLE_MEMBER.getRoleName())
                 .mbrNickname(joinReq.nickname())
-                .mbrEmail(joinReq.userId())
                 .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
                 .build();
         log.debug("[AuthorityService - joinMember] mbrInfo : {}", mbrInfo);

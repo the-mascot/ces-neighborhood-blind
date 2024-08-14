@@ -29,7 +29,7 @@ import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.OauthMbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.app.repository.Oauth2UserRepository;
+import ces.neighborhood.blind.app.repository.OauthMbrInfoRepository;
 import ces.neighborhood.blind.common.code.ComCode;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
@@ -37,12 +37,11 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,7 +69,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     private final MemberRepository memberRepository;
 
-    private final Oauth2UserRepository oauth2UserRepository;
+    private final OauthMbrInfoRepository oauthMbrInfoRepository;
 
     /**
      * Resource 서버에서 받아온 userInfo DB 저장
@@ -118,26 +117,32 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(userRequest);
         // resource 서버에 userInfo 요청
         ResponseEntity<Map<String, Object>> response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {});
-        Map<String, Object> userAttributes = StringUtils.equals(registrationId, NAVER) ? (Map<String, Object>) response.getBody().get(userNameAttributeName) : response.getBody();
+        Map<String, Object> userAttributes = StringUtils.equals(registrationId, NAVER) ?
+                (Map<String, Object>) response.getBody().get(userNameAttributeName) : response.getBody();
 
         if (userAttributes == null || userAttributes.get("email") == null) {
             throw new BizException(ErrorCode.CODE_1101);
         }
 
-        Optional<MbrInfo> optionalMbrInfo = memberRepository.findById((String) userAttributes.get("email"));
+        String mbrId = (String) userAttributes.get("email");
+        Optional<MbrInfo> optionalMbrInfo = memberRepository.findById(mbrId);
+        MbrInfo mbrInfo;
+
         if(optionalMbrInfo.isPresent()) {
-            MbrInfo mbrInfo = optionalMbrInfo.get();
+            // 기존 회원의 경우 마지막 로그인 날짜와 프로필 사진 없는경우 만 업데이트
+            mbrInfo = optionalMbrInfo.get();
             mbrInfo.setLastLoginDate(Timestamp.valueOf(LocalDateTime.now()));
+            if (StringUtils.isBlank(mbrInfo.getMbrProfileImageUrl()) && userAttributes.get("profile") != null) {
+                mbrInfo.setMbrProfileImageUrl((String) userAttributes.get("profile"));
+            }
         } else {
             // mbrInfo 저장
             memberRepository.save(convertToMbrInfo(userAttributes));
-            // snsMbrInfo 저장
-            oauth2UserRepository.save(
-                    convertToOauthMbrInfo(userAttributes, registrationId));
+            mbrInfo = memberRepository.findById(mbrId).get();
         }
-
-        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-        authorities.add(new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName()));
+        // snsMbrInfo 저장
+        oauthMbrInfoRepository.save(convertToOauthMbrInfo(userAttributes, registrationId));
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(mbrInfo.getRole()));
 
         return new DefaultOAuth2User(authorities, userAttributes, "email");
     }
@@ -154,7 +159,7 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .mbrId(attributes.get("email").toString())
                 .role(Role.ROLE_MEMBER.getRoleName())
                 .mbrNickname(String.valueOf(attributes.get("nickname")))
-                .mbrEmail(String.valueOf(attributes.get("email")))
+                .mbrProfileImageUrl(String.valueOf(attributes.get("profile")))
                 .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
                 .build();
     }

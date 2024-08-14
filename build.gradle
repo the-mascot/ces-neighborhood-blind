@@ -57,7 +57,8 @@ dependencies {
 	// Jackson
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
 	// Spring Security
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '3.1.5'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '3.3.2'
+
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.1.5'
 	// Apache common-text
 	implementation group: 'org.apache.commons', name: 'commons-text', version: '1.11.0'

@@ -4,22 +4,25 @@ spring:
       client:
         registration:
           google:
-            client-id: 512417503371-1e9a5bfkatecboi4aq3jl4qv04mj36q0.apps.googleusercontent.com
-            client-secret: ENC(UScBvuzYI36wrSqcsHJ5YPz5nh1N1XqxmylyKFslcXInStiR1mhonDL3i03Iv3T3)
+            client-id: 1001350064885-kms5egkoft11g0stgb1m8pg791c8c2fn.apps.googleusercontent.com
+            client-secret: ENC(jUIXMoPhD9i1u1PcWTc9i0hvYlzMZikNpRqUp8gE2WV0mud4Rj+H74d85XAIW+e4)
             scope:
               - email
               - profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "http://localhost:3000/login/google"
+
           naver:
             client-id: UpEJjnGzwwLj_hk4mbB6
             client-secret: ENC(n9Zp2zZ17KdDJ0eL6Z1aY7knuXQBuIIX)
             scope:
               - id
               - email
+              - nickname
             authorization-grant-type: authorization_code
-            redirect-uri: "http//localhost:8010/api/v1/oauth/naver"
-            #redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "http://localshot:3000/login/naver"
         provider:
+          google:
+            token-uri: https://oauth2.googleapis.com/token
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
             token-uri: https://nid.naver.com/oauth2.0/token

@@ -7,12 +7,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
 import java.io.File;
+import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class BasicTest {
 
     @Test
@@ -49,6 +53,14 @@ public class BasicTest {
         if (!file.exists()) {
             file.mkdirs();
         }
+    }
+
+    @Test
+    public void bigIntegerTest() {
+        SecureRandom secureRandom = new SecureRandom();
+        log.info(secureRandom.toString());
+        String state = new BigInteger(130, secureRandom).toString();
+        log.info("state : {}", state);
     }
 
 }

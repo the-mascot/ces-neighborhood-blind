@@ -63,6 +63,7 @@ public class OAuthService {
     public TokenDto authenticate(String registrationId, String code, String state) throws
             AuthenticationException {
         ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(registrationId);
+        log.info("[OauthService - authenticate] clientRegistration : {}", clientRegistration);
         OAuth2AuthorizationResponse authorizationResponse = OAuth2AuthorizationResponse
                 .success(code)
                 .state(state)
@@ -72,6 +73,7 @@ public class OAuthService {
         // 인증서버에 Access Token 요청
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(clientRegistration, authorizationResponse);
+        log.info("[OauthService - authenticate] requestEntity : {}", requestEntity);
         ResponseEntity<AccessTokenResponseDto> response = restTemplate.exchange(requestEntity, AccessTokenResponseDto.class);
         log.info("[OauthService - authenticate] response : {}", response);
         AccessTokenResponseDto accessTokenResponseDto = response.getBody();
@@ -87,7 +89,7 @@ public class OAuthService {
                 clientRegistration, oAuth2AccessToken, additionalParameters
         ));
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(oauth2User.getName(), oauth2User.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(oauth2User.getName(), null, oauth2User.getAuthorities());
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
