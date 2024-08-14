@@ -14,9 +14,9 @@ public class JasyptTest {
     @DisplayName("Jasypt 테스트")
     @Test
     public void jasyptTest() {
-        log.info("enc = {}", jasyptEncrypt("northstar/ces/neighborhood/blind/key/for/react"));
-        //String decrypt = jasyptDecrypt("lcRccwXkWhY2Vn/f3Pgssg==");
-        //System.out.println("dec = " + decrypt);
+        //log.info("enc = {}", jasyptEncrypt("northstar/ces/neighborhood/blind/key/for/react"));
+        String decrypt = jasyptDecrypt("n9Zp2zZ17KdDJ0eL6Z1aY7knuXQBuIIX");
+        System.out.println("dec = " + decrypt);
 
         //assertEquals("abc", decrypt);
     }

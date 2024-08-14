@@ -17,7 +17,8 @@ spring:
               - id
               - email
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "http//localhost:8010/api/v1/oauth/naver"
+            #redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize

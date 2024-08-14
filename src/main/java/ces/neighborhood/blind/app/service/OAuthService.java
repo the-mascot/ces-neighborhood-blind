@@ -60,9 +60,9 @@ public class OAuthService {
      * @return
      * @throws
      */
-    public TokenDto authenticate(String code, String state) throws
+    public TokenDto authenticate(String registrationId, String code, String state) throws
             AuthenticationException {
-        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("naver");
+        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(registrationId);
         OAuth2AuthorizationResponse authorizationResponse = OAuth2AuthorizationResponse
                 .success(code)
                 .state(state)
@@ -73,6 +73,7 @@ public class OAuthService {
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(clientRegistration, authorizationResponse);
         ResponseEntity<AccessTokenResponseDto> response = restTemplate.exchange(requestEntity, AccessTokenResponseDto.class);
+        log.info("[OauthService - authenticate] response : {}", response);
         AccessTokenResponseDto accessTokenResponseDto = response.getBody();
 
         // Access Token
@@ -130,7 +131,7 @@ public class OAuthService {
         headers.setAcceptCharset(List.of(Charset.forName("UTF-8")));
         final MediaType contentType = MediaType.valueOf(MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         headers.setContentType(contentType);
-        // client_secret_basic 인 경우 clientId, clientSecret URL Ecoder 로 encoding 해서 Basic Auth 로 header 에 보내야함.
+        // client_secret_basic 인 경우 clientId, clientSecret URL Encoder 로 encoding 해서 Basic Auth 로 header 에 보내야함.
         // google, naver 둘다 현재 Basic 방식.
         if (ClientAuthenticationMethod.CLIENT_SECRET_BASIC.equals(clientRegistration.getClientAuthenticationMethod())) {
             String clientId = encodeClientCredential(clientRegistration.getClientId());
