@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.service;
+package ces.neighborhood.blind.app.service.authority;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
-import ces.neighborhood.blind.app.provider.OAuth2AuthenticationProviderImpl;
 import ces.neighborhood.blind.common.filter.JwtTokenFilter;
 import ces.neighborhood.blind.common.handler.CustomAccessDeniedHandler;
 import ces.neighborhood.blind.common.handler.CustomAuthenticationEntryPoint;
@@ -39,8 +38,6 @@ public class SpringSecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
-
-    private final OAuth2AuthenticationProviderImpl oAuth2AuthenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

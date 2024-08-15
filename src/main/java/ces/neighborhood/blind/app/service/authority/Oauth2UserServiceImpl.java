@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.service;
+package ces.neighborhood.blind.app.service.authority;
 
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,22 +26,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ces.neighborhood.blind.app.dto.Role;
-import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.entity.OauthMbrInfo;
-import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.app.repository.OauthMbrInfoRepository;
-import ces.neighborhood.blind.common.code.ComCode;
-import ces.neighborhood.blind.common.exception.BizException;
-import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,12 +57,8 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     private static final String MISSING_USER_NAME_ATTRIBUTE_ERROR_CODE = "missing_user_name_attribute";
 
-    private final MemberRepository memberRepository;
-
-    private final OauthMbrInfoRepository oauthMbrInfoRepository;
-
     /**
-     * Resource 서버에서 받아온 userInfo DB 저장
+     * Resource Server에 UserInfo 요청 후 OAuth2User 객체 return
      * @see DefaultOAuth2UserService#loadUser(OAuth2UserRequest)
      * @param userRequest
      * @return OAuth2User
@@ -119,65 +105,9 @@ public class Oauth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         ResponseEntity<Map<String, Object>> response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {});
         Map<String, Object> userAttributes = StringUtils.equals(registrationId, NAVER) ?
                 (Map<String, Object>) response.getBody().get(userNameAttributeName) : response.getBody();
-
-        if (userAttributes == null || userAttributes.get("email") == null) {
-            throw new BizException(ErrorCode.CODE_1101);
-        }
-
-        String mbrId = (String) userAttributes.get("email");
-        Optional<MbrInfo> optionalMbrInfo = memberRepository.findById(mbrId);
-        MbrInfo mbrInfo;
-
-        if(optionalMbrInfo.isPresent()) {
-            // 기존 회원의 경우 마지막 로그인 날짜와 프로필 사진 없는경우 만 업데이트
-            mbrInfo = optionalMbrInfo.get();
-            mbrInfo.setLastLoginDate(Timestamp.valueOf(LocalDateTime.now()));
-            if (StringUtils.isBlank(mbrInfo.getMbrProfileImageUrl()) && userAttributes.get("profile") != null) {
-                mbrInfo.setMbrProfileImageUrl((String) userAttributes.get("profile"));
-            }
-        } else {
-            // mbrInfo 저장
-            memberRepository.save(convertToMbrInfo(userAttributes));
-            mbrInfo = memberRepository.findById(mbrId).get();
-        }
-        // snsMbrInfo 저장
-        oauthMbrInfoRepository.save(convertToOauthMbrInfo(userAttributes, registrationId));
-        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(mbrInfo.getRole()));
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Role.ROLE_MEMBER.getRoleName()));
 
         return new DefaultOAuth2User(authorities, userAttributes, "email");
-    }
-
-
-    /**
-     * attributes -> MbrInfo convert
-     * @param attributes
-     * @return attributes -> MbrInfo entity로 변환
-     * @throws
-     */
-    private MbrInfo convertToMbrInfo(Map<String, Object> attributes) {
-        return MbrInfo.builder()
-                .mbrId(attributes.get("email").toString())
-                .role(Role.ROLE_MEMBER.getRoleName())
-                .mbrNickname(String.valueOf(attributes.get("nickname")))
-                .mbrProfileImageUrl(String.valueOf(attributes.get("profile")))
-                .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
-                .build();
-    }
-
-    /**
-     * attributes -> OauthMbrInfo convert
-     * @param attributes, registrationId
-     * @return attributes -> OauthMbrInfo entity로 변환
-     * @throws
-     */
-    private OauthMbrInfo convertToOauthMbrInfo(Map<String, Object> attributes, String registrationId) {
-        return OauthMbrInfo.builder()
-                .oauthMbrInfoKey(OauthMbrInfo.OauthMbrInfoKey.builder()
-                        .oauthId(String.valueOf(attributes.get(StringUtils.equals(NAVER, registrationId) ? "id" : "sub")))
-                        .provider(registrationId)
-                        .build())
-                .mbrInfo(new MbrInfo(String.valueOf(attributes.get("email"))))
-                .build();
     }
 
     /**

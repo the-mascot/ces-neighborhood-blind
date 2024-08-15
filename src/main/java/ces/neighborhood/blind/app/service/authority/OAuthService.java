@@ -1,5 +1,6 @@
-package ces.neighborhood.blind.app.service;
+package ces.neighborhood.blind.app.service.authority;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,18 +27,30 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
+import ces.neighborhood.blind.app.dto.Role;
 import ces.neighborhood.blind.app.dto.TokenDto;
+import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.OauthMbrInfo;
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
+import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.app.repository.OauthMbrInfoRepository;
+import ces.neighborhood.blind.app.service.member.MemberService;
+import ces.neighborhood.blind.common.code.ComCode;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +66,18 @@ public class OAuthService {
     private final Oauth2UserServiceImpl userService;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private static final String NAVER = "naver";
+
+    private static final String NAVER_PROFILE_IMAGE = "profile_image";
+
+    private static final String GOOGLE_PROFILE_IMAGE = "picture";
+
+    private final MemberRepository memberRepository;
+
+    private final OauthMbrInfoRepository oauthMbrInfoRepository;
+
+    private final MemberService memberService;
 
     /**
      * JWT 로그인 인증
@@ -89,7 +114,38 @@ public class OAuthService {
                 clientRegistration, oAuth2AccessToken, additionalParameters
         ));
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(oauth2User.getName(), null, oauth2User.getAuthorities());
+        // 응답 userAttributes -> mbrInfo 컨버팅
+        MbrInfo responseMbrInfo = convertToMbrInfo(oauth2User.getAttributes(), registrationId);
+        // 기존 회원인지 조회
+        Optional<MbrInfo> optionalMbrInfo = memberRepository.findById(responseMbrInfo.getMbrId());
+
+        if(optionalMbrInfo.isPresent()) {
+            /*기존 회원의 경우 마지막 로그인 날짜 업데이트.
+            기존에 프로필 사진 없고, oAuth에서 제공하는 프로필 사진 있는 경우 회원 프로필 사진 업데이트.*/
+            MbrInfo mbrInfo = optionalMbrInfo.get();
+            mbrInfo.setLastLoginDate(Timestamp.valueOf(LocalDateTime.now()));
+            if (StringUtils.isBlank(mbrInfo.getMbrProfileImageUrl()) && responseMbrInfo.getMbrProfileImageUrl() != null) {
+                mbrInfo.setMbrProfileImageUrl(responseMbrInfo.getMbrProfileImageUrl());
+            }
+        } else {
+            // unique 닉네임 생성
+            String nickname = memberService.generateRandomNickname();
+            MbrInfo mbrInfo = MbrInfo.builder()
+                    .mbrId(responseMbrInfo.getMbrId())
+                    .mbrNickname(nickname)
+                    .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
+                    .mbrProfileImageUrl(responseMbrInfo.getMbrProfileImageUrl())
+                    .role(Role.ROLE_MEMBER.getRoleName())
+                    .build();
+
+            // mbrInfo 저장
+            memberRepository.save(mbrInfo);
+        }
+        // oauthMbrInfo 저장
+        oauthMbrInfoRepository.save(convertToOauthMbrInfo(oauth2User.getAttributes(), registrationId));
+        MbrInfo mbrInfo = memberRepository.findById(responseMbrInfo.getMbrId()).get();
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(mbrInfo.getMbrId(), null, mbrInfo.getAuthorities());
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
@@ -154,5 +210,46 @@ public class OAuthService {
             // Will not happen since UTF-8 is a standard charset
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    /**
+     * attributes -> MbrInfo convert
+     * @param userAttributes
+     * @return attributes -> MbrInfo entity로 변환
+     * @throws
+     */
+    private MbrInfo convertToMbrInfo(Map<String, Object> userAttributes, String registrationId) {
+        if (userAttributes == null || userAttributes.get("email") == null) {
+            throw new BizException(ErrorCode.CODE_1101);
+        }
+        String mbrId = (String) userAttributes.get("email");
+        String profileImage = ObjectUtils.defaultIfNull(
+                (String) userAttributes.get(registrationId.equals(NAVER) ?
+                        NAVER_PROFILE_IMAGE : GOOGLE_PROFILE_IMAGE), null);
+        String nickname = ObjectUtils.defaultIfNull((String) userAttributes.get("nickname"), null);
+
+        return MbrInfo.builder()
+                .mbrId(mbrId)
+                .role(Role.ROLE_MEMBER.getRoleName())
+                .mbrNickname(nickname)
+                .mbrProfileImageUrl(profileImage)
+                .mbrStd(ComCode.MBR_STD_ACTIVE.getCode())
+                .build();
+    }
+
+    /**
+     * attributes -> OauthMbrInfo convert
+     * @param attributes, registrationId
+     * @return attributes -> OauthMbrInfo entity로 변환
+     * @throws
+     */
+    private OauthMbrInfo convertToOauthMbrInfo(Map<String, Object> attributes, String registrationId) {
+        return OauthMbrInfo.builder()
+                .oauthMbrInfoKey(OauthMbrInfo.OauthMbrInfoKey.builder()
+                        .oauthId(String.valueOf(attributes.get(StringUtils.equals(NAVER, registrationId) ? "id" : "sub")))
+                        .provider(registrationId)
+                        .build())
+                .mbrInfo(new MbrInfo(String.valueOf(attributes.get("email"))))
+                .build();
     }
 }

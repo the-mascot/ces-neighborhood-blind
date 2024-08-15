@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.service.MemberService;
+import ces.neighborhood.blind.app.service.member.MemberService;
 import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;

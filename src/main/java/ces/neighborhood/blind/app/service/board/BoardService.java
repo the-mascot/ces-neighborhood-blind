@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.service;
+package ces.neighborhood.blind.app.service.board;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -22,6 +22,7 @@ import ces.neighborhood.blind.app.repository.AttachmentRepository;
 import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.CommentRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
+import ces.neighborhood.blind.app.service.file.S3Service;
 import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.utils.ComUtils;
 import java.security.Principal;

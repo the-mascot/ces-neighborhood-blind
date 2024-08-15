@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
-import ces.neighborhood.blind.app.service.MemberService;
+import ces.neighborhood.blind.app.service.member.MemberService;
 import ces.neighborhood.blind.common.code.Constant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

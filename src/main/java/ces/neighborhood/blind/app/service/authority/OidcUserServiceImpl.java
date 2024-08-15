@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.service;
+package ces.neighborhood.blind.app.service.authority;
 
 import static org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService.createDefaultClaimTypeConverters;
 import org.apache.commons.lang3.StringUtils;

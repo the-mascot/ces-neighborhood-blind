@@ -14,6 +14,7 @@ public enum ErrorCode {
     CODE_1001("1001", "존재하지 않는 회원입니다."),
     CODE_1002("1002", "Wrong Password"),
     CODE_1003("1003", "Please enter a Password"),
+    CODE_1004("1004", "신규회원 닉네임 설정 필요."),
     CODE_1005("1005", "아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요."),
     CODE_1100("1100", "OAuth Login - Missing attribute name in UserInfoEndpoint"),
     CODE_1101("1101", "OAuth Login - Missing attribute or email in UserInfoEndpoint"),

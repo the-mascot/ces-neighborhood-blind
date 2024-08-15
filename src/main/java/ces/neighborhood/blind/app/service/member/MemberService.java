@@ -1,9 +1,10 @@
-package ces.neighborhood.blind.app.service;
+package ces.neighborhood.blind.app.service.member;
 
 import org.springframework.stereotype.Service;
 
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.common.utils.ComUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,5 +57,22 @@ public class MemberService {
         Boolean isDuplicate = memberRepository.existsByMbrNickname(nickname);
         log.info("[MemberService - checkNicknameDuplicate] nickname: {}, isDuplicate: {}", nickname, isDuplicate);
         return isDuplicate;
+    }
+
+    /**
+     * unique nickname 생성
+     * @param
+     * @return unique nickname
+     * @throws
+     */
+    public String generateRandomNickname() {
+        String randomNickname;
+        boolean exist;
+        // random 닉네임 생성
+        do {
+            randomNickname = ComUtils.generateRandomNickname();
+            exist = memberRepository.existsByMbrNickname(randomNickname);
+        } while (exist);
+        return randomNickname;
     }
 }

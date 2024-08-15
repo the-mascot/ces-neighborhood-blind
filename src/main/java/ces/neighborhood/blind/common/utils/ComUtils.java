@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,6 +28,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ComUtils {
+
+    /**
+     * 랜덤 닉네임생성
+     * @param
+     * @return 10글자 이하 랜덤 nickname
+     * @throws
+     */
+    public static String generateRandomNickname() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replace("-", "").substring(0, 10);
+    }
 
     /**
      * Object to Json String Converter

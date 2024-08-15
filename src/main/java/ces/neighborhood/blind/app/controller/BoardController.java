@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.entity.Post;
-import ces.neighborhood.blind.app.service.BoardService;
+import ces.neighborhood.blind.app.service.board.BoardService;
 import ces.neighborhood.blind.common.code.Constant;
 import jakarta.validation.Valid;
 import java.security.Principal;

@@ -10,7 +10,6 @@ spring:
               - email
               - profile
             redirect-uri: "http://localhost:3000/login/google"
-
           naver:
             client-id: UpEJjnGzwwLj_hk4mbB6
             client-secret: ENC(n9Zp2zZ17KdDJ0eL6Z1aY7knuXQBuIIX)
@@ -21,8 +20,6 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "http://localshot:3000/login/naver"
         provider:
-          google:
-            token-uri: https://oauth2.googleapis.com/token
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
             token-uri: https://nid.naver.com/oauth2.0/token

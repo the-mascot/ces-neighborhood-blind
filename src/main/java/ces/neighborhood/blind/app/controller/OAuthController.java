@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.dto.TokenDto;
-import ces.neighborhood.blind.app.service.OAuthService;
+import ces.neighborhood.blind.app.service.authority.OAuthService;
 import ces.neighborhood.blind.common.code.Constant;
 import lombok.RequiredArgsConstructor;
 
