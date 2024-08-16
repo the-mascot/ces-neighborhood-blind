@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
-import ces.neighborhood.blind.app.dto.TokenDto;
+import ces.neighborhood.blind.app.dto.Oauth2Authentication;
 import ces.neighborhood.blind.app.service.authority.OAuthService;
 import ces.neighborhood.blind.common.code.Constant;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class OAuthController {
 
     @GetMapping("/{registrationId}")
     public ResponseEntity oauthLogin(@PathVariable String registrationId, @RequestParam String code, @RequestParam String state) {
-        TokenDto tokenDto = oAuthService.authenticate(registrationId, code, state);
-        return ApiResponse.success(tokenDto);
+        Oauth2Authentication authentication = oAuthService.authenticate(registrationId, code, state);
+        return ApiResponse.success(authentication.getTokenDto(), authentication.getOAuthLoginRes());
     }
 
 }

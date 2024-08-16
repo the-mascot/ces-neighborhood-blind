@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ces.neighborhood.blind.app.dto.ApiResponse;
 import ces.neighborhood.blind.app.dto.TokenDto;
-import ces.neighborhood.blind.app.record.JoinReq;
-import ces.neighborhood.blind.app.record.LoginReq;
+import ces.neighborhood.blind.app.record.authority.JoinReq;
+import ces.neighborhood.blind.app.record.authority.LoginReq;
 import ces.neighborhood.blind.app.service.authority.AuthorityService;
 import ces.neighborhood.blind.common.code.Constant;
 import jakarta.validation.Valid;

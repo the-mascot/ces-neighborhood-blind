@@ -51,4 +51,9 @@ public class ApiResponse<T> {
         ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), null);
         return new ResponseEntity<>(apiResponse, getTokenHeaders(tokenDto), HttpStatus.OK);
     }
+
+    public static <T> ResponseEntity<ApiResponse<T>> success(TokenDto tokenDto, T data) {
+        ApiResponse<T> apiResponse = new ApiResponse<>(ErrorCode.CODE_0000.getCode(), ErrorCode.CODE_0000.getMessage(), data);
+        return new ResponseEntity<>(apiResponse, getTokenHeaders(tokenDto), HttpStatus.OK);
+    }
 }

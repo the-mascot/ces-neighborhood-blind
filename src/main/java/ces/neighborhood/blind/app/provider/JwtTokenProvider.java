@@ -144,7 +144,7 @@ public class JwtTokenProvider {
         // 토큰 payload 가져오기, 만료여부 validation
         Claims claims = this.parseClaims(refreshToken);
         // 회원정보조회
-        MbrInfo mbrInfo = memberService.getMbrInfo(claims.getSubject());
+        MbrInfo mbrInfo = memberService.getMbrInfoById(claims.getSubject());
 
         if (!StringUtils.equals(refreshToken, mbrInfo.getRefreshToken())) {
             throw new BizException(ErrorCode.CODE_1121);

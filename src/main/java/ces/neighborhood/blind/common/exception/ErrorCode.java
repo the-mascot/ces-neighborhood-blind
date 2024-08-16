@@ -7,8 +7,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
+    /*CODE 0000 ~ 0999 : 성공코드*/
     CODE_0000("0000", "Successful Response", HttpStatus.OK),
-
+    CODE_0010("0010", "소셜로그인 회원가입 성공."),
     /*CODE 1000 ~ 1999 : 회원관련*/
     CODE_1000("1000", "No Authority"),
     CODE_1001("1001", "존재하지 않는 회원입니다."),

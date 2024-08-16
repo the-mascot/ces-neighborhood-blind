@@ -27,11 +27,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
+import ces.neighborhood.blind.app.dto.Oauth2Authentication;
 import ces.neighborhood.blind.app.dto.Role;
-import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.OauthMbrInfo;
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
+import ces.neighborhood.blind.app.record.authority.OAuthLoginRes;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.app.repository.OauthMbrInfoRepository;
 import ces.neighborhood.blind.app.service.member.MemberService;
@@ -85,7 +86,7 @@ public class OAuthService {
      * @return
      * @throws
      */
-    public TokenDto authenticate(String registrationId, String code, String state) throws
+    public Oauth2Authentication authenticate(String registrationId, String code, String state) throws
             AuthenticationException {
         ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(registrationId);
         log.info("[OauthService - authenticate] clientRegistration : {}", clientRegistration);
@@ -149,7 +150,9 @@ public class OAuthService {
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
-        return jwtTokenProvider.createTokenDTO(accessToken, refreshToken);
+        OAuthLoginRes oAuthLoginRes = new OAuthLoginRes(optionalMbrInfo.isEmpty(), mbrInfo.getMbrNickname());
+        Oauth2Authentication authenticate = new Oauth2Authentication(oAuthLoginRes, jwtTokenProvider.createTokenDTO(accessToken, refreshToken));
+        return authenticate;
     }
 
     /**

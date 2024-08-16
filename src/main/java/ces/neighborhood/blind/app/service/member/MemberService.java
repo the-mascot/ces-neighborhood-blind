@@ -1,10 +1,15 @@
 package ces.neighborhood.blind.app.service.member;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.record.member.UpdateMemberInfoReq;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.common.utils.ComUtils;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +35,7 @@ public class MemberService {
      * @return MbrInfo
      * @throws
      */
-    public MbrInfo getMbrInfo(String mbrId) {
+    public MbrInfo getMbrInfoById(String mbrId) {
         return memberRepository.findById(mbrId)
                 .orElseThrow(() -> new RuntimeException());
     }
@@ -57,6 +62,21 @@ public class MemberService {
         Boolean isDuplicate = memberRepository.existsByMbrNickname(nickname);
         log.info("[MemberService - checkNicknameDuplicate] nickname: {}, isDuplicate: {}", nickname, isDuplicate);
         return isDuplicate;
+    }
+
+    /**
+     * 회원정보변경
+     * @param updateMemberInfoReq
+     * @return
+     * @throws
+     */
+    @Transactional
+    public void updateMbrInfo(UpdateMemberInfoReq updateMemberInfoReq) {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        MbrInfo mbrInfo = this.getMbrInfoById(authentication.getName());
+        Optional.ofNullable(updateMemberInfoReq.nickname()).ifPresent(mbrInfo::setMbrNickname);
+        Optional.ofNullable(updateMemberInfoReq.profileImage()).ifPresent(mbrInfo::setMbrProfileImageUrl);
     }
 
     /**
