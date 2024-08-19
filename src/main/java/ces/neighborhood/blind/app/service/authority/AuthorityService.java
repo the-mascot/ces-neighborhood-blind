@@ -12,18 +12,17 @@ import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
+import ces.neighborhood.blind.app.dto.CesAuthentication;
 import ces.neighborhood.blind.app.dto.Role;
-import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
 import ces.neighborhood.blind.app.record.authority.JoinReq;
 import ces.neighborhood.blind.app.record.authority.LoginReq;
+import ces.neighborhood.blind.app.record.authority.LoginRes;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.common.code.ComCode;
 import ces.neighborhood.blind.common.exception.ErrorCode;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,45 +69,22 @@ public class AuthorityService {
     }
 
     /**
-     * 네이버 로그인 Authorization Code 요청
-     * Spring OAuth 가 아닌 직접 요청 구현을 위해 작성. 현재 Spring OAuth 사용으로 사용 x
-     * @param param
-     * @return Authorization Code 요청 response
-     * @throws
-     */
-    public String authenticate(Map<String, Object> param) {
-        WebClient webClient = WebClient.builder().baseUrl("https://nid.naver.com/oauth2.0/authorize").build();
-        String response = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("response_type", "code")
-                        .queryParam("client_id", "UpEJjnGzwwLj_hk4mbB6")
-                        .queryParam("redirect_uri", "http%3a%2f%2flocalhost%3a8010%2flogin%2foauth2%2fcode%2fnaver")
-                        .queryParam("state", "1234")
-                        .build()
-                ).retrieve()
-                .bodyToMono(String.class)
-                .block();
-                //.queryParam("redirect_uri", "http://localhost:8010/login/oauth2/code/naver")
-        log.error(response);
-        return response;
-    }
-
-    /**
      * JWT 로그인 인증
      * @param loginReq
      * @return
      * @throws
      */
-    public TokenDto authenticate(LoginReq loginReq) {
+    public CesAuthentication authenticate(LoginReq loginReq) {
         // ID 값으로 회원정보조회
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginReq.userId());
+        MbrInfo mbrInfo = userDetailsService.loadUserByUsername(loginReq.userId());
         // 비밀번호 확인
-        this.credentialChecks(loginReq, userDetails);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getAuthorities());
+        this.credentialChecks(loginReq, mbrInfo);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(mbrInfo.getUsername(), mbrInfo.getAuthorities());
 
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        return jwtTokenProvider.createTokenDTO(accessToken, refreshToken);
+        LoginRes loginRes = new LoginRes(mbrInfo.getMbrNickname(), mbrInfo.getMbrProfileImageUrl());
+        return new CesAuthentication(loginRes, null, jwtTokenProvider.createTokenDTO(accessToken, refreshToken));
     }
 
     /**

@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.record.authority.LoginRes;
 import ces.neighborhood.blind.app.record.member.UpdateMemberInfoReq;
 import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
 import ces.neighborhood.blind.common.utils.ComUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +40,7 @@ public class MemberService {
      */
     public MbrInfo getMbrInfoById(String mbrId) {
         return memberRepository.findById(mbrId)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new BizException(ErrorCode.CODE_1001));
     }
 
     /**
@@ -94,5 +97,18 @@ public class MemberService {
             exist = memberRepository.existsByMbrNickname(randomNickname);
         } while (exist);
         return randomNickname;
+    }
+
+    /**
+     * 로그인정보 가져오기
+     * @param
+     * @return LoginRes(닉네임, 프로필사진 url)
+     * @throws
+     */
+    public LoginRes getProfileInfo() {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        MbrInfo mbrInfo = this.getMbrInfoById(authentication.getName());
+        return new LoginRes(mbrInfo.getMbrNickname(), mbrInfo.getMbrProfileImageUrl());
     }
 }

@@ -1,10 +1,10 @@
 package ces.neighborhood.blind.app.service.authority;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.repository.MemberRepository;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
@@ -34,8 +34,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
      * @throws
      */
     @Override
-    public UserDetails loadUserByUsername(String mbrId) throws BizException {
+    public MbrInfo loadUserByUsername(String mbrId) throws BizException {
         return memberRepository.findById(mbrId)
-                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.CODE_1001.getMessage()));
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "[UserDetailServiceImpl - loadUserByUsername] mbrId: "
+                        + mbrId + ErrorCode.CODE_1001.getMessage()));
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import ces.neighborhood.blind.app.dto.TokenDto;
 import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.service.member.MemberService;
+import ces.neighborhood.blind.app.service.authority.UserDetailServiceImpl;
 import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
@@ -48,7 +48,7 @@ public class JwtTokenProvider {
 
     private String issuer;
 
-    private MemberService memberService;
+    private UserDetailServiceImpl userDetailService;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
                             @Value("${jwt.access-token-expire-time}") long accessTime,
@@ -144,7 +144,7 @@ public class JwtTokenProvider {
         // 토큰 payload 가져오기, 만료여부 validation
         Claims claims = this.parseClaims(refreshToken);
         // 회원정보조회
-        MbrInfo mbrInfo = memberService.getMbrInfoById(claims.getSubject());
+        MbrInfo mbrInfo = userDetailService.loadUserByUsername(claims.getSubject());
 
         if (!StringUtils.equals(refreshToken, mbrInfo.getRefreshToken())) {
             throw new BizException(ErrorCode.CODE_1121);
