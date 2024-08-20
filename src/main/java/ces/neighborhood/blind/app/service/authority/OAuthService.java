@@ -82,12 +82,16 @@ public class OAuthService {
 
     /**
      * JWT 로그인 인증
+     * 1. 인증서버에 토큰 요청
+     * 2. resource 서버에 userInfo 요청
+     * 3. 기존 회원 확인 / 신규회원 가입
      * @param code, state
      * @return
      * @throws
      */
     public CesAuthentication authenticate(String registrationId, String code, String state) throws
             AuthenticationException {
+        // authorization_code 응답 객체 생성
         ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(registrationId);
         log.info("[OauthService - authenticate] clientRegistration : {}", clientRegistration);
         OAuth2AuthorizationResponse authorizationResponse = OAuth2AuthorizationResponse
@@ -96,7 +100,7 @@ public class OAuthService {
                 .redirectUri(clientRegistration.getRedirectUri())
                 .build();
 
-        // 인증서버에 Access Token 요청
+        // 1. 인증서버에 토큰 요청
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(clientRegistration, authorizationResponse);
         log.info("[OauthService - authenticate] requestEntity : {}", requestEntity);
@@ -109,15 +113,15 @@ public class OAuthService {
         // Refresh Token
         OAuth2RefreshToken oAuth2RefreshToken = StringUtils.equals(clientRegistration.getRegistrationId(), "google") ? null : new OAuth2RefreshToken(accessTokenResponseDto.getRefreshToken(), Instant.now(), null);
 
+        // 2. resource 서버에 userInfo 요청
         Map<String, Object> additionalParameters = new HashMap<>();
-        // resource 서버에 userInfo 요청
         OAuth2User oauth2User = this.userService.loadUser(new OAuth2UserRequest(
                 clientRegistration, oAuth2AccessToken, additionalParameters
         ));
-
         // 응답 userAttributes -> mbrInfo 컨버팅
         MbrInfo responseMbrInfo = convertToMbrInfo(oauth2User.getAttributes(), registrationId);
-        // 기존 회원인지 조회
+
+        // 3. 기존 회원 확인 / 신규회원 가입
         Optional<MbrInfo> optionalMbrInfo = memberRepository.findById(responseMbrInfo.getMbrId());
 
         if(optionalMbrInfo.isPresent()) {
