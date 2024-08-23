@@ -31,11 +31,11 @@ public class BoardController {
     private final BoardService boardService;
 
     /**
-     * 게시판 리스트
+     * 게시글 리스트
      */
     @GetMapping("/list")
-    public ResponseEntity getBoardMain() {
-        return ApiResponse.success(boardService.getBoardList());
+    public ResponseEntity getPosts() {
+        return ApiResponse.success(boardService.getPosts());
     }
 
     /**

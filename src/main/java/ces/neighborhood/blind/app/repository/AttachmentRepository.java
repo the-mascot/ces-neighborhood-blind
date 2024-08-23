@@ -6,6 +6,6 @@ import ces.neighborhood.blind.app.entity.Attachment;
 
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
-    Attachment findByStoredFileName(String storedFileName);
+    Attachment findByFileName(String fileName);
 
 }

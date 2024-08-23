@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,11 +23,13 @@ public class Attachment extends BaseEntity {
     @SequenceGenerator(name = "FILE_NO_SEQ", sequenceName = "FILE_NO_SEQ", allocationSize = 50)
     private Long fileNo;
 
+    private String fileUrl;
+
     private String folderPath;
 
     private String fileName;
 
-    private String storedFileName;
+    private String originalFileName;
 
     private String fileExt;
 
@@ -40,14 +40,6 @@ public class Attachment extends BaseEntity {
     private Long refNo;
 
     private String delYn;
-
-    @ManyToOne
-    @JoinColumn(name = "post_no")
-    private Post post;
-
-    @ManyToOne
-    @JoinColumn(name = "reply_no")
-    private Reply reply;
 
     public void setRefNo(Long refNo) {
         this.refNo = refNo;

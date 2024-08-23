@@ -61,17 +61,4 @@ public class Post extends BaseEntity {
     public String getCreateDateStr() {
         return ComUtils.calculateTimeDifference(createDate);
     }
-
-    public void setDelYn(String delYn) {
-        this.delYn = delYn;
-    }
-
-    public void setMbrInfo(MbrInfo mbrInfo) {
-        this.mbrInfo = mbrInfo;
-    }
-
-    @Access(AccessType.PROPERTY)
-    public void setTitle(String title) {
-        this.title = title;
-    }
 }

@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardDto {
+public class PostsDto {
 
     private Long postNo;
 
@@ -58,7 +58,7 @@ public class BoardDto {
         return "/board/post/" + postNo;
     }
 
-    public BoardDto(Long postNo, String boardType, String nickName,
+    public PostsDto(Long postNo, String boardType, String nickName,
                     String title, String content, Integer viewCnt, Long likeCnt, Boolean isLiked,
                     Integer commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;
@@ -75,7 +75,7 @@ public class BoardDto {
         this.fileName = fileName;
     }
 
-    public BoardDto(Long postNo, String boardType, String nickName,
+    public PostsDto(Long postNo, String boardType, String nickName,
                     String title, String content, Integer viewCnt, Long likeCnt, Boolean isLiked,
                     Long commCnt, Timestamp createDate, String folderPath, String fileName) {
         this.postNo = postNo;

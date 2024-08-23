@@ -49,6 +49,13 @@ public class Constant {
     /*일*/
     public static final String DAYS_KO = "일";
 
-    /*Attachment 참조타입 - BOARD*/
-    public static final String BOARD = "BOARD";
+    /*참조타입 - 게시글(POST)*/
+    public static final String REF_TYPE_POST = "POST";
+
+    /*참조타입 - 댓글(COMMENT)*/
+    public static final String REF_TYPE_COMMENT = "COMMENT";
+
+    /*참조타입 - 대댓글(REPLY)*/
+    public static final String REF_TYPE_REPLY = "REPLY";
+
 }

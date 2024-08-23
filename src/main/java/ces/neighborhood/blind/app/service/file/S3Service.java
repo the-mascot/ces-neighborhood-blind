@@ -61,9 +61,9 @@ public class S3Service {
         }
 
         // 파일명
-        String fileName = multipartFile.getOriginalFilename();
+        String originalFileName = multipartFile.getOriginalFilename();
         // 확장자
-        String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
         // 확장자 검사
         if (!ALLOWED_IMAGE_EXTENSIONS.contains(fileExt)) {
@@ -79,8 +79,8 @@ public class S3Service {
         String folderPath = new SimpleDateFormat(IMAGE_FOLDER_PATTERN).format(new Date());
         // 저장 파일명 UUID 사용
         String uuid = UUID.randomUUID().toString();
-        String storedFileName = new StringBuilder(uuid).append(".").append(fileExt).toString();
-        String fullFileName = new StringBuilder(folderPath).append("/").append(storedFileName).toString();
+        String fileName = new StringBuilder(uuid).append(".").append(fileExt).toString();
+        String fullFileName = new StringBuilder(folderPath).append("/").append(fileName).toString();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
@@ -97,7 +97,7 @@ public class S3Service {
         attachmentRepository.save(Attachment.builder()
                 .folderPath(folderPath)
                 .fileName(fileName)
-                .storedFileName(storedFileName)
+                .originalFileName(originalFileName)
                 .fileExt(fileExt)
                 .fileSize(multipartFile.getSize())
                 .delYn(Constant.N)

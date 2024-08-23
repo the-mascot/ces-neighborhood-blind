@@ -1,6 +1,5 @@
 package ces.neighborhood.blind.app;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,11 +8,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import ces.neighborhood.blind.app.dto.BoardDto;
 import ces.neighborhood.blind.app.entity.Likes;
-import ces.neighborhood.blind.app.entity.Post;
-import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
+import ces.neighborhood.blind.app.repository.PostRepository;
 import ces.neighborhood.blind.common.TestQueryDslConfig;
 import java.util.List;
 
@@ -26,7 +23,7 @@ JpaQueryFactory 는 persistenceLayer가 아니라서 추가 bean등록이 필요
 public class JpaTest {
 
     @Autowired
-    private BoardRepository boardRepository;
+    private PostRepository postRepository;
 
     @Autowired
     private LikesRepository likesRepository;
@@ -34,7 +31,7 @@ public class JpaTest {
     @Test
     public void convertDate() {
         long startTime = System.currentTimeMillis();
-        List<BoardDto> boardDto = boardRepository.getBoardList("dmstn1812@naver.com");
+        //List<BoardDto> boardDto = boardRepository.getBoardList("dmstn1812@naver.com");
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         System.out.println("실행시간 : " + duration + "ms");
@@ -71,53 +68,28 @@ public class JpaTest {
     @Test
     public void nPlusOneTest() {
         // JPA 의 N + 1 문제 테스트
-        // Board 와 즉시 로딩인 MbrInfo select 발생
-        List<Post> postList = boardRepository.findAll();
+        // Post 와 즉시 로딩인 MbrInfo select 발생
+        //List<Post> postList = boardRepository.();
         System.out.println("findAll 종료");
         // 지연 로딩인 Comment select 발생
         // 부모 Board의 개수 만큼 +1 의 Comment select 쿼리 발생.
         //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : ");
     }
 
-    @Test
-    public void joinTest() {
-        // 일반 Join 테스트
-        List<Post> postList = boardRepository.findAllWithJustJoin();
-        System.out.println("findAllWithJustJoin 종료");
-        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
-    }
 
-    @Test
-    public void fetchJoinTest() {
-        // Fetch Join 테스트
-        List<Post> postList = boardRepository.findAllWithFetchJoin();
-        System.out.println("findAllWithFetchJoin 종료");
-        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
-    }
-
-    @Test
-    @DisplayName("EntityGraph 테스트")
-    public void entityGraphTest() {
-        List<Post> postList = boardRepository.findAll();
-        System.out.println("EntityGraph 종료");
-        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
-        postList.forEach(s -> System.out.println("nickname : " + s.getMbrInfo().getMbrNickname()));
-    }
-
-    @Test
-    @DisplayName("queryDsl 테스트")
-    public void simpleQueryDslTest() {
-        List<BoardDto> boardList = boardRepository.findAllByPostNoAndMbrId("dmstn1812@naver.com");
-        boardList.forEach(s -> System.out.println(s.getPostNo()));
-    }
-
-    @Test
-    @DisplayName("queryDsl 테스트")
-    public void ss() {
-        List<BoardDto> boardList = boardRepository.getBoardList("dmstn1812@naver.com");
-        boardList.forEach(s -> {
-            System.out.println("postNo : " + s.getPostNo());
-            System.out.println("nickname : " + s.getNickName());
-        });
-    }
+//    @Test
+//    @DisplayName("EntityGraph 테스트")
+//    public void entityGraphTest() {
+//        List<Post> postList = postRepository.findAll();
+//        System.out.println("EntityGraph 종료");
+//        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : " + s.getComment().size()));
+//        postList.forEach(s -> System.out.println("nickname : " + s.getMbrInfo().getMbrNickname()));
+//    }
+//
+//    @Test
+//    @DisplayName("queryDsl 테스트")
+//    public void simpleQueryDslTest() {
+//        List<BoardDto> boardList = postRepository.findAllByPostNoAndMbrId("dmstn1812@naver.com");
+//        boardList.forEach(s -> System.out.println(s.getPostNo()));
+//    }
 }

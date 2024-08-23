@@ -64,9 +64,9 @@ public class FileService {
             throw new BizException(ErrorCode.CODE_8000);
         }
         // 파일명
-        String fileName = image.getOriginalFilename();
+        String originalFileName = image.getOriginalFilename();
         // 확장자
-        String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
         // 확장자 검사
         if (!ALLOWED_IMAGE_EXTENSIONS.contains(fileExt)) {
@@ -94,21 +94,21 @@ public class FileService {
             StringBuilder stringBuilder = new StringBuilder(uuid);
             stringBuilder.append(".");
             stringBuilder.append(fileExt);
-            String storedFileName = stringBuilder.toString();
-            Path uploadPath = Paths.get(uploadFolderPath.toString(), storedFileName);
+            String fileName = stringBuilder.toString();
+            Path uploadPath = Paths.get(uploadFolderPath.toString(), fileName);
             // 이미지 저장
             image.transferTo(uploadPath);
             // Attachment 저장
             attachmentRepository.save(Attachment.builder()
                     .folderPath(folderPath)
                     .fileName(fileName)
-                    .storedFileName(storedFileName)
+                    .originalFileName(originalFileName)
                     .fileExt(fileExt)
                     .fileSize(image.getSize())
                     .delYn(Constant.N)
                     .createUser(principal.getName())
                     .build());
-            imageSrc = imageUploadServer + folderPath + "/" + storedFileName;
+            imageSrc = imageUploadServer + folderPath + "/" + fileName;
         } catch (IOException e) {
             throw new BizException(ErrorCode.CODE_8002);
         }

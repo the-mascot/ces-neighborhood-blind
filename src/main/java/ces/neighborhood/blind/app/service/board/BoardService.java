@@ -1,16 +1,15 @@
 package ces.neighborhood.blind.app.service.board;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.BoardDto;
 import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
@@ -18,10 +17,11 @@ import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.Post;
+import ces.neighborhood.blind.app.record.board.Posts;
 import ces.neighborhood.blind.app.repository.AttachmentRepository;
-import ces.neighborhood.blind.app.repository.BoardRepository;
 import ces.neighborhood.blind.app.repository.CommentRepository;
 import ces.neighborhood.blind.app.repository.LikesRepository;
+import ces.neighborhood.blind.app.repository.PostRepository;
 import ces.neighborhood.blind.app.service.file.S3Service;
 import ces.neighborhood.blind.common.code.Constant;
 import ces.neighborhood.blind.common.utils.ComUtils;
@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
     private final AttachmentRepository attachmentRepository;
 
@@ -55,30 +55,18 @@ public class BoardService {
 
     private final S3Service s3Service;
 
-    public List<Post> getBoardList() {
-        return boardRepository.findAll();
-    }
-
     /**
      * 게시판 목록 가져오기
-     * @param boardType
+     * @param
      * @return List<BoardDto>
      * @throws
      */
-    public List<BoardDto> getBoardList(String boardType) {
-        Authentication authentication = ComUtils.getAuthentication();
-        List<BoardDto> boardList;
-        // TODO: 게시판 타입 결정 후 코드 변경 요
-        if (StringUtils.equals(boardType, Constant.BOARD_TYPE_ALL) || StringUtils.equals(boardType, Constant.NULL.toLowerCase())) {
-            boardList = boardRepository.getBoardList(authentication.getName());
-        } else {
-            boardList = boardRepository.getBoardList(boardType, authentication.getName());
-        }
-        boardList.forEach(boardDto -> {
-            // 본문 미리보기를 위해 HTML -> 평문으로 변환
-            boardDto.setContent(Jsoup.parse(boardDto.getContent()).text());
-        });
-        return boardList;
+    public List<Posts> getPosts() {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        List<Posts> posts = postRepository.findAllPostsDto(authentication.getName());
+
+        return posts;
     }
 
     /**
@@ -91,7 +79,7 @@ public class BoardService {
         post.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
         post.setCreateUser(principal.getName());
         post.setDelYn(Constant.N);
-        return boardRepository.save(post).getPostNo();
+        return postRepository.save(post).getPostNo();
     }
 
     /**
@@ -111,7 +99,7 @@ public class BoardService {
         post.setCreateUser(principal.getName());
         post.setDelYn(Constant.N);
         // 게시글 저장
-        Long postNo = boardRepository.save(post).getPostNo();
+        Long postNo = postRepository.save(post).getPostNo();
 
         // 첨부 이미지 refNo 업데이트
         Document doc = Jsoup.parse(post.getContent());
@@ -119,12 +107,12 @@ public class BoardService {
         for (Element imgTag : imgTags) {
             String src =  imgTag.attr("src");
             String[] parts = src.split("/");
-            String storedFileName = parts[parts.length - 1];
-           Attachment attachment = attachmentRepository.findByStoredFileName(storedFileName);
+            String fileName = parts[parts.length - 1];
+           Attachment attachment = attachmentRepository.findByFileName(fileName);
             if (attachment != null) {
                 attachment.setRefNo(postNo);
                 attachment.setModifyUser(principal.getName());
-                attachment.setRefType(Constant.BOARD);
+                attachment.setRefType(Constant.REF_TYPE_POST);
                 attachmentRepository.save(attachment);
             }
         }
@@ -139,7 +127,8 @@ public class BoardService {
      */
     public Optional<PostDto> getPost(Long postNo) {
         Authentication authentication = ComUtils.getAuthentication();
-        return boardRepository.getPost(postNo, authentication.getName());
+        //return postRepository.getPost(postNo, authentication.getName());
+        return null;
     }
 
     /**
@@ -150,7 +139,7 @@ public class BoardService {
      */
     @Transactional
     public void increaseViewCount(Long postNo) {
-        boardRepository.updateViewCount(postNo);
+        //postRepository.updateViewCount(postNo);
     }
 
     /**
