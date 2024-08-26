@@ -21,6 +21,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collection;
@@ -114,11 +115,11 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
-        if(claims.get(AUTHORITIES_KEY) == null || StringUtils.isBlank(claims.get(AUTHORITIES_KEY).toString())) {
+        if (claims.get(AUTHORITIES_KEY) == null || StringUtils.isBlank(claims.get(AUTHORITIES_KEY).toString())) {
             throw new BizException(ErrorCode.CODE_1000);
         }
-        log.debug("[JwtTokenProvider - getAuthentication] claims.getAuth = {}", claims.get(AUTHORITIES_KEY));
-        log.debug("[JwtTokenProvider - getAuthentication] claims.getEmail = {}", claims.getSubject());
+        log.info("[JwtTokenProvider - getAuthentication] claims.getAuth = {}", claims.get(AUTHORITIES_KEY));
+        log.info("[JwtTokenProvider - getAuthentication] claims.getEmail = {}", claims.getSubject());
 
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
@@ -127,7 +128,7 @@ public class JwtTokenProvider {
                         .collect(Collectors.toList());
 
         authorities.stream().forEach(o -> {
-            log.debug("[JwtTokenProvider - getAuthentication] authorities = {}", o.getAuthority());
+            log.info("[JwtTokenProvider - getAuthentication] authorities = {}", o.getAuthority());
         });
 
         // UserDetails 객체를 만들어서 Authentication 리턴
@@ -162,10 +163,14 @@ public class JwtTokenProvider {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return 1;
         } catch (ExpiredJwtException e) {
-            log.info("[JwtTokenProvider] 만료된 JWT 토큰입니다.");
+            log.info("[JwtTokenProvider] 만료된 JWT 토큰입니다.\ntoken: {}", token);
             return 2;
-        } catch (Exception e) {
-            log.debug("[JwtTokenProvider] 유효하지 않은 토큰입니다.");
+        } catch (SignatureException e) {
+            log.info("[JwtTokenProvider] JWT 토큰의 서명이 유효하지 않습니다.\ntoken: {}", token);
+            return -1;
+        }
+        catch (Exception e) {
+            log.debug("[JwtTokenProvider] 유효하지 않은 토큰입니다.\ntoken: {}", token);
             return -1;
         }
     }

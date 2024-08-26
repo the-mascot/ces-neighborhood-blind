@@ -15,7 +15,7 @@ public class JasyptTest {
     @Test
     public void jasyptTest() {
         //log.info("enc = {}", jasyptEncrypt("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"));
-        String decrypt = jasyptDecrypt("jUIXMoPhD9i1u1PcWTc9i0hvYlzMZikNpRqUp8gE2WV0mud4Rj+H74d85XAIW+e4");
+        String decrypt = jasyptDecrypt("DKleP4Bs7OkPNCiWCfvgNw==");
         System.out.println("dec = " + decrypt);
 
         //assertEquals("abc", decrypt);
