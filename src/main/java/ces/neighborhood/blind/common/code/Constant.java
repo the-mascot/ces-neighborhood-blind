@@ -48,7 +48,18 @@ public class Constant {
 
     /*일*/
     public static final String DAYS_KO = "일";
+    
+    /*일*/
+    public static final String YEARS_KO = "년";
 
+    /*방금*/
+    public static final String JUST_BEFORE_KO = "방금";
+
+    /*전*/
+    public static final String BEFORE_KO = "전";
+
+    public static final String AFTER_KO = "후";
+    
     /*참조타입 - 게시글(POST)*/
     public static final String REF_TYPE_POST = "POST";
 

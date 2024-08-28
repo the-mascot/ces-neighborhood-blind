@@ -24,7 +24,6 @@ import ces.neighborhood.blind.app.repository.LikesRepository;
 import ces.neighborhood.blind.app.repository.PostRepository;
 import ces.neighborhood.blind.app.service.file.S3Service;
 import ces.neighborhood.blind.common.code.Constant;
-import ces.neighborhood.blind.common.utils.ComUtils;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -126,7 +125,8 @@ public class BoardService {
      * @throws
      */
     public Optional<PostDto> getPost(Long postNo) {
-        Authentication authentication = ComUtils.getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
         //return postRepository.getPost(postNo, authentication.getName());
         return null;
     }
@@ -149,7 +149,8 @@ public class BoardService {
      * @throws
      */
     public LikeDto like(LikeDto likeDto) {
-        Authentication authentication = ComUtils.getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
         Likes.LikesId likesId = Likes.LikesId.builder()
                 .postType(likeDto.getPostType())
                 .postNo(likeDto.getPostNo())
@@ -176,7 +177,8 @@ public class BoardService {
 
     @Transactional
     public void writeComment(String postNo, String content, MultipartFile image) {
-        Authentication authentication = ComUtils.getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
         commentRepository.save(Comment.builder()
                 .post(new Post(Long.valueOf(postNo)))
                 .content(content)

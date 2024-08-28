@@ -1,8 +1,5 @@
 package ces.neighborhood.blind.common.utils;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ces.neighborhood.blind.common.code.Constant;
@@ -97,20 +94,31 @@ public class ComUtils {
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of(TimeZone.getDefault().getID()));
 
         LocalDateTime now = LocalDateTime.now();
-        long minutes = ChronoUnit.MINUTES.between(dateTime, now);
-        long hours = ChronoUnit.HOURS.between(dateTime, now);
-        long days = ChronoUnit.DAYS.between(dateTime, now);
+        // between(start, end) end 가 start 보다 늦으면 양수, 빠르면 음수
+        long minutes = ChronoUnit.MINUTES.between(now, dateTime);
+        long hours = ChronoUnit.HOURS.between(now, dateTime);
+        long days = ChronoUnit.DAYS.between(now, dateTime);
+        long year = ChronoUnit.YEARS.between(now, dateTime);
 
-        if (minutes < 60) {
-            return minutes + Constant.MINUTES_KO;
+        if (minutes == 0) {
+            return Constant.JUST_BEFORE_KO;
+        } else if (minutes < 60) {
+            return getElapsedTimeString(minutes, Constant.MINUTES_KO);
         } else if (hours < 24) {
-            return hours + Constant.HOURS_KO;
+            return getElapsedTimeString(hours, Constant.HOURS_KO);
+        } else if (days < 365) {
+            return getElapsedTimeString(days, Constant.HOURS_KO);
         } else {
-            return days + Constant.DAYS_KO;
+            return getElapsedTimeString(year, Constant.YEARS_KO);
         }
     }
 
-    public static Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
+    public static String getElapsedTimeString(long time, String unit) {
+        StringBuilder builder = new StringBuilder();
+        return builder
+                .append(Math.abs(time))
+                .append(unit)
+                .append(time < 0 ? Constant.BEFORE_KO : Constant.AFTER_KO)
+                .toString();
     }
 }
