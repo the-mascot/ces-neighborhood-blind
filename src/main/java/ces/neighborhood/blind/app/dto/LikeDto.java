@@ -19,8 +19,4 @@ public class LikeDto {
 
     @NotNull
     private Long postNo;
-
-    private Boolean isLiked;
-
-    private Integer likeCnt;
 }

@@ -1,5 +1,7 @@
 package ces.neighborhood.blind.app.repository;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -71,6 +73,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                         post.createDate,
                         attachment.fileUrl
                 )
+                .orderBy(new OrderSpecifier<>(Order.DESC, post.createDate))
                 .fetch();
     }
 }

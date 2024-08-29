@@ -96,21 +96,26 @@ public class ComUtils {
         LocalDateTime now = LocalDateTime.now();
         // between(start, end) end 가 start 보다 늦으면 양수, 빠르면 음수
         long minutes = ChronoUnit.MINUTES.between(now, dateTime);
-        long hours = ChronoUnit.HOURS.between(now, dateTime);
-        long days = ChronoUnit.DAYS.between(now, dateTime);
-        long year = ChronoUnit.YEARS.between(now, dateTime);
-
         if (minutes == 0) {
             return Constant.JUST_BEFORE_KO;
-        } else if (minutes < 60) {
+        } else if (Math.abs(minutes) < 60) {
             return getElapsedTimeString(minutes, Constant.MINUTES_KO);
-        } else if (hours < 24) {
-            return getElapsedTimeString(hours, Constant.HOURS_KO);
-        } else if (days < 365) {
-            return getElapsedTimeString(days, Constant.HOURS_KO);
-        } else {
-            return getElapsedTimeString(year, Constant.YEARS_KO);
         }
+        // 시간 단위
+        long hours = ChronoUnit.HOURS.between(now, dateTime);
+        if (Math.abs(hours) < 24) {
+            return getElapsedTimeString(hours, Constant.HOURS_KO);
+        }
+
+        // 일 단위
+        long days = ChronoUnit.DAYS.between(now, dateTime);
+        if (Math.abs(days) < 365) {
+            return getElapsedTimeString(days, Constant.HOURS_KO);
+        }
+
+        // 년 단위
+        long year = ChronoUnit.YEARS.between(now, dateTime);
+        return getElapsedTimeString(year, Constant.YEARS_KO);
     }
 
     public static String getElapsedTimeString(long time, String unit) {
@@ -118,6 +123,7 @@ public class ComUtils {
         return builder
                 .append(Math.abs(time))
                 .append(unit)
+                .append(" ")
                 .append(time < 0 ? Constant.BEFORE_KO : Constant.AFTER_KO)
                 .toString();
     }

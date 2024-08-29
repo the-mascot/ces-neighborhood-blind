@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.LikeDto;
 import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.Post;
+import ces.neighborhood.blind.app.record.board.PostLikeReq;
 import ces.neighborhood.blind.app.record.board.Posts;
 import ces.neighborhood.blind.app.repository.AttachmentRepository;
 import ces.neighborhood.blind.app.repository.CommentRepository;
@@ -144,35 +144,34 @@ public class BoardService {
 
     /**
      * 게시글 좋아요 기능
-     * @param likeDto
-     * @return LikeDto(좋아요 여부, 좋아요 개수)
+     * @param postLikeReq
+     * @return
      * @throws
      */
-    public LikeDto like(LikeDto likeDto) {
+    public void updatePostLike(PostLikeReq postLikeReq) {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         Likes.LikesId likesId = Likes.LikesId.builder()
-                .postType(likeDto.getPostType())
-                .postNo(likeDto.getPostNo())
+                .postType(postLikeReq.postType())
+                .postNo(postLikeReq.postNo())
                 .mbrId(authentication.getName())
                 .build();
         // 해당 게시물에 좋아요를 한적 있는지 확인
         Optional<Likes> likes = likesRepository.findById(likesId);
-        boolean isLiked = likes.isPresent();
-        if (isLiked) {
+        if (likes.isPresent()) {
             // 좋아요 상태면 좋아요 해제
             likesRepository.delete(likes.get());
         } else {
             // 좋아요 추가
             likesRepository.save(Likes.builder()
                     .likesId(likesId)
+                    .post(
+                        Post.builder()
+                        .postNo(postLikeReq.postNo())
+                        .build()
+                    )
                     .build());
         }
-
-        return LikeDto.builder()
-                .isLiked(!isLiked)
-                .likeCnt(likesRepository.getLikeCount(likeDto.getPostNo()))
-                .build();
     }
 
     @Transactional
