@@ -110,7 +110,7 @@ public class ComUtils {
         // 일 단위
         long days = ChronoUnit.DAYS.between(now, dateTime);
         if (Math.abs(days) < 365) {
-            return getElapsedTimeString(days, Constant.HOURS_KO);
+            return getElapsedTimeString(days, Constant.DAYS_KO);
         }
 
         // 년 단위

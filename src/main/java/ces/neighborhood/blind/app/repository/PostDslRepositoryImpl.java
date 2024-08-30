@@ -3,7 +3,9 @@ package ces.neighborhood.blind.app.repository;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import ces.neighborhood.blind.app.entity.QAttachment;
@@ -21,13 +23,28 @@ public class PostDslRepositoryImpl implements PostDslRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    /**
+     * 게시판 목록 가져오기
+     */
     @Override
     public List<Posts> findAllPostsDto(String mbrId) {
         QPost post = QPost.post;
-        QAttachment attachment = QAttachment.attachment;
         QComment comment = QComment.comment;
         QReply reply = QReply.reply;
         QLikes likes = QLikes.likes;
+        QAttachment attachment = QAttachment.attachment;
+
+        // 첨부 파일 개수를 서브쿼리로 계산
+        JPQLQuery<Long> attachmentCount = JPAExpressions
+                .select(attachment.count())
+                .from(attachment)
+                .where(attachmentConditions(attachment, post));
+
+        JPQLQuery<Long> minFileNo = JPAExpressions
+                .select(attachment.fileNo.min())
+                .from(attachment)
+                .where(attachmentConditions(attachment, post));
+
         return jpaQueryFactory
                 .select(Projections.constructor(Posts.class,
                         post.postNo,
@@ -50,7 +67,9 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                                 .exists(),
                         comment.count().add(reply.count()),
                         post.createDate,
-                        attachment.fileUrl
+                        attachment.fileUrl,
+                        attachment.originalFileName,
+                        attachmentCount
                 ))
                 .from(post)
                 .leftJoin(comment).fetchJoin()
@@ -60,9 +79,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                     .on(reply.comment.commentNo.eq(comment.commentNo)
                     .and(reply.delYn.eq("N")))
                 .leftJoin(attachment).fetchJoin()
-                    .on(attachment.refType.eq(Constant.REF_TYPE_POST)
-                    .and(attachment.refNo.eq(post.postNo))
-                    .and(attachment.delYn.eq("N")))
+                    .on(attachment.fileNo.eq(minFileNo))
                 .where(post.delYn.eq("N"))
                 .groupBy(
                         post.postNo,
@@ -71,9 +88,22 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                         post.content,
                         post.viewCnt,
                         post.createDate,
-                        attachment.fileUrl
+                        attachment.fileUrl,
+                        attachment.originalFileName
                 )
                 .orderBy(new OrderSpecifier<>(Order.DESC, post.createDate))
                 .fetch();
+    }
+
+    /**
+     * Attachement where 조건 절
+     * refType = 'POST'
+     * refNo = postNo
+     * delYn = 'N'
+     */
+    private BooleanExpression attachmentConditions(QAttachment attachment, QPost post) {
+        return  attachment.refType.eq(Constant.REF_TYPE_POST)
+                .and(attachment.refNo.eq(post.postNo))
+                .and(attachment.delYn.eq("N"));
     }
 }

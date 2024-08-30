@@ -14,15 +14,17 @@ public record Posts(
         Long commentCnt,
         Timestamp createDate,
         String createElapsedTime,
-        String fileUrl
+        String fileUrl,
+        String fileName,
+        Long fileCnt
 ) {
 
     public Posts(Long postNo, String nickName, String title, String content,
                  Integer viewCnt, Long likeCnt, Boolean isLiked,
                  Long commentCnt,
-                 Timestamp createDate, String fileUrl) {
+                 Timestamp createDate, String fileUrl, String fileName, Long fileCnt) {
         this(postNo, nickName, title, content, viewCnt, likeCnt, isLiked,
-                commentCnt, createDate, null, fileUrl);
+                commentCnt, createDate, null, fileUrl, fileName, fileCnt);
     }
 
     @Override

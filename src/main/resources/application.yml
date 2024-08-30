@@ -34,10 +34,21 @@ spring:
     hikari:
       driver-class-name: org.postgresql.Driver
       jdbc-url: jdbc:postgresql://localhost:5432/neighborhooddb
+      #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      #jdbc-url: jdbc:log4jdbc:postgresql://localhost:5432/neighborhooddb
       username: ENC(Oy+tIiSyGqRI+e/cIBvNpg==)
       password: ENC(DKleP4Bs7OkPNCiWCfvgNw==)
       minimum-idle: 10
       maximum-pool-size: 50
+
+    p6spy:
+      enable-logging: true
+      multiline: true
+      logging: slf4j
+      tracing:
+        include-parameter-values: true
+      log-level: info
+      format-sql: true
 
   jpa:
     database: postgresql
@@ -45,10 +56,9 @@ spring:
       hibernate:
         format_sql: true  # 쿼리 출력시 포맷 정렬
         use_sql_comments: true  # 주석 출력
-        show_sql: true  # JPA 출력시 쿼리 출력
+        #show_sql: true  # JPA 출력시 쿼리 출력
         jdbc:
           time_zone: UTC
-    show-sql: true
 
   servlet:
     multipart:
@@ -57,6 +67,7 @@ spring:
       location: /neighborhood1/temp # 업로드된 파일이 임시로 저장되는 디스크 위치 (default: WAS가 결정)
       max-file-size: 100MB  # 한개 파일의 최대 사이즈 (default: 1MB)
       max-request-size: 100MB # 한개 요청의 최대 사이즈 (default: 100MB)
+
 
 cloud:
   aws:
@@ -71,10 +82,11 @@ cloud:
     stack:
       auto: false
 
+#logging:
+#  level:
+#    p6spy: info
 
-
-logging:
-  config: classpath:log4j2.xml
+#config: classpath:log4j2.xml
 
 file:
   upload:
