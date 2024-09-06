@@ -1,13 +1,12 @@
 spring:
   config:
     activate:
-      on-profile: "test"
+      on-profile: "test-h2"
 
   datasource:
     username: master
-    password: 1234
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/neighborhooddb
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=postgresql
 
     p6spy:
       enable-logging: true
@@ -20,7 +19,8 @@ spring:
 
   jpa:
     hibernate:
-    database: postgresql
+      ddl-auto: create-drop
+    database: h2
     properties:
       hibernate:
         format_sql: true  # 쿼리 출력시 포맷 정렬

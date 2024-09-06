@@ -1,3 +1,5 @@
+package ces.neighborhood.blind.common.config;
+
 import org.hibernate.engine.jdbc.internal.FormatStyle;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,7 +32,7 @@ public class P6SpySqlFormatter implements MessageFormattingStrategy {
             } else {
                 sql = FormatStyle.BASIC.getFormatter().format(sql);
             }
-            return sql;
+            return sql.toUpperCase(Locale.ROOT);
         }
         return sql;
     }

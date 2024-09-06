@@ -53,7 +53,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                         post.content,
                         post.viewCnt,
                         JPAExpressions
-                            .select(likes.likesId.count())
+                            .select(likes.likesId.mbrId.count())
                             .from(likes)
                             .where(likes.likesId.postNo.eq(post.postNo)
                             .and(likes.likesId.postType.eq(Constant.REF_TYPE_POST))),
@@ -96,7 +96,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
     }
 
     /**
-     * Attachement where 조건 절
+     * Attachment where 조건 절
      * refType = 'POST'
      * refNo = postNo
      * delYn = 'N'

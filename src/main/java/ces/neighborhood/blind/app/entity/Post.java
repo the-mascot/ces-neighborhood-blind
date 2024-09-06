@@ -30,9 +30,7 @@ public class Post extends BaseEntity {
     @SequenceGenerator(name = "POST_NO_SEQ", sequenceName = "POST_NO_SEQ", allocationSize = 50)
     private Long postNo;
 
-    private String boardType;
-
-    @Access(AccessType.PROPERTY)
+     @Access(AccessType.PROPERTY)
     private String title;
 
     private String content;

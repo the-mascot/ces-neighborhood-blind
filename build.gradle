@@ -66,7 +66,8 @@ dependencies {
 	// Jsoup
 	implementation group: 'org.jsoup', name: 'jsoup', version: '1.17.2'
 	// devtools
-	developmentOnly 'org.pringframework.boot:spring-boot-devtools'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '3.3.3'
+
 	// logging
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.1.5'
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9'
@@ -91,30 +92,33 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	// Junit5
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.1'
+	testImplementation group: 'com.h2database', name: 'h2', version: '2.3.232'
 
 }
 
-/* queryDsl 설정 */
-// Q파일 생성 위치
-//def generated = layout.buildDirectory.dir("generated/qeurydsl").get()	gradle 8.5버전
-def querydslDir = "$buildDir/generated/querydsl"
+/* ========== queryDsl 설정 ========== */
+// Q 파일 생성 위치 (gradle 8.x 버전 이후)
+def querydslDir = layout.buildDirectory.dir("generated/qeurydsl").get().asFile
+//def querydslDir = "$buildDir/generated/querydsl"
+
 //querydsl {
 //	jpa = true
 //	querydslSourcesDir = querydslDir
 //}
 
 // gradle 8.x 버전
-//tasks.withType(JavaCompile) {
-//	options.getGeneratedSourceOutputDirectory().set(file(generated))
-//}
+tasks.withType(JavaCompile) {
+	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
 
 sourceSets {
-//	main.java.srcDirs += [ generated ]
-	main.java.srcDir querydslDir
+	main.java.srcDirs += [querydslDir]
 }
-configurations {
-	querydsl.extendsFrom compileClasspath
-}
+
+//configurations {
+//	querydsl.extendsFrom compileClasspath
+//}
+
 //compileQuerydsl {
 //	options.annotationProcessorPath = configurations.querydsl
 //}
@@ -123,7 +127,7 @@ clean {
 	delete file(querydslDir)
 }
 
-/* --queryDsl 설정 */
+/* ========== /queryDsl 설정 ========== */
 
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'

@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface LikesRepository extends JpaRepository<Likes, Likes.LikesId> {
 
-    @Query("select count(l.likesId.postNo) from Likes l where l.likesId.postNo = :postNo ")
+    @Query("select count(l.likesId.mbrId) from Likes l " +
+            "where l.likesId.postNo = :postNo " +
+            "and l.likesId.postType = 'POST'"
+    )
     Integer getLikeCount(@Param("postNo") Long postNo);
 
     List<Likes> findAllByLikesId_PostNo(Long postNo);
