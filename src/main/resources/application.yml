@@ -72,10 +72,10 @@ spring:
 cloud:
   aws:
     s3:
-      buket: ces-neighborhood
+      buket: S3-BUKET-NAME
     credentials:
-      access-key: ENC(4EpWW4esyg46rysYV68h3DXIlfVyBz0OMP+9BI6mLLw=)
-      secret-key: ENC(Orm1WG6bUSNFUC3Ud92NhQgrCSv+4T5SxVjHmy78GZAFBmUQ17ZXHXn2rxokCStGy8nTklAvIiw=)
+      access-key: ACCESS_KEY
+      secret-key: SECRKET_KEY
     region:
       static: ap-northeast-2
       auto: false

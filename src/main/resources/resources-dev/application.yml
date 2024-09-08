@@ -3,7 +3,6 @@ PORT: 8010
 spring:
   datasource:
     hikari:
-      #jdbc-url: neighborhood-db.crngyweqerpj.us-east-2.rds.amazonaws.com:5432
       driver-class-name: org.postgresql.Driver
       jdbc-url: ENC(AQnYRndp9XxQL60oG32dX7tsShCInt1n2OP1SGoGd71mbjdKn/iXZGf3yxqF90487dQd9blIb4H4Qeh8Ce7f4qr7ZALuW4Y/)
       username: ENC(e/KE2yOzAi1r7yEuNCspnA==)

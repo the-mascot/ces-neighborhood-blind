@@ -4,15 +4,15 @@ spring:
       client:
         registration:
           google:
-            client-id: 1001350064885-kms5egkoft11g0stgb1m8pg791c8c2fn.apps.googleusercontent.com
-            client-secret: ENC(jUIXMoPhD9i1u1PcWTc9i0hvYlzMZikNpRqUp8gE2WV0mud4Rj+H74d85XAIW+e4)
+            client-id: CLIENT_ID
+            client-secret: CLIENT_SECRET
             scope:
               - email
               - profile
             redirect-uri: "http://localhost:3000/login/google"
           naver:
-            client-id: UpEJjnGzwwLj_hk4mbB6
-            client-secret: ENC(n9Zp2zZ17KdDJ0eL6Z1aY7knuXQBuIIX)
+            client-id: CLIENT_ID
+            client-secret: CLINET_SECRET
             scope:
               - id
               - email
