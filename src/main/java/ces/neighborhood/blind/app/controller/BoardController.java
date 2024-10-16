@@ -36,6 +36,12 @@ public class BoardController {
         return ApiResponse.success(boardService.getPosts());
     }
 
+    /** 게시글 상세 가져오기*/
+    @GetMapping("/post")
+    public ResponseEntity getPost(@PathVariable Long postId) {
+        return ApiResponse.success(boardService.getPost(postId));
+    }
+
     /** 게시글 등록 */
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @ResponseBody

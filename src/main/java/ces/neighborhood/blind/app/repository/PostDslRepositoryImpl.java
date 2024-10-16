@@ -1,18 +1,24 @@
 package ces.neighborhood.blind.app.repository;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import ces.neighborhood.blind.app.entity.Comment;
+import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.entity.QAttachment;
 import ces.neighborhood.blind.app.entity.QComment;
 import ces.neighborhood.blind.app.entity.QLikes;
 import ces.neighborhood.blind.app.entity.QPost;
 import ces.neighborhood.blind.app.entity.QReply;
+import ces.neighborhood.blind.app.record.board.PostRes;
 import ces.neighborhood.blind.app.record.board.Posts;
 import ces.neighborhood.blind.common.code.Constant;
 import java.util.List;
@@ -24,7 +30,35 @@ public class PostDslRepositoryImpl implements PostDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     /**
-     * 게시판 목록 가져오기
+     * 게시물 상세 가져오기
+     */
+    @Override
+    public PostRes findPostById(Long postNo, String mbrId) {
+        QPost post = QPost.post;
+        QComment comment = QComment.comment;
+        QReply reply = QReply.reply;
+        QLikes likes = QLikes.likes;
+        QAttachment attachment = QAttachment.attachment;
+
+        Tuple postData = jpaQueryFactory.select(
+                    post.postNo,
+                    post.mbrInfo.mbrNickname,
+                    post.title,
+                    post.content,
+                    post.viewCnt,
+                    getLikeCount(post, likes, Constant.REF_TYPE_POST),
+                    getIsLiked(post, likes, mbrId),
+                    post.createDate
+                )
+                .where(post.postNo.eq(postNo)
+                    .and(post.delYn.eq("N")))
+                .fetchOne();
+
+        Comment
+    }
+
+    /**
+     * 게시물 목록 가져오기
      */
     @Override
     public List<Posts> findAllPostsDto(String mbrId) {
@@ -40,6 +74,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                 .from(attachment)
                 .where(attachmentConditions(attachment, post));
 
+        // 처음 올린 대표 이미지 가져오는 쿼리
         JPQLQuery<Long> minFileNo = JPAExpressions
                 .select(attachment.fileNo.min())
                 .from(attachment)
@@ -52,19 +87,8 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                         post.title,
                         post.content,
                         post.viewCnt,
-                        JPAExpressions
-                            .select(likes.likesId.mbrId.count())
-                            .from(likes)
-                            .where(likes.likesId.postNo.eq(post.postNo)
-                            .and(likes.likesId.postType.eq(Constant.REF_TYPE_POST))),
-                        JPAExpressions
-                            .selectOne()
-                            .from(likes)
-                            .where(
-                                likes.likesId.mbrId.eq(mbrId)
-                                .and(likes.likesId.postNo.eq(post.postNo))
-                                .and(likes.likesId.postType.eq(Constant.REF_TYPE_POST)))
-                                .exists(),
+                        getLikeCount(post, likes, Constant.REF_TYPE_POST),
+                        getIsLiked(post, likes, mbrId),
                         comment.count().add(reply.count()),
                         post.createDate,
                         attachment.fileUrl,
@@ -105,5 +129,23 @@ public class PostDslRepositoryImpl implements PostDslRepository {
         return  attachment.refType.eq(Constant.REF_TYPE_POST)
                 .and(attachment.refNo.eq(post.postNo))
                 .and(attachment.delYn.eq("N"));
+    }
+
+    private Expression<Long> getLikeCount(QPost post, QLikes likes, String postType) {
+        return JPAExpressions
+                .select(likes.likesId.mbrId.count())
+                .from(likes)
+                .where(likes.likesId.postNo.eq(post.postNo)
+                        .and(likes.likesId.postType.eq(postType)));
+    }
+
+    private BooleanExpression getIsLiked(QPost post, QLikes likes, String mbrId) {
+        return JPAExpressions
+                .selectOne()
+                .from(likes)
+                .where(likes.likesId.mbrId.eq(mbrId)
+                        .and(likes.likesId.postNo.eq(post.postNo))
+                        .and(likes.likesId.postType.eq(Constant.REF_TYPE_POST)))
+                .exists();
     }
 }
