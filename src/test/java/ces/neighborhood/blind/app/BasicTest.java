@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
+import ces.neighborhood.blind.app.dto.authority.AccessTokenRes;
 import java.io.File;
 import java.math.BigInteger;
 import java.nio.file.Path;
@@ -23,7 +23,8 @@ public class BasicTest {
     public void toStringTest() throws Exception {
         String response = "{\"access_token\":\"1234\"}";
         ObjectMapper objectMapper = new ObjectMapper();
-        AccessTokenResponseDto accessTokenResponseDto = objectMapper.readValue(response, AccessTokenResponseDto.class);
+        AccessTokenRes
+                accessTokenRes = objectMapper.readValue(response, AccessTokenRes.class);
     }
 
     @Test

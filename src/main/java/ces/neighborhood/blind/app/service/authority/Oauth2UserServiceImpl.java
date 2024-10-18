@@ -25,7 +25,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.common.constant.Role;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;

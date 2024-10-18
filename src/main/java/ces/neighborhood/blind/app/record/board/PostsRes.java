@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import com.querydsl.core.annotations.QueryProjection;
 
-public record Posts(
+public record PostsRes(
         Long postNo,
         String nickName,
         String title,
@@ -22,10 +22,10 @@ public record Posts(
 ) {
 
     @QueryProjection
-    public Posts(Long postNo, String nickName, String title, String content,
-                 Integer viewCnt, Long likeCnt, Boolean isLiked,
-                 Long commentCnt,
-                 Timestamp createDate, String fileUrl, String fileName, Long fileCnt) {
+    public PostsRes(Long postNo, String nickName, String title, String content,
+                    Integer viewCnt, Long likeCnt, Boolean isLiked,
+                    Long commentCnt,
+                    Timestamp createDate, String fileUrl, String fileName, Long fileCnt) {
         this(postNo, nickName, title, content, viewCnt, likeCnt, isLiked,
                 commentCnt, createDate, null, fileUrl, fileName, fileCnt);
     }

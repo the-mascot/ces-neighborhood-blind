@@ -1,8 +1,7 @@
 package ces.neighborhood.blind;
 
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import jakarta.annotation.PostConstruct;
-import java.time.LocalDateTime;
 import java.util.TimeZone;
 
 import org.springframework.boot.SpringApplication;

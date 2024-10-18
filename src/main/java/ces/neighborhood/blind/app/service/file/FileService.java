@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ces.neighborhood.blind.app.entity.Attachment;
-import ces.neighborhood.blind.app.repository.AttachmentRepository;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.app.repository.file.AttachmentRepository;
+import ces.neighborhood.blind.common.constant.Constant;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.io.File;

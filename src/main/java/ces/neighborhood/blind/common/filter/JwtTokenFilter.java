@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import jakarta.servlet.FilterChain;

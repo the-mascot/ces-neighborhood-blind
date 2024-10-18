@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.repository;
+package ces.neighborhood.blind.app.repository.authority;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

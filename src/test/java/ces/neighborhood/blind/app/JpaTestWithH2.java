@@ -30,12 +30,12 @@ import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.entity.QLikes;
 import ces.neighborhood.blind.app.entity.QPost;
-import ces.neighborhood.blind.app.repository.LikesRepository;
-import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.app.repository.PostRepository;
+import ces.neighborhood.blind.app.repository.board.LikesRepository;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
+import ces.neighborhood.blind.app.repository.board.PostRepository;
 import ces.neighborhood.blind.common.TestQueryDslConfig;
-import ces.neighborhood.blind.common.code.ComCode;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.ComCode;
+import ces.neighborhood.blind.common.constant.Constant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

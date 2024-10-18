@@ -2,7 +2,7 @@ package ces.neighborhood.blind.common.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.Instant;

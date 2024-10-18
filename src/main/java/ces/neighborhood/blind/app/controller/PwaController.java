@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.ApiResponse;
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

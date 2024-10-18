@@ -10,20 +10,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.PostDto;
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.Post;
-import ces.neighborhood.blind.app.record.board.PostLikeReq;
-import ces.neighborhood.blind.app.record.board.Posts;
-import ces.neighborhood.blind.app.repository.AttachmentRepository;
-import ces.neighborhood.blind.app.repository.CommentRepository;
-import ces.neighborhood.blind.app.repository.LikesRepository;
-import ces.neighborhood.blind.app.repository.PostRepository;
+import ces.neighborhood.blind.app.record.board.LikeReq;
+import ces.neighborhood.blind.app.record.board.PostRes;
+import ces.neighborhood.blind.app.record.board.PostsRes;
+import ces.neighborhood.blind.app.repository.board.CommentRepository;
+import ces.neighborhood.blind.app.repository.board.LikesRepository;
+import ces.neighborhood.blind.app.repository.board.PostRepository;
+import ces.neighborhood.blind.app.repository.file.AttachmentRepository;
 import ces.neighborhood.blind.app.service.file.S3Service;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -60,25 +60,12 @@ public class BoardService {
      * @return List<BoardDto>
      * @throws
      */
-    public List<Posts> getPosts() {
+    public List<PostsRes> getPosts() {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
-        List<Posts> posts = postRepository.findAllPostsDto(authentication.getName());
+        List<PostsRes> posts = postRepository.findAllPostsDto(authentication.getName());
 
         return posts;
-    }
-
-    /**
-     * 게시글 저장 (이미지 파일 없는 버전)
-     * @param post, principal
-     * @return postNo
-     * @throws
-     */
-    public long saveBoardWithoutFile(Post post, Principal principal) {
-        post.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
-        post.setCreateUser(principal.getName());
-        post.setDelYn(Constant.N);
-        return postRepository.save(post).getPostNo();
     }
 
     /**
@@ -89,14 +76,18 @@ public class BoardService {
      * 게시글 등록 후 : 게시글 저장 -> 본문에 img 태그 불러와서 최종 저장된 img만 Attachment 참조번호(refNo) 업데이트
      * -> S3에 업로드 되었으나, 최종 저장하지 않은(refNo가 없는) 파일은 batch로 일정 기간 후 삭제 예정.
      *
-     * @param post, principal
+     * @param savePostReq, principal
      * @return postNo
      * @throws
      */
-    public long saveBoard(Post post, Principal principal) {
-        post.setMbrInfo(MbrInfo.builder().mbrId(principal.getName()).build());
-        post.setCreateUser(principal.getName());
-        post.setDelYn(Constant.N);
+    public long saveBoard(Post savePostReq, Principal principal) {
+        Post post = Post.builder()
+                .title(savePostReq.getTitle())
+                .content(savePostReq.getContent())
+                .mbrInfo(MbrInfo.builder().mbrId(principal.getName()).build())
+                .delYn(Constant.N)
+                .createUser(principal.getName())
+                .build();
         // 게시글 저장
         Long postNo = postRepository.save(post).getPostNo();
 
@@ -124,7 +115,7 @@ public class BoardService {
      * @return PostDto
      * @throws
      */
-    public Optional<PostDto> getPost(Long postNo) {
+    public Optional<PostRes> getPost(Long postNo) {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         //return postRepository.getPost(postNo, authentication.getName());
@@ -144,16 +135,16 @@ public class BoardService {
 
     /**
      * 게시글 좋아요 기능
-     * @param postLikeReq
+     * @param likeReq
      * @return
      * @throws
      */
-    public void updatePostLike(PostLikeReq postLikeReq) {
+    public void updatePostLike(LikeReq likeReq) {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         Likes.LikesId likesId = Likes.LikesId.builder()
-                .postType(postLikeReq.postType())
-                .postNo(postLikeReq.postNo())
+                .postType(likeReq.postType())
+                .postNo(likeReq.postNo())
                 .mbrId(authentication.getName())
                 .build();
         // 해당 게시물에 좋아요를 한적 있는지 확인
@@ -167,7 +158,7 @@ public class BoardService {
                     .likesId(likesId)
                     .post(
                         Post.builder()
-                        .postNo(postLikeReq.postNo())
+                        .postNo(likeReq.postNo())
                         .build()
                     )
                     .build());

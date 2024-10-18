@@ -13,15 +13,15 @@ import org.springframework.security.web.context.RequestAttributeSecurityContextR
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
-import ces.neighborhood.blind.app.dto.CesAuthentication;
-import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.app.dto.authority.CesAuthentication;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
 import ces.neighborhood.blind.app.record.authority.JoinReq;
 import ces.neighborhood.blind.app.record.authority.LoginReq;
 import ces.neighborhood.blind.app.record.authority.LoginRes;
-import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.common.code.ComCode;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
+import ces.neighborhood.blind.common.constant.ComCode;
+import ces.neighborhood.blind.common.constant.Role;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

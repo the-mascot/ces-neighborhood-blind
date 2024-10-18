@@ -65,8 +65,6 @@ public class SpringSecurityConfig {
                         // 인증된 사용자이지만 권한이 없는 경우 접근처리
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .oauth2Login((oauth) -> oauth.userInfoEndpoint(endpoint -> endpoint.and()
-                        .successHandler(oauth2LoginSuccessHandler)))
                 .build();
     }
 

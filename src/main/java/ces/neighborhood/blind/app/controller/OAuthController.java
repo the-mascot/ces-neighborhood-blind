@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ces.neighborhood.blind.app.dto.ApiResponse;
-import ces.neighborhood.blind.app.dto.CesAuthentication;
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
+import ces.neighborhood.blind.app.dto.authority.CesAuthentication;
 import ces.neighborhood.blind.app.service.authority.OAuthService;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import lombok.RequiredArgsConstructor;
 
 @RestController

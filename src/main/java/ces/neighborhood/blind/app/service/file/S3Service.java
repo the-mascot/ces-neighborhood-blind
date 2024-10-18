@@ -8,8 +8,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import ces.neighborhood.blind.app.entity.Attachment;
-import ces.neighborhood.blind.app.repository.AttachmentRepository;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.app.repository.file.AttachmentRepository;
+import ces.neighborhood.blind.common.constant.Constant;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.io.IOException;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.ApiResponse;
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
 import ces.neighborhood.blind.app.service.file.FileService;
 import ces.neighborhood.blind.app.service.file.S3Service;
 import java.security.Principal;

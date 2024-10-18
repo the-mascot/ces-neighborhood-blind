@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.ApiResponse;
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
 import ces.neighborhood.blind.app.entity.Post;
-import ces.neighborhood.blind.app.record.board.PostLikeReq;
+import ces.neighborhood.blind.app.record.board.LikeReq;
 import ces.neighborhood.blind.app.service.board.BoardService;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +61,8 @@ public class BoardController {
 
     /** 게시글 좋아요 */
     @PutMapping("/post/like")
-    public ResponseEntity updatePostLike(@Valid @RequestBody PostLikeReq postLikeReq) {
-        boardService.updatePostLike(postLikeReq);
+    public ResponseEntity updatePostLike(@Valid @RequestBody LikeReq likeReq) {
+        boardService.updatePostLike(likeReq);
         return ApiResponse.success();
     }
 

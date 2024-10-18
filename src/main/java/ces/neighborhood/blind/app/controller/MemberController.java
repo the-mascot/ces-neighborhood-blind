@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ces.neighborhood.blind.app.dto.ApiResponse;
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
 import ces.neighborhood.blind.app.record.member.UpdateMemberInfoReq;
 import ces.neighborhood.blind.app.service.member.MemberService;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class MemberController {
 
     @PutMapping("/info")
     public ResponseEntity updateMbrInfo(@Valid @RequestBody
-                                         UpdateMemberInfoReq updateMemberInfoReq) {
+                                        UpdateMemberInfoReq updateMemberInfoReq) {
         memberService.updateMbrInfo(updateMemberInfoReq);
         return ApiResponse.success();
     }

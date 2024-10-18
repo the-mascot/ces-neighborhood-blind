@@ -1,11 +1,15 @@
-package ces.neighborhood.blind.app.dto;
+package ces.neighborhood.blind.app.dto.authority;
 
 import ces.neighborhood.blind.app.record.authority.LoginRes;
 import ces.neighborhood.blind.app.record.authority.OAuthLoginRes;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Builder
+@ToString
 @AllArgsConstructor
 public class CesAuthentication {
 

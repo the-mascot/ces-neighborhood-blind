@@ -26,17 +26,16 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import ces.neighborhood.blind.app.dto.AccessTokenResponseDto;
-import ces.neighborhood.blind.app.dto.CesAuthentication;
-import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.app.dto.authority.AccessTokenRes;
+import ces.neighborhood.blind.app.dto.authority.CesAuthentication;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.OauthMbrInfo;
 import ces.neighborhood.blind.app.provider.JwtTokenProvider;
-import ces.neighborhood.blind.app.record.authority.OAuthLoginRes;
-import ces.neighborhood.blind.app.repository.MemberRepository;
-import ces.neighborhood.blind.app.repository.OauthMbrInfoRepository;
+import ces.neighborhood.blind.app.repository.authority.OauthMbrInfoRepository;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
 import ces.neighborhood.blind.app.service.member.MemberService;
-import ces.neighborhood.blind.common.code.ComCode;
+import ces.neighborhood.blind.common.constant.ComCode;
+import ces.neighborhood.blind.common.constant.Role;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.io.UnsupportedEncodingException;
@@ -104,14 +103,15 @@ public class OAuthService {
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(clientRegistration, authorizationResponse);
         log.info("[OauthService - authenticate] requestEntity : {}", requestEntity);
-        ResponseEntity<AccessTokenResponseDto> response = restTemplate.exchange(requestEntity, AccessTokenResponseDto.class);
+        ResponseEntity<AccessTokenRes> response = restTemplate.exchange(requestEntity, AccessTokenRes.class);
         log.info("[OauthService - authenticate] response : {}", response);
-        AccessTokenResponseDto accessTokenResponseDto = response.getBody();
+        AccessTokenRes accessTokenRes = response.getBody();
 
         // Access Token
-        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenResponseDto.getAccessToken(), Instant.now(), Instant.now().plusSeconds(30));
+        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenRes.getAccessToken(), Instant.now(), Instant.now().plusSeconds(30));
         // Refresh Token
-        OAuth2RefreshToken oAuth2RefreshToken = StringUtils.equals(clientRegistration.getRegistrationId(), "google") ? null : new OAuth2RefreshToken(accessTokenResponseDto.getRefreshToken(), Instant.now(), null);
+        OAuth2RefreshToken oAuth2RefreshToken = StringUtils.equals(clientRegistration.getRegistrationId(), "google") ? null : new OAuth2RefreshToken(
+                accessTokenRes.getRefreshToken(), Instant.now(), null);
 
         // 2. resource 서버에 userInfo 요청
         Map<String, Object> additionalParameters = new HashMap<>();

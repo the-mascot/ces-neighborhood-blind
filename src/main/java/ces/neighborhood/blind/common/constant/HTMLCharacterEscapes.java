@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.common.code;
+package ces.neighborhood.blind.common.constant;
 
 import org.apache.commons.text.StringEscapeUtils;
 

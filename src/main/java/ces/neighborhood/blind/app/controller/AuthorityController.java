@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ces.neighborhood.blind.app.dto.ApiResponse;
-import ces.neighborhood.blind.app.dto.CesAuthentication;
+import ces.neighborhood.blind.app.dto.authority.CesAuthentication;
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
 import ces.neighborhood.blind.app.record.authority.JoinReq;
 import ces.neighborhood.blind.app.record.authority.LoginReq;
 import ces.neighborhood.blind.app.service.authority.AuthorityService;
 import ces.neighborhood.blind.app.service.authority.UserDetailServiceImpl;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.common.constant.Constant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

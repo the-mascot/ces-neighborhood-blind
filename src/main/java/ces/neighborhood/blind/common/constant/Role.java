@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.dto;
+package ces.neighborhood.blind.common.constant;
 
 import lombok.Getter;
 import lombok.ToString;

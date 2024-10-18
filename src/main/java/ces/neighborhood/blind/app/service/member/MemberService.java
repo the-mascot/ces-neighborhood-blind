@@ -5,10 +5,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.record.authority.LoginRes;
 import ces.neighborhood.blind.app.record.member.UpdateMemberInfoReq;
-import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import ces.neighborhood.blind.common.utils.ComUtils;
@@ -38,7 +37,7 @@ public class MemberService {
      * @return MbrInfo
      * @throws
      */
-    public MbrInfo getMbrInfoById(String mbrId) {
+    public ces.neighborhood.blind.app.entity.MbrInfo getMbrInfoById(String mbrId) {
         return memberRepository.findById(mbrId)
                 .orElseThrow(() -> new BizException(ErrorCode.CODE_1001));
     }
@@ -77,7 +76,7 @@ public class MemberService {
     public void updateMbrInfo(UpdateMemberInfoReq updateMemberInfoReq) {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
-        MbrInfo mbrInfo = this.getMbrInfoById(authentication.getName());
+        ces.neighborhood.blind.app.entity.MbrInfo mbrInfo = this.getMbrInfoById(authentication.getName());
         Optional.ofNullable(updateMemberInfoReq.nickname()).ifPresent(mbrInfo::setMbrNickname);
         Optional.ofNullable(updateMemberInfoReq.profileImage()).ifPresent(mbrInfo::setMbrProfileImageUrl);
     }
@@ -108,7 +107,7 @@ public class MemberService {
     public LoginRes getProfileInfo() {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
-        MbrInfo mbrInfo = this.getMbrInfoById(authentication.getName());
+        ces.neighborhood.blind.app.entity.MbrInfo mbrInfo = this.getMbrInfoById(authentication.getName());
         return new LoginRes(mbrInfo.getMbrNickname(), mbrInfo.getMbrProfileImageUrl());
     }
 }

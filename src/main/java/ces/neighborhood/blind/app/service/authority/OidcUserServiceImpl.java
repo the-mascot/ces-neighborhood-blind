@@ -20,9 +20,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import ces.neighborhood.blind.app.dto.Role;
+import ces.neighborhood.blind.common.constant.Role;
 import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.repository.MemberRepository;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
 import ces.neighborhood.blind.common.exception.BizException;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import java.util.LinkedHashSet;

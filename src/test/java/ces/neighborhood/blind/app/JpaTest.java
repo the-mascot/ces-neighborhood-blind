@@ -13,14 +13,19 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.Post;
+import ces.neighborhood.blind.app.entity.QComment;
+import ces.neighborhood.blind.app.entity.QMbrInfo;
 import ces.neighborhood.blind.app.entity.QPost;
-import ces.neighborhood.blind.app.repository.LikesRepository;
-import ces.neighborhood.blind.app.repository.PostRepository;
+import ces.neighborhood.blind.app.entity.QReply;
+import ces.neighborhood.blind.app.repository.board.LikesRepository;
+import ces.neighborhood.blind.app.repository.board.PostRepository;
 import ces.neighborhood.blind.common.TestQueryDslConfig;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -153,5 +158,51 @@ public class JpaTest {
             builder.and(post.delYn.eq(delYn));
         }
         return builder;
+    }
+
+    @Test
+    @DisplayName("댓글, 대댓글 튜플 조인 테스트")
+    void commentTupleJoinTest() {
+        Long postNo = Long.valueOf(1);
+
+        QComment comment = QComment.comment;
+        QReply reply = QReply.reply;
+        QMbrInfo mbrInfo = QMbrInfo.mbrInfo;
+
+        // tuple join으로 가져올 경우 comment 하나당 reply 하나가 select 됨
+        List<Tuple> data = jpaQueryFactory.select(comment, reply)
+                .from(comment)
+                .leftJoin(reply)
+                .on(comment.eq(reply.comment))
+                .where(comment.post.postNo.eq(postNo))
+                .fetch();
+
+        log.info("[commentJoinTest] data : {}", data);
+    }
+
+    @Test
+    @DisplayName("댓글, 대댓글 조인 테스트")
+    void commentJoinTest() {
+        Long postNo = Long.valueOf(1);
+
+        QComment comment = QComment.comment;
+        QReply reply = QReply.reply;
+        QMbrInfo mbrInfo = QMbrInfo.mbrInfo;
+
+        List<Comment> data = jpaQueryFactory.selectFrom(comment)
+                .from(comment)
+                .leftJoin(reply).fetchJoin()
+                .on(comment.eq(reply.comment))
+                .where(comment.post.postNo.eq(postNo))
+                .orderBy(comment.createDate.desc(), reply.createDate.desc())
+                .fetch();
+
+        for (Comment c : data) {
+            if (c.getReply() != null) {
+                c.getReply().sort((r1, r2) -> r2.getCreateDate().compareTo(r1.getCreateDate())); // Reply의 createDate 기준으로 내림차순 정렬
+            }
+        }
+
+        log.info("[commentJoinTest] data : {}", data);
     }
 }

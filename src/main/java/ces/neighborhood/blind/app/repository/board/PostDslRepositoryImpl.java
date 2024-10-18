@@ -1,4 +1,4 @@
-package ces.neighborhood.blind.app.repository;
+package ces.neighborhood.blind.app.repository.board;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -6,21 +6,19 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import ces.neighborhood.blind.app.entity.Comment;
-import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.entity.QAttachment;
 import ces.neighborhood.blind.app.entity.QComment;
 import ces.neighborhood.blind.app.entity.QLikes;
 import ces.neighborhood.blind.app.entity.QPost;
 import ces.neighborhood.blind.app.entity.QReply;
 import ces.neighborhood.blind.app.record.board.PostRes;
-import ces.neighborhood.blind.app.record.board.Posts;
-import ces.neighborhood.blind.common.code.Constant;
+import ces.neighborhood.blind.app.record.board.PostsRes;
+import ces.neighborhood.blind.common.constant.Constant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +38,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
         QLikes likes = QLikes.likes;
         QAttachment attachment = QAttachment.attachment;
 
-        Tuple postData = jpaQueryFactory.select(
+        Tuple posts = jpaQueryFactory.select(
                     post.postNo,
                     post.mbrInfo.mbrNickname,
                     post.title,
@@ -54,14 +52,28 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                     .and(post.delYn.eq("N")))
                 .fetchOne();
 
-        Comment
+        List<Comment> comments = jpaQueryFactory.selectFrom(comment)
+                .from(comment)
+                .where(comment.post.postNo.eq(postNo)
+                        .and(comment.delYn.eq("N")))
+                .leftJoin(reply).fetchJoin()
+                .orderBy(comment.createDate.desc())
+                .fetch();
+
+        for (Comment c : comments) {
+            if (c.getReply() != null) {
+                c.getReply().sort((r1, r2) -> r2.getCreateDate().compareTo(r1.getCreateDate()));
+            }
+        }
+
+        return new PostRes(posts, comments);
     }
 
     /**
      * 게시물 목록 가져오기
      */
     @Override
-    public List<Posts> findAllPostsDto(String mbrId) {
+    public List<PostsRes> findAllPostsDto(String mbrId) {
         QPost post = QPost.post;
         QComment comment = QComment.comment;
         QReply reply = QReply.reply;
@@ -81,7 +93,7 @@ public class PostDslRepositoryImpl implements PostDslRepository {
                 .where(attachmentConditions(attachment, post));
 
         return jpaQueryFactory
-                .select(Projections.constructor(Posts.class,
+                .select(Projections.constructor(PostsRes.class,
                         post.postNo,
                         post.mbrInfo.mbrNickname,
                         post.title,

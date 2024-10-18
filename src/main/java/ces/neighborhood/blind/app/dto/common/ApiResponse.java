@@ -1,10 +1,11 @@
-package ces.neighborhood.blind.app.dto;
+package ces.neighborhood.blind.app.dto.common;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import ces.neighborhood.blind.app.dto.authority.TokenDto;
 import ces.neighborhood.blind.common.exception.ErrorCode;
 import lombok.Getter;
 import lombok.ToString;
