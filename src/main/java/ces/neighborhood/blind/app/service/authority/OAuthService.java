@@ -1,5 +1,34 @@
 package ces.neighborhood.blind.app.service.authority;
 
+import ces.neighborhood.blind.app.dto.authority.AccessTokenResponseDto;
+import ces.neighborhood.blind.app.dto.authority.CesAuthentication;
+import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.OauthMbrInfo;
+import ces.neighborhood.blind.app.provider.JwtTokenProvider;
+import ces.neighborhood.blind.app.record.authority.OAuthLoginRes;
+import ces.neighborhood.blind.app.repository.authority.OauthMbrInfoRepository;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
+import ces.neighborhood.blind.app.service.member.MemberService;
+import ces.neighborhood.blind.common.constant.ComCode;
+import ces.neighborhood.blind.common.constant.Role;
+import ces.neighborhood.blind.common.exception.BizException;
+import ces.neighborhood.blind.common.exception.ErrorCode;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -25,34 +54,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import ces.neighborhood.blind.app.dto.authority.AccessTokenRes;
-import ces.neighborhood.blind.app.dto.authority.CesAuthentication;
-import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.entity.OauthMbrInfo;
-import ces.neighborhood.blind.app.provider.JwtTokenProvider;
-import ces.neighborhood.blind.app.repository.authority.OauthMbrInfoRepository;
-import ces.neighborhood.blind.app.repository.member.MemberRepository;
-import ces.neighborhood.blind.app.service.member.MemberService;
-import ces.neighborhood.blind.common.constant.ComCode;
-import ces.neighborhood.blind.common.constant.Role;
-import ces.neighborhood.blind.common.exception.BizException;
-import ces.neighborhood.blind.common.exception.ErrorCode;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -103,15 +104,15 @@ public class OAuthService {
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = this.getRequestEntity(clientRegistration, authorizationResponse);
         log.info("[OauthService - authenticate] requestEntity : {}", requestEntity);
-        ResponseEntity<AccessTokenRes> response = restTemplate.exchange(requestEntity, AccessTokenRes.class);
+        ResponseEntity<AccessTokenResponseDto> response = restTemplate.exchange(requestEntity, AccessTokenResponseDto.class);
         log.info("[OauthService - authenticate] response : {}", response);
-        AccessTokenRes accessTokenRes = response.getBody();
+        AccessTokenResponseDto accessTokenResponseDto = response.getBody();
 
         // Access Token
-        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenRes.getAccessToken(), Instant.now(), Instant.now().plusSeconds(30));
+        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessTokenResponseDto.getAccessToken(), Instant.now(), Instant.now().plusSeconds(30));
         // Refresh Token
         OAuth2RefreshToken oAuth2RefreshToken = StringUtils.equals(clientRegistration.getRegistrationId(), "google") ? null : new OAuth2RefreshToken(
-                accessTokenRes.getRefreshToken(), Instant.now(), null);
+                accessTokenResponseDto.getRefreshToken(), Instant.now(), null);
 
         // 2. resource 서버에 userInfo 요청
         Map<String, Object> additionalParameters = new HashMap<>();
@@ -155,7 +156,8 @@ public class OAuthService {
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
         OAuthLoginRes oAuthLoginRes = new OAuthLoginRes(optionalMbrInfo.isEmpty(), mbrInfo.getMbrNickname(), mbrInfo.getMbrProfileImageUrl());
-        CesAuthentication authenticate = new CesAuthentication(null, oAuthLoginRes, jwtTokenProvider.createTokenDTO(accessToken, refreshToken));
+        CesAuthentication
+                authenticate = new CesAuthentication(null, oAuthLoginRes, jwtTokenProvider.createTokenDTO(accessToken, refreshToken));
         return authenticate;
     }
 

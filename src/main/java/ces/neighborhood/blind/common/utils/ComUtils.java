@@ -127,4 +127,17 @@ public class ComUtils {
                 .append(time < 0 ? Constant.BEFORE_KO : Constant.AFTER_KO)
                 .toString();
     }
+
+    /**
+     * 파일 명과 확장자 받아서 파일 full name 만들어주는 함수
+     * @param fileName
+     * @param fileExt
+     * @return
+     */
+    public static String getFileFullName(String fileName, String fileExt) {
+        StringBuilder sb = new StringBuilder(fileName);
+        sb.append(".");
+        sb.append(fileExt);
+        return sb.toString();
+    }
 }

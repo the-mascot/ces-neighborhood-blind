@@ -11,7 +11,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.Locale;
 
 @Configuration
-public class P6SpySqlFormatter implements MessageFormattingStrategy {
+public class P6SpyFormatter implements MessageFormattingStrategy {
 
     @PostConstruct
     public void setLogMessageFormat() {
@@ -32,7 +32,7 @@ public class P6SpySqlFormatter implements MessageFormattingStrategy {
             } else {
                 sql = FormatStyle.BASIC.getFormatter().format(sql);
             }
-            return sql.toUpperCase(Locale.ROOT);
+            return sql;
         }
         return sql;
     }

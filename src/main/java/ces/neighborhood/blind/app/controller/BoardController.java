@@ -1,5 +1,16 @@
 package ces.neighborhood.blind.app.controller;
 
+import ces.neighborhood.blind.app.dto.common.ApiResponse;
+import ces.neighborhood.blind.app.entity.Post;
+import ces.neighborhood.blind.app.record.board.LikeReq;
+import ces.neighborhood.blind.app.record.board.PostsRes;
+import ces.neighborhood.blind.app.service.board.BoardService;
+import ces.neighborhood.blind.common.constant.Constant;
+import jakarta.validation.Valid;
+import java.security.Principal;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,15 +25,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import ces.neighborhood.blind.app.dto.common.ApiResponse;
-import ces.neighborhood.blind.app.entity.Post;
-import ces.neighborhood.blind.app.record.board.LikeReq;
-import ces.neighborhood.blind.app.service.board.BoardService;
-import ces.neighborhood.blind.common.constant.Constant;
-import jakarta.validation.Valid;
-import java.security.Principal;
-import lombok.RequiredArgsConstructor;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(Constant.BASE_API_URL + "/board")
@@ -32,7 +34,7 @@ public class BoardController {
 
     /** 게시글 목록 가져오기*/
     @GetMapping("/posts")
-    public ResponseEntity getPosts() {
+    public ResponseEntity<ApiResponse<List<PostsRes>>> getPosts() {
         return ApiResponse.success(boardService.getPosts());
     }
 

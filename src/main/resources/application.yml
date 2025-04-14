@@ -48,7 +48,6 @@ spring:
       tracing:
         include-parameter-values: true
       log-level: info
-      format-sql: true
 
   jpa:
     database: postgresql
@@ -72,10 +71,10 @@ spring:
 cloud:
   aws:
     s3:
-      buket: S3-BUKET-NAME
+      buket: ces-neighborhood
     credentials:
-      access-key: ACCESS_KEY
-      secret-key: SECRKET_KEY
+      access-key: tXo1QGCFuC21jKyjvtE9WslNA3rbtul4lrNkw76V1Cw=
+      secret-key: NA7ai5EiGJzDm/gP2LOyLMlOP2FkPqCUtPHdXiZXu+blAbHirWesdboiDgLsC5bQC9DhpqvP94U=
     region:
       static: ap-northeast-2
       auto: false

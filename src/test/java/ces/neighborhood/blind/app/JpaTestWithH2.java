@@ -31,8 +31,8 @@ import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.entity.QLikes;
 import ces.neighborhood.blind.app.entity.QPost;
 import ces.neighborhood.blind.app.repository.board.LikesRepository;
-import ces.neighborhood.blind.app.repository.member.MemberRepository;
 import ces.neighborhood.blind.app.repository.board.PostRepository;
+import ces.neighborhood.blind.app.repository.member.MemberRepository;
 import ces.neighborhood.blind.common.TestQueryDslConfig;
 import ces.neighborhood.blind.common.constant.ComCode;
 import ces.neighborhood.blind.common.constant.Constant;
@@ -91,7 +91,6 @@ public class JpaTestWithH2 {
                         .mbrId("tester@naver.com")
                         .postNo(postNo)
                         .postType("POST").build())
-                .post(Post.builder().postNo(postNo).build())
                 .build();
 
         memberRepository.save(mbrInfo);

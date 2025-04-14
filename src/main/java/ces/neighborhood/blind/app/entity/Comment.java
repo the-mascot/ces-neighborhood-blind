@@ -7,10 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Transient;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
+@ToString(exclude = { "post" })
 @Builder
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -31,13 +28,9 @@ public class Comment extends BaseEntity {
     @SequenceGenerator(name = "COMM_NO_SEQ", sequenceName = "COMM_NO_SEQ", allocationSize = 50)
     private Long commentNo;
 
+    private Long parentCommentNo;
+
     private String content;
-
-    @Transient
-    private Long likeCnt;
-
-    @Transient
-    private Boolean isLiked;
 
     private String delYn;
 
@@ -48,7 +41,4 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)  // @ManyToOne 는 fetch = FetchType.EAGER 가 기본
     @JoinColumn(name = "post_no")
     private Post post;
-
-    @OneToMany(mappedBy = "comment")    // @OneToMany 는 fetch = FetchType.LAZY 가 기본
-    private List<Reply> reply;
 }

@@ -41,15 +41,7 @@ public class Attachment extends BaseEntity {
 
     private String refType;
 
-    private Long refNo;
+    private String refNo;
 
     private String delYn;
-
-    public void setRefNo(Long refNo) {
-        this.refNo = refNo;
-    }
-
-    public void setRefType(String refType) {
-        this.refType = refType;
-    }
 }

@@ -1,5 +1,19 @@
 package ces.neighborhood.blind.app;
 
+import ces.neighborhood.blind.app.entity.Comment;
+import ces.neighborhood.blind.app.entity.Likes;
+import ces.neighborhood.blind.app.entity.MbrInfo;
+import ces.neighborhood.blind.app.entity.Post;
+import ces.neighborhood.blind.app.entity.QLikes;
+import ces.neighborhood.blind.app.entity.QPost;
+import ces.neighborhood.blind.app.repository.board.LikesRepository;
+import ces.neighborhood.blind.app.repository.board.PostRepository;
+import ces.neighborhood.blind.common.TestQueryDslConfig;
+import ces.neighborhood.blind.common.config.P6SpyConfig;
+import java.util.List;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,29 +27,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import ces.neighborhood.blind.app.entity.Comment;
-import ces.neighborhood.blind.app.entity.Likes;
-import ces.neighborhood.blind.app.entity.MbrInfo;
-import ces.neighborhood.blind.app.entity.Post;
-import ces.neighborhood.blind.app.entity.QComment;
-import ces.neighborhood.blind.app.entity.QMbrInfo;
-import ces.neighborhood.blind.app.entity.QPost;
-import ces.neighborhood.blind.app.entity.QReply;
-import ces.neighborhood.blind.app.repository.board.LikesRepository;
-import ces.neighborhood.blind.app.repository.board.PostRepository;
-import ces.neighborhood.blind.common.TestQueryDslConfig;
-import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @DataJpaTest    // JPA 슬라이싱 테스트. JPA 관련 Component 들만 로드 시키고 테스트 떄 넣은 Data 도 롤백 된다.
 @ActiveProfiles("test") // 테스트 프로파일
 @TestPropertySource(locations = "classpath:application-test.yml")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)    // Replace.NONE 실제 데이터 베이스 사용.
-@Import({ TestQueryDslConfig.class }) /*QueryDsl 추가로 JpaQueryFactory Bean 등록을 위해 추가.
+@Import({ TestQueryDslConfig.class, P6SpyConfig.class}) /*QueryDsl 추가로 JpaQueryFactory Bean 등록을 위해 추가.
 JpaQueryFactory 는 persistenceLayer가 아니라서 추가 bean등록이 필요하다.*/
 public class JpaTest {
 
@@ -88,12 +91,13 @@ public class JpaTest {
     @Test
     public void nPlusOneTest() {
         // JPA 의 N + 1 문제 테스트
-        // Post 와 즉시 로딩인 MbrInfo select 발생
-        //List<Post> postList = boardRepository.();
-        System.out.println("findAll 종료");
-        // 지연 로딩인 Comment select 발생
+        Long id = Long.valueOf(1);
+        Optional<Post> post = postRepository.findById(id);
         // 부모 Board의 개수 만큼 +1 의 Comment select 쿼리 발생.
-        //boardList.forEach(s -> System.out.println("postNo : " + s.getPostNo() + ", comment size : ");
+        if (post.isPresent() && post.get().getComment() != null) {
+            List<Comment> comments = post.get().getComment();
+            comments.forEach(s -> log.info(s.toString()));
+        }
     }
 
 
@@ -160,49 +164,74 @@ public class JpaTest {
         return builder;
     }
 
-    @Test
-    @DisplayName("댓글, 대댓글 튜플 조인 테스트")
-    void commentTupleJoinTest() {
-        Long postNo = Long.valueOf(1);
+//    @Test
+//    @DisplayName("댓글, 대댓글 튜플 조인 테스트")
+//    void commentTupleJoinTest() {
+//        Long postNo = Long.valueOf(1);
+//
+//        QComment comment = QComment.comment;
+//        QReply reply = QReply.reply;
+//        QMbrInfo mbrInfo = QMbrInfo.mbrInfo;
+//
+//        // tuple join으로 가져올 경우 comment 하나당 reply 하나가 select 됨
+//        List<Tuple> data = jpaQueryFactory.select(comment, reply)
+//                .from(comment)
+//                .leftJoin(reply)
+//                .on(comment.eq(reply.comment))
+//                .where(comment.post.postNo.eq(postNo))
+//                .fetch();
+//
+//        log.info("[commentJoinTest] data : {}", data);
+//    }
 
-        QComment comment = QComment.comment;
-        QReply reply = QReply.reply;
-        QMbrInfo mbrInfo = QMbrInfo.mbrInfo;
+//    @Test
+//    @DisplayName("댓글, 대댓글 조인 테스트")
+//    void commentJoinTest() {
+//        Long postNo = Long.valueOf(1);
+//        String mbrId = "dmstn1812@naver.com";
+//
+//        QPost post = QPost.post;
+//        QComment comment = QComment.comment;
+//        QReply reply = QReply.reply;
+//        QMbrInfo mbrInfo = QMbrInfo.mbrInfo;
+//        QLikes likes = QLikes.likes;
+//        QAttachment attachment = QAttachment.attachment;
+//
+//        List<CommentRes> comments = jpaQueryFactory.select(Projections.constructor(CommentRes.class,
+//                        Expressions.constant(Constant.REF_TYPE_COMMENT),
+//                        comment.commentNo,
+//                        mbrInfo.mbrNickname,
+//                        comment.content,
+//                        getLikeCount(comment.commentNo, likes, Constant.REF_TYPE_COMMENT),
+//                        getIsLiked(comment.commentNo, likes, mbrId, Constant.REF_TYPE_COMMENT),
+//                        comment.createDate,
+//                        attachment
+//                ))
+//                .from(comment)
+//                .leftJoin(comment.reply, reply)
+//                .where(comment.post.postNo.eq(postNo))
+//                .fetch();
+//
+//        log.info("[commentJoinTest] comments : {}", comments);
+////        log.info("[commentJoinTest] comments : {}", comments);
+//
+//    }
 
-        // tuple join으로 가져올 경우 comment 하나당 reply 하나가 select 됨
-        List<Tuple> data = jpaQueryFactory.select(comment, reply)
-                .from(comment)
-                .leftJoin(reply)
-                .on(comment.eq(reply.comment))
-                .where(comment.post.postNo.eq(postNo))
-                .fetch();
-
-        log.info("[commentJoinTest] data : {}", data);
+    private Expression<Long> getLikeCount(NumberPath<Long> id, QLikes likes, String postType) {
+        return JPAExpressions
+                .select(likes.likesId.postNo.count())
+                .from(likes)
+                .where(likes.likesId.postNo.eq(id)
+                        .and(likes.likesId.postType.eq(postType)));
     }
 
-    @Test
-    @DisplayName("댓글, 대댓글 조인 테스트")
-    void commentJoinTest() {
-        Long postNo = Long.valueOf(1);
-
-        QComment comment = QComment.comment;
-        QReply reply = QReply.reply;
-        QMbrInfo mbrInfo = QMbrInfo.mbrInfo;
-
-        List<Comment> data = jpaQueryFactory.selectFrom(comment)
-                .from(comment)
-                .leftJoin(reply).fetchJoin()
-                .on(comment.eq(reply.comment))
-                .where(comment.post.postNo.eq(postNo))
-                .orderBy(comment.createDate.desc(), reply.createDate.desc())
-                .fetch();
-
-        for (Comment c : data) {
-            if (c.getReply() != null) {
-                c.getReply().sort((r1, r2) -> r2.getCreateDate().compareTo(r1.getCreateDate())); // Reply의 createDate 기준으로 내림차순 정렬
-            }
-        }
-
-        log.info("[commentJoinTest] data : {}", data);
+    private BooleanExpression getIsLiked(NumberPath<Long> id, QLikes likes, String mbrId, String postType) {
+        return JPAExpressions
+                .selectOne()
+                .from(likes)
+                .where(likes.likesId.mbrId.eq(mbrId)
+                        .and(likes.likesId.postNo.eq(id))
+                        .and(likes.likesId.postType.eq(postType)))
+                .exists();
     }
 }

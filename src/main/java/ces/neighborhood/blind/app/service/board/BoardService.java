@@ -1,22 +1,11 @@
 package ces.neighborhood.blind.app.service.board;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import ces.neighborhood.blind.app.entity.Attachment;
 import ces.neighborhood.blind.app.entity.Comment;
 import ces.neighborhood.blind.app.entity.Likes;
 import ces.neighborhood.blind.app.entity.MbrInfo;
 import ces.neighborhood.blind.app.entity.Post;
 import ces.neighborhood.blind.app.record.board.LikeReq;
-import ces.neighborhood.blind.app.record.board.PostRes;
 import ces.neighborhood.blind.app.record.board.PostsRes;
 import ces.neighborhood.blind.app.repository.board.CommentRepository;
 import ces.neighborhood.blind.app.repository.board.LikesRepository;
@@ -29,6 +18,16 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <pre>
@@ -56,9 +55,7 @@ public class BoardService {
 
     /**
      * 게시판 목록 가져오기
-     * @param
      * @return List<BoardDto>
-     * @throws
      */
     public List<PostsRes> getPosts() {
         Authentication authentication = SecurityContextHolder.getContext()
@@ -78,7 +75,6 @@ public class BoardService {
      *
      * @param savePostReq, principal
      * @return postNo
-     * @throws
      */
     public long saveBoard(Post savePostReq, Principal principal) {
         Post post = Post.builder()
@@ -100,7 +96,6 @@ public class BoardService {
             String fileName = parts[parts.length - 1];
            Attachment attachment = attachmentRepository.findByFileName(fileName);
             if (attachment != null) {
-                attachment.setRefNo(postNo);
                 attachment.setModifyUser(principal.getName());
                 attachment.setRefType(Constant.REF_TYPE_POST);
                 attachmentRepository.save(attachment);
@@ -115,7 +110,7 @@ public class BoardService {
      * @return PostDto
      * @throws
      */
-    public Optional<PostRes> getPost(Long postNo) {
+    public Optional<PostsRes> getPost(Long postNo) {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         //return postRepository.getPost(postNo, authentication.getName());
@@ -156,11 +151,6 @@ public class BoardService {
             // 좋아요 추가
             likesRepository.save(Likes.builder()
                     .likesId(likesId)
-                    .post(
-                        Post.builder()
-                        .postNo(likeReq.postNo())
-                        .build()
-                    )
                     .build());
         }
     }
@@ -170,7 +160,6 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         commentRepository.save(Comment.builder()
-                .post(new Post(Long.valueOf(postNo)))
                 .content(content)
                 .build());
         if (!image.isEmpty()) {

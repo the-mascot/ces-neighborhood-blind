@@ -8,26 +8,26 @@ spring:
     password: 1234
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/neighborhooddb
-
-    p6spy:
-      enable-logging: true
-      multiline: true
-      logging: slf4j
-      tracing:
-        include-parameter-values: true
-      log-level: info
-      format-sql: true
+#    p6spy:
+#      multiline: true # SQL 을 포멧해서 출력
+#      tracing:
+#        include-parameter-values: true  # 변수 바인딩된 값을 포함하여 출력
+#      log-level: info
 
   jpa:
     hibernate:
     database: postgresql
     properties:
       hibernate:
-        format_sql: true  # 쿼리 출력시 포맷 정렬
-        use_sql_comments: true  # 주석 출력
-        #show_sql: true  # JPA 출력시 쿼리 출력
+        format_sql: false  # 쿼리 출력시 포맷 정렬
+        use_sql_comments: false  # 주석 출력
+        show_sql: false  # JPA 출력시 쿼리 출력
         jdbc:
           time_zone: UTC
-  h2:
-    console:
-      enabled: true
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      multiline: true
+      logging: slf4j

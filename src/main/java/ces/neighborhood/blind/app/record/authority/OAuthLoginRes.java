@@ -1,12 +1,8 @@
 package ces.neighborhood.blind.app.record.authority;
 
 public record OAuthLoginRes(
-        Boolean isNewMember,
-
-        String nickname,
-
-        String profileImage
-
+        boolean isMember,
+        String mbrNickname,
+        String mbrProfileImageUrl
 ) {
-
 }

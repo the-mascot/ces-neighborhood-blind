@@ -1,10 +1,5 @@
 package ces.neighborhood.blind.app.service.member;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ces.neighborhood.blind.app.record.authority.LoginRes;
 import ces.neighborhood.blind.app.record.member.UpdateMemberInfoReq;
 import ces.neighborhood.blind.app.repository.member.MemberRepository;
@@ -14,6 +9,11 @@ import ces.neighborhood.blind.common.utils.ComUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <pre>

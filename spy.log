@@ -1,0 +1,9 @@
+1744597320052|2|statement|connection 24|url jdbc:h2:mem:test|     drop table if exists attachment cascade |     drop table if exists attachment cascade 
+1744597320055|1|statement|connection 24|url jdbc:h2:mem:test|     drop table if exists comment cascade |     drop table if exists comment cascade 
+1744597320057|0|statement|connection 24|url jdbc:h2:mem:test|     drop table if exists likes cascade |     drop table if exists likes cascade 
+1744597320058|1|statement|connection 24|url jdbc:h2:mem:test|     drop table if exists mbr_info cascade |     drop table if exists mbr_info cascade 
+1744597320059|0|statement|connection 24|url jdbc:h2:mem:test|     drop table if exists oauth_mbr_info cascade |     drop table if exists oauth_mbr_info cascade 
+1744597320061|0|statement|connection 24|url jdbc:h2:mem:test|     drop table if exists post cascade |     drop table if exists post cascade 
+1744597320061|0|statement|connection 24|url jdbc:h2:mem:test|     drop sequence if exists comm_no_seq|     drop sequence if exists comm_no_seq
+1744597320062|0|statement|connection 24|url jdbc:h2:mem:test|     drop sequence if exists file_no_seq|     drop sequence if exists file_no_seq
+1744597320062|0|statement|connection 24|url jdbc:h2:mem:test|     drop sequence if exists post_no_seq|     drop sequence if exists post_no_seq
